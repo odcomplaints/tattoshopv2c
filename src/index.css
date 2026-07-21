@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+@layer base {
+  html {
+    background: var(--color-neutral-950);
+  }
+
+  body {
+    min-width: 320px;
+    margin: 0;
+    background: var(--color-neutral-950);
+    color: var(--color-neutral-200);
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background: var(--color-neutral-200);
+    color: var(--color-neutral-950);
+  }
+}
