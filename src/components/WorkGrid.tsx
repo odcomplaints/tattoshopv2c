@@ -4,7 +4,7 @@ type WorkGridProps = {
   items: Work[]
 }
 
-const dateFormatter = new Intl.DateTimeFormat('de-DE', { month: 'short', year: 'numeric' })
+const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' })
 
 export function WorkGrid({ items }: WorkGridProps) {
   return (
@@ -14,7 +14,7 @@ export function WorkGrid({ items }: WorkGridProps) {
           <div className="aspect-[4/5] overflow-hidden bg-neutral-900">
             <img
               src={item.image}
-              alt={`${item.title}, ${item.style} Tattoo am ${item.bodyPart}`}
+              alt={`${item.title}, ${item.style} tattoo on the ${item.bodyPart}`}
               width="800"
               height="1000"
               loading={index > 1 ? 'lazy' : 'eager'}

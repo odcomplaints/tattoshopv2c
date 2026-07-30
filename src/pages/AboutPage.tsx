@@ -2,14 +2,14 @@ import { Layout } from '../components/Layout'
 
 export function AboutPage() {
   return (
-    <Layout title="About | Mara Kern Tattoo" description="Über Mara Kern, Tattoo Artist für Blackwork und Fineline in Berlin.">
-      <section className="max-w-2xl">
-        <p className="text-xs uppercase tracking-widest text-neutral-500">Über mich</p>
-        <h1 className="mt-3 text-3xl font-medium uppercase tracking-widest text-neutral-100">Mara Kern</h1>
+    <Layout title="About | OD: COMPLAINTS" description="About OD: COMPLAINTS, tattoo artist for blackwork and fineline in GD.">
+      <section className="max-w-2xl text-left">
+        <p className="text-xs uppercase tracking-widest text-neutral-500">About</p>
+        <h1 className="mt-3 text-3xl font-medium uppercase tracking-widest text-neutral-100">OD: COMPLAINTS</h1>
         <div className="mt-8 space-y-5 text-sm leading-7 text-neutral-400">
-          <p>Ich tätowiere in Berlin mit einem Fokus auf reduzierte Formen, organische Linien und Motive, die langfristig funktionieren. Meine Arbeiten bewegen sich zwischen Blackwork, Fineline und botanischen Fragmenten.</p>
-          <p>Jedes Projekt beginnt mit einem Gespräch über Körperstelle, Idee und Bewegung. Aus Referenzen und deinen Gedanken entsteht ein Entwurf, der für dich und die gewählte Stelle entwickelt wird.</p>
-          <p>Termine finden nach Vereinbarung in einem ruhigen Studio in Berlin statt. Die genaue Adresse erhältst du mit der Terminbestätigung.</p>
+          <p>I tattoo in GD, focusing on reduced forms, organic lines and motifs that age well. My work moves between blackwork, fineline and botanical fragments.</p>
+          <p>Every project starts with a conversation about placement, idea and movement. References and your thoughts become a design made for you and your chosen placement.</p>
+          <p>Appointments take place by arrangement in a quiet studio in GD. You will receive the exact address with your booking confirmation.</p>
         </div>
       </section>
     </Layout>
