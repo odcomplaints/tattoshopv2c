@@ -1,28 +1,37 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import logo from '../assets/logoshopbesser.png'
+import { useShop } from '../context/ShopContext'
+import { useLanguage } from '../context/LanguageContext'
+import { CartIcon, HeartIcon } from './icons'
 
 type LayoutProps = {
   children: ReactNode
   title?: string
   description?: string
+  headerExtra?: ReactNode
 }
 
 const navigation = [
-  { label: 'Work', to: '/work' },
-  { label: 'Shop', to: '/shop' },
-  { label: 'Booking', to: '/booking' },
-  { label: 'About', to: '/about' },
-]
+  { key: 'work', to: '/work' },
+  { key: 'shop', to: '/shop' },
+  { key: 'booking', to: '/booking' },
+  { key: 'about', to: '/about' },
+] as const
 
 export function Layout({
   children,
-  title = 'OD: COMPLAINTS | GD',
-  description = 'Blackwork, fineline and botanical tattoos by OD: COMPLAINTS in GD.',
+  title = 'OD COMPLAINTS | GD',
+  description = 'Blackwork, fineline and botanical tattoos by OD COMPLAINTS in GD.',
+  headerExtra,
 }: LayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
+  const { cartCount, favoritesCount } = useShop()
+  const { t } = useLanguage()
+  const isShopSection = location.pathname.startsWith('/shop')
 
   return (
     <div className="relative z-10 flex min-h-screen flex-col text-neutral-200">
@@ -30,36 +39,66 @@ export function Layout({
         <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet>
-      <header className="border-b border-neutral-800">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-4 lg:px-8 lg:py-6">
-          <Link to="/" aria-label="OD: COMPLAINTS — home" className="inline-block transition-opacity hover:opacity-80">
-            <img src={logo} alt="OD: COMPLAINTS" className="h-14 w-auto sm:h-16 lg:h-20" />
-          </Link>
-          <button
-            type="button"
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 lg:hidden"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span className={`h-px w-6 bg-accent transition-transform ${menuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
-            <span className={`h-px w-6 bg-accent transition-opacity ${menuOpen ? 'opacity-0' : ''}`} />
-            <span className={`h-px w-6 bg-accent transition-transform ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
-          </button>
-          <nav aria-label="Main navigation" className="hidden lg:block">
-            <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-3xl uppercase tracking-widest sm:gap-x-10">
-              {navigation.map((item) => (
-                <li key={item.to}>
-                  <NavLink
-                    to={item.to}
-                    className={({ isActive }) => `transition-colors hover:text-neutral-100 ${isActive ? 'text-accent' : 'text-neutral-500'}`}
-                  >
-                    {item.label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
+      <header>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 pb-4 pt-10 lg:px-8 lg:pb-6 lg:pt-16">
+          <div className="relative flex w-full items-center justify-between gap-6">
+            <Link to="/" aria-label="OD COMPLAINTS — home" className="inline-block transition-opacity hover:opacity-80">
+              <img src={logo} alt="OD COMPLAINTS" className="h-14 w-auto sm:h-16 lg:h-20" />
+            </Link>
+            <div className="flex items-center gap-5">
+            {isShopSection && (
+              <div className="flex items-center gap-5">
+                <Link
+                  to="/shop/favorites"
+                  aria-label="Favorites"
+                  className="relative flex items-center text-neutral-300 transition-colors hover:text-accent"
+                >
+                  <HeartIcon filled={favoritesCount > 0} />
+                </Link>
+                <Link
+                  to="/shop/cart"
+                  aria-label={`Cart (${cartCount})`}
+                  className="relative flex items-center text-neutral-300 transition-colors hover:text-accent"
+                >
+                  <CartIcon />
+                  {cartCount > 0 && (
+                    <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[9px] font-medium text-accent-contrast">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
+              </div>
+            )}
+            <button
+              type="button"
+              className="flex h-9 w-9 flex-col items-center justify-center gap-1.5 lg:hidden"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              <span className={`h-px w-6 bg-accent transition-transform ${menuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
+              <span className={`h-px w-6 bg-accent transition-opacity ${menuOpen ? 'opacity-0' : ''}`} />
+              <span className={`h-px w-6 bg-accent transition-transform ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
+            </button>
+            <nav aria-label="Main navigation" className="hidden lg:absolute lg:left-1/2 lg:top-1/2 lg:block lg:-translate-x-1/2 lg:-translate-y-1/2">
+              <ul className="flex flex-wrap items-center justify-center gap-x-14 gap-y-3 text-xl font-normal uppercase tracking-tight sm:gap-x-20">
+                {navigation.map((item) => (
+                  <li key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      className="inline-block origin-center scale-x-150 text-accent transition-colors hover:text-neutral-100"
+                    >
+                      {t.nav[item.key]}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            </div>
+            {headerExtra && (
+              <div className="absolute right-0 top-1/2 hidden -translate-y-1/2 lg:block">{headerExtra}</div>
+            )}
+          </div>
         </div>
         <div
           className={`fixed inset-0 z-40 bg-neutral-950/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${menuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
@@ -84,23 +123,45 @@ export function Layout({
                 <NavLink
                   to={item.to}
                   onClick={() => setMenuOpen(false)}
-                  className={({ isActive }) => `transition-colors hover:text-neutral-100 ${isActive ? 'text-accent' : 'text-neutral-500'}`}
+                  className="text-accent transition-colors hover:text-neutral-100"
                 >
-                  {item.label}
+                  {t.nav[item.key]}
                 </NavLink>
               </li>
             ))}
+            {isShopSection && (
+              <>
+                <li>
+                  <NavLink
+                    to="/shop/favorites"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-accent transition-colors hover:text-neutral-100"
+                  >
+                    {t.nav.favorites}
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/shop/cart"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-accent transition-colors hover:text-neutral-100"
+                  >
+                    {t.nav.cart}{cartCount > 0 ? ` (${cartCount})` : ''}
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>
       <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-12 text-center sm:px-8 sm:py-20">{children}</main>
-      <footer className="border-t border-neutral-800 text-xs uppercase tracking-widest text-neutral-500">
+      <footer className="border-t border-neutral-800 text-xs uppercase tracking-widest text-accent">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-4 px-5 py-6 text-center sm:px-8">
           <p>GD</p>
           <div className="flex justify-center gap-5">
-            <Link className="transition-colors hover:text-neutral-100" to="/imprint">Legal notice</Link>
-            <Link className="transition-colors hover:text-neutral-100" to="/privacy">Privacy</Link>
-            <a className="transition-colors hover:text-accent" href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
+            <Link className="transition-colors hover:text-neutral-100" to="/imprint">{t.footer.legalNotice}</Link>
+            <Link className="transition-colors hover:text-neutral-100" to="/privacy">{t.footer.privacy}</Link>
+            <a className="transition-colors hover:text-neutral-100" href="https://instagram.com/" target="_blank" rel="noreferrer">{t.footer.instagram}</a>
           </div>
         </div>
       </footer>

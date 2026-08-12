@@ -16,10 +16,10 @@ const sectionTitle = 'text-sm font-medium uppercase tracking-widest text-neutral
 
 export function BookingPage() {
   return (
-    <Layout title="Booking | OD: COMPLAINTS" description="Secure your tattoo appointment with a deposit at OD: COMPLAINTS in GD.">
+    <Layout title="Booking | OD COMPLAINTS" description="Secure your tattoo appointment with a deposit at OD COMPLAINTS in GD.">
       <div className="text-left">
         <header className="border-b border-neutral-800 pb-8">
-          <p className="text-xs uppercase tracking-widest text-accent">Checkout</p>
+          <p className="text-xs uppercase tracking-widest text-neutral-200">Checkout</p>
           <h1 className="mt-3 text-3xl font-medium uppercase tracking-widest text-neutral-100">Booking</h1>
           <p className="mt-4 max-w-xl text-sm leading-7 text-neutral-400">Secure your appointment with a deposit of {DEPOSIT}. The amount is credited towards the final price of your tattoo.</p>
         </header>
@@ -100,7 +100,7 @@ export function BookingPage() {
               <div className="mt-6 flex items-start justify-between gap-3 border-b border-neutral-800 pb-6">
                 <div>
                   <p className="text-xs uppercase tracking-widest text-neutral-200">Tattoo deposit</p>
-                  <p className="mt-1 text-xs text-neutral-500">Credited towards the final price</p>
+                  <p className="mt-1 text-xs text-neutral-300">Credited towards the final price</p>
                 </div>
                 <p className="shrink-0 text-xs uppercase tracking-widest text-neutral-200">{DEPOSIT}</p>
               </div>
@@ -127,7 +127,7 @@ export function BookingPage() {
             {faqs.map(([question, answer]) => (
               <details key={question} className="py-4">
                 <summary className="cursor-pointer text-xs uppercase tracking-widest text-neutral-300">{question}</summary>
-                <p className="mt-3 text-sm leading-6 text-neutral-500">{answer}</p>
+                <p className="mt-3 text-sm leading-6 text-neutral-300">{answer}</p>
               </details>
             ))}
           </div>

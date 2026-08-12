@@ -1,5 +1,13 @@
-// Visual-only express checkout buttons (Apple Pay / Google Pay).
-// These are a design mockup and are NOT connected to a payment processor.
+// Express checkout buttons. Clicking either one starts a real Stripe Checkout
+// Session (via the parent's handler) and redirects to Stripe's hosted page,
+// where cards, Apple Pay and Google Pay are offered based on the customer's
+// device and Dashboard settings.
+
+type ExpressPayProps = {
+  onPay: () => void
+  disabled?: boolean
+  loading?: boolean
+}
 
 function AppleLogo() {
   return (
@@ -23,28 +31,27 @@ function GoogleLogo() {
   )
 }
 
-export function ExpressPay() {
-  // Mockup handler: no real charge is created.
-  const handleMockPay = () => {
-    window.alert('Demo: payment is not connected yet. You can submit your appointment request below.')
-  }
+export function ExpressPay({ onPay, disabled = false, loading = false }: ExpressPayProps) {
+  const inactive = disabled || loading
 
   return (
     <div className="grid gap-3">
       <button
         type="button"
-        onClick={handleMockPay}
+        onClick={onPay}
+        disabled={inactive}
         aria-label="Pay with Apple Pay"
-        className="pay-button flex w-full items-center justify-center gap-2 rounded-md border border-neutral-800 bg-black py-3.5"
+        className="pay-button flex w-full items-center justify-center gap-2 rounded-md border border-neutral-800 bg-black py-3.5 transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
       >
         <AppleLogo />
         <span className="text-base font-medium">Pay</span>
       </button>
       <button
         type="button"
-        onClick={handleMockPay}
+        onClick={onPay}
+        disabled={inactive}
         aria-label="Pay with Google Pay"
-        className="pay-button flex w-full items-center justify-center gap-2 rounded-md border border-neutral-800 bg-black py-3.5"
+        className="pay-button flex w-full items-center justify-center gap-2 rounded-md border border-neutral-800 bg-black py-3.5 transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
       >
         <GoogleLogo />
         <span className="text-base font-medium">Pay</span>

@@ -211,21 +211,61 @@ export default function EvilEye({
 
     const mouse = { x: 0, y: 0, tx: 0, ty: 0 }
 
+    // Touch devices don't fire mousemove, so the pupil would otherwise sit
+    // frozen in the center. On coarse-pointer (touch) devices we drive an
+    // organic idle "looking around" drift instead, and let an actual touch
+    // temporarily take over (so dragging a finger still moves the pupil).
+    // On desktop the same idle drift kicks in whenever the cursor hasn't
+    // moved for a moment, so the eye keeps looking around on its own instead
+    // of freezing once the mouse stops.
+    const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches
+    const idleSeed = Math.random() * 1000
+    let touching = false
+    let lastTouchAt = -Infinity
+    let lastMouseMoveAt = -Infinity
+
+    function idleTarget(t: number): [number, number] {
+      const tx = Math.sin(t * 0.9 + idleSeed) * 0.5 + Math.sin(t * 2.1 + idleSeed * 1.7) * 0.3
+      const ty = Math.cos(t * 0.75 + idleSeed * 0.6) * 0.4 + Math.sin(t * 1.6 + idleSeed * 2.1) * 0.22
+      return [Math.max(-0.85, Math.min(0.85, tx)), Math.max(-0.85, Math.min(0.85, ty))]
+    }
+
     function onMouseMove(e: MouseEvent) {
       const rect = container.getBoundingClientRect()
       mouse.tx = ((e.clientX - rect.left) / rect.width) * 2 - 1
       mouse.ty = -(((e.clientY - rect.top) / rect.height) * 2 - 1)
+      lastMouseMoveAt = performance.now()
     }
 
     function onMouseLeave() {
       mouse.tx = 0
       mouse.ty = 0
+      lastMouseMoveAt = -Infinity
+    }
+
+    function onTouchMove(e: TouchEvent) {
+      const touch = e.touches[0]
+      if (!touch) return
+      const rect = container.getBoundingClientRect()
+      mouse.tx = ((touch.clientX - rect.left) / rect.width) * 2 - 1
+      mouse.ty = -(((touch.clientY - rect.top) / rect.height) * 2 - 1)
+      touching = true
+      lastTouchAt = performance.now()
+    }
+
+    function onTouchEnd() {
+      touching = false
+      lastTouchAt = performance.now()
     }
 
     // Listen on the window so pupil tracking keeps working even when this
     // canvas sits behind pointer-events-none content (site-wide background).
     window.addEventListener('mousemove', onMouseMove)
     document.addEventListener('mouseleave', onMouseLeave)
+    window.addEventListener('touchstart', onTouchMove, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
+    window.addEventListener('touchend', onTouchEnd)
+    window.addEventListener('touchcancel', onTouchEnd)
 
     let program: Program
 
@@ -268,8 +308,17 @@ export default function EvilEye({
 
     function update(time: number) {
       animationFrameId = requestAnimationFrame(update)
-      mouse.x += (mouse.tx - mouse.x) * 0.05
-      mouse.y += (mouse.ty - mouse.y) * 0.05
+      const idle = isCoarsePointer
+        ? !touching && time - lastTouchAt > 900
+        : time - lastMouseMoveAt > 1200
+      if (idle) {
+        const [tx, ty] = idleTarget(time * 0.001)
+        mouse.tx = tx
+        mouse.ty = ty
+      }
+      const ease = isCoarsePointer ? 0.12 : 0.05
+      mouse.x += (mouse.tx - mouse.x) * ease
+      mouse.y += (mouse.ty - mouse.y) * ease
       program.uniforms.uMouse.value = [mouse.x, mouse.y]
       program.uniforms.uTime.value = time * 0.001
       renderer.render({ scene: mesh })
@@ -281,6 +330,10 @@ export default function EvilEye({
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('mouseleave', onMouseLeave)
+      window.removeEventListener('touchstart', onTouchMove)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('touchend', onTouchEnd)
+      window.removeEventListener('touchcancel', onTouchEnd)
       container.removeChild(gl.canvas)
       gl.getExtension('WEBGL_lose_context')?.loseContext()
     }

@@ -25,9 +25,9 @@ export function WorkGrid({ items }: WorkGridProps) {
           </div>
           <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-xs uppercase tracking-widest">
             <h2 className="font-medium text-neutral-100">{item.title}</h2>
-            <time className="text-neutral-500" dateTime={item.date.toISOString().slice(0, 10)}>{dateFormatter.format(item.date)}</time>
+            <time className="text-neutral-300" dateTime={item.date.toISOString().slice(0, 10)}>{dateFormatter.format(item.date)}</time>
           </div>
-          <p className="mt-1 text-xs text-neutral-500">{item.style} / {item.bodyPart}</p>
+          <p className="mt-1 text-xs text-neutral-300">{item.style} / {item.bodyPart}</p>
         </article>
       ))}
     </div>

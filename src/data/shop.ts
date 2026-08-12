@@ -15,7 +15,7 @@ export const shopItems: ShopItem[] = [
     name: 'Black Sun',
     price: '45 EUR',
     category: 'Riso Print / A3',
-    image: '/assets/shop/black-sun.svg',
+    image: '/assets/shop/1.png',
     availability: 'available',
     description:
       'Two-colour risograph print on heavy uncoated stock. Dense blackwork study, hand-pulled in a small studio edition.',
@@ -26,7 +26,7 @@ export const shopItems: ShopItem[] = [
     name: 'Soft Structure',
     price: '35 EUR',
     category: 'Art Print / A4',
-    image: '/assets/shop/soft-structure.svg',
+    image: '/assets/shop/2.png',
     availability: 'sold-out',
     description:
       'Fineline botanical study printed on matte fine-art paper. Muted greyscale tones, minimal composition.',
@@ -37,7 +37,7 @@ export const shopItems: ShopItem[] = [
     name: 'Talisman 01',
     price: '60 EUR',
     category: 'Risograph / A3',
-    image: '/assets/shop/talisman.svg',
+    image: '/assets/shop/3.png',
     availability: 'available',
     description:
       'Abstract talisman motif, layered risograph in three passes. Each copy varies slightly through the print process.',
@@ -48,7 +48,7 @@ export const shopItems: ShopItem[] = [
     name: 'Field Study',
     price: '30 EUR',
     category: 'Open Edition / A4',
-    image: '/assets/shop/field-study.svg',
+    image: '/assets/shop/4.png',
     availability: 'available',
     description:
       'Loose fineline field study, open edition. An accessible entry piece printed on demand in the studio.',

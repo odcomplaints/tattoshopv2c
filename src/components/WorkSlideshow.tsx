@@ -39,11 +39,11 @@ export function WorkSlideshow({ items, intervalMs = 4500 }: WorkSlideshowProps) 
       </div>
       <div className="mt-4 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1 text-xs uppercase tracking-widest">
         <h2 className="font-medium text-neutral-100">{items[activeIndex].title}</h2>
-        <time className="text-neutral-500" dateTime={items[activeIndex].date.toISOString().slice(0, 10)}>
+        <time className="text-neutral-300" dateTime={items[activeIndex].date.toISOString().slice(0, 10)}>
           {dateFormatter.format(items[activeIndex].date)}
         </time>
       </div>
-      <p className="mt-1 text-xs text-neutral-500">{items[activeIndex].style} / {items[activeIndex].bodyPart}</p>
+      <p className="mt-1 text-xs text-neutral-300">{items[activeIndex].style} / {items[activeIndex].bodyPart}</p>
       <div className="mt-5 flex justify-center gap-2">
         {items.map((item, index) => (
           <button
