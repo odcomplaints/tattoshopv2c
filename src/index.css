@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "OptimusPrinceps";
+  src: url("/fonts/OptimusPrinceps.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-mono: "OptimusPrinceps", Georgia, "Times New Roman", serif;
+  --color-accent: #FF3939;
+  --color-accent-contrast: #f5f5f5;
+}
+
+@layer base {
+  html {
+    background: var(--color-neutral-950);
+  }
+
+  body {
+    min-width: 320px;
+    margin: 0;
+    background-color: var(--color-neutral-950);
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255, 57, 57, 0.16) 0 1px, transparent 1px 96px),
+      repeating-linear-gradient(0deg, rgba(255, 57, 57, 0.1) 0 1px, transparent 1px 96px);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  ::selection {
+    background: var(--color-neutral-200);
+    color: var(--color-neutral-950);
+  }
+}
+
+body::before {
+  position: fixed;
+  inset: -24px;
+  z-index: 0;
+  content: "";
+  background: inherit;
+  filter: blur(12px);
+  transform: scale(1.04);
+}
+
+@layer components {
+  /* Keep the uppercase treatment across the UI, but only headlines carry the
+     brand red. Body copy, links and form fields keep their per-element neutral
+     (grey/white) colours for better contrast and readability. */
+  #root :is(h1, h2, h3, p, a, label, input, textarea, summary, time, dt, dd, span) {
+    text-transform: uppercase;
+  }
+
+  #root :is(h1, h2, h3) {
+    color: var(--color-accent) !important;
+    font-weight: 700 !important;
+  }
+
+  #root :is(button, .button-label) {
+    color: var(--color-accent) !important;
+  }
+
+  #root :is(button, .button-label):hover {
+    color: var(--color-neutral-100) !important;
+  }
+
+  #root header nav a:hover {
+    color: var(--color-neutral-100) !important;
+  }
+
+  /* Express-pay buttons keep their brand look, overriding the global red/uppercase. */
+  #root .pay-button,
+  #root .pay-button *,
+  #root .pay-button:hover,
+  #root .pay-button:hover * {
+    color: #ffffff !important;
+    text-transform: none !important;
+  }
+
+  /* Favorite (heart) toggle buttons: grey outline until favorited or hovered. */
+  #root button.favorite-toggle {
+    color: var(--color-neutral-400) !important;
+  }
+
+  #root button.favorite-toggle:hover,
+  #root button.favorite-toggle[aria-pressed='true'] {
+    color: var(--color-accent) !important;
+  }
+
+  /* Language toggle button: grey by default, red on hover. */
+  #root button.lang-toggle {
+    color: var(--color-neutral-300) !important;
+  }
+
+  #root button.lang-toggle:hover {
+    color: var(--color-accent) !important;
+  }
+
+  /* Specular (React Bits) buttons keep their own text colour and a solid brand border. */
+  #root button.specular-button,
+  #root button.specular-button:hover {
+    color: var(--sb-text-color) !important;
+  }
+
+  #root button.specular-button {
+    border: 1px solid var(--color-accent);
+    background-color: transparent;
+  }
+
+  #root button.specular-button:hover {
+    border-color: var(--color-neutral-100);
+  }
+}
