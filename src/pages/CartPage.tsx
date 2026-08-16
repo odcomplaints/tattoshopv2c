@@ -15,7 +15,7 @@ export function CartPage() {
   const { cart, updateQuantity, removeFromCart, cartCount } = useShop()
   const [searchParams] = useSearchParams()
   const canceled = searchParams.get('canceled') === '1'
-  const [_loading, setLoading] = useState(false);
+  const [_loading, _setLoading] = useState(false);
 const [_error, _setError] = useState<string | null>(null);
   
 
