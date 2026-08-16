@@ -3,7 +3,6 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { ExpressPay } from '../components/ExpressPay'
 import { useShop } from '../context/ShopContext'
-import { startCheckout } from '../lib/checkout'
 import { shopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
 
@@ -16,20 +15,9 @@ export function CartPage() {
   const { cart, updateQuantity, removeFromCart, cartCount } = useShop()
   const [searchParams] = useSearchParams()
   const canceled = searchParams.get('canceled') === '1'
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const handleCheckout = async () => {
-    setError(null)
-    setLoading(true)
-    try {
-      await startCheckout(cart)
-      // On success the browser is redirected to Stripe, so we never get here.
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Checkout failed. Please try again.')
-      setLoading(false)
-    }
-  }
+  const [_loading, setLoading] = useState(false);
+const [_error, _setError] = useState<string | null>(null);
+  
 
   const items = cart
     .map((entry) => {
@@ -122,8 +110,7 @@ export function CartPage() {
                 Shipping and taxes are calculated at checkout. Payment is not connected yet — the buttons below are a
                 preview.
               </p>
-              <ExpressPay />
-            </div>
+<ExpressPay onPay={() => {}} />            </div>
           </div>
         )}
       </div>

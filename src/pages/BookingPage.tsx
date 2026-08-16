@@ -31,7 +31,7 @@ export function BookingPage() {
             <section>
               <h2 className={sectionTitle}>Express Checkout</h2>
               <div className="mt-4 max-w-sm">
-                <ExpressPay />
+                <ExpressPay onPay={() => {}} />
               </div>
               <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-widest text-neutral-600">
                 <span className="h-px flex-1 bg-neutral-800" />
