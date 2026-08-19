@@ -23,7 +23,7 @@ export function ShopPage() {
             const favorite = isFavorite(item.id)
             return (
               <div key={item.id} className="group relative">
-                <div className="relative aspect-[4/5] overflow-hidden bg-neutral-900">
+                <div className="relative aspect-[4/5] overflow-hidden">
                   <img
                     src={item.image}
                     alt={`${item.name}, ${item.category}`}

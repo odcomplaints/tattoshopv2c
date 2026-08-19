@@ -36,7 +36,7 @@ export function ProductPage() {
       </Link>
 
       <div className="mt-8 grid gap-10 text-left lg:grid-cols-2 lg:gap-16">
-        <div className="relative aspect-[4/5] overflow-hidden bg-neutral-900">
+        <div className="relative aspect-[4/5] overflow-hidden">
           <img
             src={item.image}
             alt={`${item.name}, ${item.category}`}
@@ -66,6 +66,11 @@ export function ProductPage() {
             <p className="text-xs uppercase tracking-widest text-neutral-300">{item.category}</p>
             <h1 className="mt-2 text-3xl font-medium uppercase tracking-widest text-neutral-100">{item.name}</h1>
             <p className="mt-3 text-lg uppercase tracking-widest text-neutral-300">{item.price}</p>
+          {available ? (
+            <p className="text-xs uppercase tracking-widest text-neutral-500">
+              {item.stock === 1 ? '1 Stück verfügbar' : `${item.stock} Stück verfügbar`}
+            </p>
+          ) : null}
           </div>
 
           <p className="max-w-md text-sm leading-7 text-neutral-400">{item.description}</p>

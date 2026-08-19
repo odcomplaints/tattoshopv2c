@@ -5,53 +5,281 @@ export type ShopItem = {
   category: string
   image: string
   availability: 'available' | 'sold-out'
+  stock: number
   description: string
   details: string[]
 }
 
 export const shopItems: ShopItem[] = [
+  // ─── BAPE SHARK HOODIES ──────────────────────────────────────────────────
   {
-    id: 'black-sun',
-    name: 'Black Sun',
-    price: '45 EUR',
-    category: 'Riso Print / A3',
-    image: '/assets/shop/1.png',
+    id: 'bape-shark-glow',
+    name: 'Bape Shark Glow in the Dark',
+    price: '180 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/bapesharkglowinthedark.png',
     availability: 'available',
+    stock: 1,
     description:
-      'Two-colour risograph print on heavy uncoated stock. Dense blackwork study, hand-pulled in a small studio edition.',
-    details: ['Format: A3 (297 × 420 mm)', 'Riso print, 2 colours', 'Signed edition of 30', 'Heavy uncoated 300 gsm'],
+      'Kultiger A Bathing Ape Shark Hoodie mit Glow-in-the-Dark-Print. Ikonisches Haifischmaul auf der Kapuze, schwerer Baumwollstoff.',
+    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Glow-in-the-Dark-Detail', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
   },
   {
-    id: 'soft-structure',
-    name: 'Soft Structure',
-    price: '35 EUR',
-    category: 'Art Print / A4',
-    image: '/assets/shop/2.png',
-    availability: 'sold-out',
+    id: 'bape-shark-lila',
+    name: 'Bape Shark Hoodie Lila',
+    price: '160 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/bapesharklila.png',
+    availability: 'available',
+    stock: 1,
     description:
-      'Fineline botanical study printed on matte fine-art paper. Muted greyscale tones, minimal composition.',
-    details: ['Format: A4 (210 × 297 mm)', 'Giclée art print', 'Signed edition of 25', 'Matte fine-art 250 gsm'],
+      'BAPE Shark Hoodie in sattem Lila. Full-Zip-Kapuze mit Haifischmaul-Grafik, Känguru-Tasche und typischem Ape-Camo-Futter.',
+    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Lila', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
   },
   {
-    id: 'talisman-01',
-    name: 'Talisman 01',
-    price: '60 EUR',
-    category: 'Risograph / A3',
-    image: '/assets/shop/3.png',
+    id: 'bape-shark-mickey',
+    name: 'Bape Shark × Mickey Mouse',
+    price: '220 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/bapesharkmickeymouse.png',
     availability: 'available',
+    stock: 1,
     description:
-      'Abstract talisman motif, layered risograph in three passes. Each copy varies slightly through the print process.',
-    details: ['Format: A3 (297 × 420 mm)', 'Riso print, 3 colours', 'Signed edition of 20', 'Heavy uncoated 300 gsm'],
+      'Limitierte BAPE × Disney Kollaboration. Shark Hoodie mit Mickey-Mouse-Motiv auf der Kapuze – eine der gefragtesten Bape-Kollabs überhaupt.',
+    details: ['Marke: BAPE × Disney', 'Material: 100 % Baumwolle', 'Limitierte Kollab-Edition', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
   },
   {
-    id: 'field-study',
-    name: 'Field Study',
-    price: '30 EUR',
-    category: 'Open Edition / A4',
-    image: '/assets/shop/4.png',
+    id: 'bape-shark-multicamo',
+    name: 'Bape Shark Multi-Camo',
+    price: '200 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/bapesharkmulticamo.png',
     availability: 'available',
+    stock: 1,
     description:
-      'Loose fineline field study, open edition. An accessible entry piece printed on demand in the studio.',
-    details: ['Format: A4 (210 × 297 mm)', 'Giclée art print', 'Open edition', 'Matte fine-art 250 gsm'],
+      'BAPE Shark Hoodie im klassischen Multi-Camo-Muster. Vollfarbiges ABC-Camo allover, Signature Shark-Kapuze, selten in diesem Zustand.',
+    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'ABC Camo Allover', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+  {
+    id: 'bape-shark-pink',
+    name: 'Bape Shark Hoodie Pink',
+    price: '155 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/bapesharkpink.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'BAPE Shark Hoodie in auffälligem Pink. Statement-Piece für jeden Streetwear-Liebhaber – Full-Zip, Haifischmaul-Kapuze.',
+    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Pink', 'Zustand: gut', 'Größe: bitte anfragen'],
+  },
+  {
+    id: 'bape-shark-rot',
+    name: 'Bape Shark Hoodie Rot',
+    price: '155 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/bapesharkrot.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'BAPE Shark Hoodie in kräftigem Rot. Klassisches Haifischmaul-Design, Full-Zip-Reißverschluss, schwere Qualität.',
+    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Rot', 'Zustand: gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── SUPREME ─────────────────────────────────────────────────────────────
+  {
+    id: 'supreme-sweatjacke',
+    name: 'Supreme Sweatjacke',
+    price: '140 EUR',
+    category: 'Streetwear / Jacke',
+    image: '/assets/shop/supremesweatjacke.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Supreme Zip-Up Sweatjacke aus der regulären Line. Stickte Box-Logo-Brust, schwerer Fleece-Innenraum, zeitloser Schnitt.',
+    details: ['Marke: Supreme', 'Material: Baumwoll-Fleece', 'Gesticktes Box Logo', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+  {
+    id: 'supreme-tshirt',
+    name: 'Supreme T-Shirt',
+    price: '75 EUR',
+    category: 'Streetwear / T-Shirt',
+    image: '/assets/shop/supremetshirt.png',
+    availability: 'available',
+    stock: 2,
+    description:
+      'Supreme T-Shirt aus einer vergangenen Season. Cleanes Grafik-Tee, 100 % Baumwolle, typischer Supreme-Oversized-Fit.',
+    details: ['Marke: Supreme', 'Material: 100 % Baumwolle', 'Grafik-Print', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── BALENCIAGA ──────────────────────────────────────────────────────────
+  {
+    id: 'balenciaga-sweatjacke',
+    name: 'Balenciaga Sweatjacke',
+    price: '320 EUR',
+    category: 'Luxury Streetwear / Jacke',
+    image: '/assets/shop/balenciagasweatjacke.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Balenciaga Sweatjacke mit typischem Oversized-Fit. Gedrucktes Logo, hochwertige Baumwollqualität – ein Statement-Piece des Hauses.',
+    details: ['Marke: Balenciaga', 'Material: Baumwoll-Fleece', 'Oversized Fit', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── CORTEIZ ─────────────────────────────────────────────────────────────
+  {
+    id: 'corteiz-hoodie',
+    name: 'Corteiz Hoodie',
+    price: '130 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/corteizhoodie.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Corteiz (CRTZ) Hoodie – einer der gefragtesten Streetwear-Drops aus London. Schwere Qualität, eingestickte Alcatraz-Grafik.',
+    details: ['Marke: Corteiz (CRTZ)', 'Material: Schweres Baumwoll-Fleece', 'Alcatraz-Grafik', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── CP COMPANY ──────────────────────────────────────────────────────────
+  {
+    id: 'cp-company',
+    name: 'CP Company Jacke',
+    price: '280 EUR',
+    category: 'Streetwear / Jacke',
+    image: '/assets/shop/cpcompany.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'CP Company Jacke mit ikonischer Linsen-Brille in der Kapuze. Hohe Verarbeitungsqualität, technisches Material, zeitloses Design.',
+    details: ['Marke: C.P. Company', 'Material: Technisches Nylon', 'Linsen-Goggle-Kapuze', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── DIOR × SORAYAMA ─────────────────────────────────────────────────────
+  {
+    id: 'dior-sorayama-hoodie',
+    name: 'Dior × Sorayama Hoodie',
+    price: '650 EUR',
+    category: 'Luxury Streetwear / Hoodie',
+    image: '/assets/shop/diorsoyaramahoodie.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Dior Men × Hajime Sorayama Kollab-Hoodie. Roboter-Grafik des japanischen Futurismus-Meisters auf schwerem Dior-Baumwollstoff. Extrem begehrtes Collector-Piece.',
+    details: ['Marke: Dior Men × Hajime Sorayama', 'Material: 100 % Baumwolle', 'Limitierte Kollaboration', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── CARLO COLUCCI ───────────────────────────────────────────────────────
+  {
+    id: 'carlo-colucci-1',
+    name: 'Carlo Colucci Strickjacke I',
+    price: '95 EUR',
+    category: 'Vintage / Strickjacke',
+    image: '/assets/shop/carlocolucci_1.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Carlo Colucci Vintage-Strickjacke im typischen 90s-Muster. Kultmarke aus der Hochzeit des deutschen HipHop – seltenes Original.',
+    details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: bitte anfragen'],
+  },
+  {
+    id: 'carlo-colucci-2',
+    name: 'Carlo Colucci Strickjacke II',
+    price: '95 EUR',
+    category: 'Vintage / Strickjacke',
+    image: '/assets/shop/carlocolucci_2.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Zweites Carlo Colucci Vintage-Piece im Mustermix. Charakteristischer Farbblock, dickes Strickgewebe – 90s Streetwear-Nostalgie pur.',
+    details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── SPIDER HOODIE ───────────────────────────────────────────────────────
+  {
+    id: 'spider-hoodie-pink',
+    name: 'Spider Hoodie Pink',
+    price: '110 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/spiderhoodiepink.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Sp5der Hoodie in Pink mit Web-Grafik allover. Einer der begehrtesten Drops von Young Thugs Brand – dicke Qualität, ikonisches Design.',
+    details: ['Marke: Sp5der', 'Material: Schweres Baumwoll-Fleece', 'Web-Allover-Print', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── JERSEYS ─────────────────────────────────────────────────────────────
+  {
+    id: 'ac-milan-trikot',
+    name: 'AC Milan Trikot',
+    price: '85 EUR',
+    category: 'Vintage / Jersey',
+    image: '/assets/shop/acmilantrikot.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Vintage AC Milan Auswärtstrikot. Klassisches Rot-Schwarz-Design, Originalstickerei – perfekt als Streetwear-Statement.',
+    details: ['Verein: AC Milan', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
+  },
+  {
+    id: 'real-madrid-trikot',
+    name: 'Real Madrid Trikot',
+    price: '80 EUR',
+    category: 'Vintage / Jersey',
+    image: '/assets/shop/realmadridtrikot.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Vintage Real Madrid Heimtrikot in Weiß. Ikonisches Wappen-Stickerei, klassisches Sponsor-Layout – ein zeitloser Fußballklassiker.',
+    details: ['Verein: Real Madrid C.F.', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
+  },
+  {
+    id: 'manchester-dhl',
+    name: 'Manchester × DHL Trikot',
+    price: '120 EUR',
+    category: 'Streetwear / Jersey',
+    image: '/assets/shop/manchesterDHL.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Das berühmte Manchester United × DHL-Trikot – ein Meme-Kultklassiker der Internetkultur. Äußerst selten im Original zu finden.',
+    details: ['Marke: Umbro', 'Typ: Kultkollektion', 'DHL-Sponsor-Print', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+  },
+  {
+    id: 'olympique-marseille',
+    name: 'Olympique Marseille Trikot',
+    price: '75 EUR',
+    category: 'Vintage / Jersey',
+    image: '/assets/shop/olympicmarseille.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Vintage Olympique de Marseille Trikot. Charakteristisches Blau-Weiß-Design, Kultverein der Ligue 1 – sehr beliebt in der Streetwear-Szene.',
+    details: ['Verein: Olympique de Marseille', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
+  },
+
+  // ─── SONSTIGE ────────────────────────────────────────────────────────────
+  {
+    id: 'arabic-shirt',
+    name: 'Arabic Graphic Shirt',
+    price: '65 EUR',
+    category: 'Vintage / Hemd',
+    image: '/assets/shop/arabicshirt.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Vintage-Hemd mit arabischer Kalligrafie-Grafik. Einzigartiges Stück mit kultureller Tiefe – selten in diesem Zustand.',
+    details: ['Typ: Vintage-Hemd', 'Material: Baumwolle', 'Arabischer Grafik-Print', 'Zustand: gut', 'Größe: bitte anfragen'],
+  },
+  {
+    id: 'redbull-jacket',
+    name: 'Red Bull Racing Jacke',
+    price: '90 EUR',
+    category: 'Streetwear / Jacke',
+    image: '/assets/shop/redbull.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'Offizielle Red Bull Racing Teamjacke. Leichtes technisches Material, vollständig bestickte Logos, Collector-Item für Motorsportfans.',
+    details: ['Marke: Red Bull Racing', 'Material: Technisches Gewebe', 'Offizielle Teamjacke', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
   },
 ]

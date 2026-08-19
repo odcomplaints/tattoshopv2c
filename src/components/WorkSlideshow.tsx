@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Work } from '../data/work'
 
 type WorkSlideshowProps = {
@@ -10,6 +10,9 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
 
 export function WorkSlideshow({ items, intervalMs = 4500 }: WorkSlideshowProps) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const touchStartX = useRef<number | null>(null)
+  const touchStartY = useRef<number | null>(null)
+  const isDragging = useRef(false)
 
   useEffect(() => {
     if (items.length < 2) return
@@ -19,11 +22,46 @@ export function WorkSlideshow({ items, intervalMs = 4500 }: WorkSlideshowProps) 
     return () => window.clearInterval(timer)
   }, [items.length, intervalMs])
 
+  const goNext = () => setActiveIndex((i) => (i + 1) % items.length)
+  const goPrev = () => setActiveIndex((i) => (i - 1 + items.length) % items.length)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+    isDragging.current = false
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return
+    const dx = e.touches[0].clientX - touchStartX.current
+    const dy = e.touches[0].clientY - touchStartY.current
+    if (Math.abs(dx) > Math.abs(dy)) {
+      isDragging.current = true
+      e.preventDefault()
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging.current || touchStartX.current === null) return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    if (Math.abs(dx) > 40) {
+      dx < 0 ? goNext() : goPrev()
+    }
+    touchStartX.current = null
+    touchStartY.current = null
+    isDragging.current = false
+  }
+
   if (items.length === 0) return null
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="relative aspect-[4/5] overflow-hidden bg-neutral-900 sm:aspect-[16/10]">
+      <div
+        className="relative aspect-[4/5] overflow-hidden bg-neutral-900 sm:aspect-[16/10]"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {items.map((item, index) => (
           <img
             key={`${item.title}-${item.date.toISOString()}`}
