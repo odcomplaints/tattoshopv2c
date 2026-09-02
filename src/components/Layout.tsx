@@ -81,12 +81,12 @@ export function Layout({
               <span className={`h-px w-6 bg-accent transition-transform ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
             </button>
             <nav aria-label="Main navigation" className="hidden lg:absolute lg:left-1/2 lg:top-1/2 lg:block lg:-translate-x-1/2 lg:-translate-y-1/2">
-              <ul className="flex flex-wrap items-center justify-center gap-x-14 gap-y-3 text-xl font-normal uppercase tracking-tight sm:gap-x-20">
+              <ul className="flex flex-nowrap items-center justify-center gap-x-10 gap-y-3 text-xl font-normal uppercase tracking-tight sm:gap-x-14">
                 {navigation.map((item) => (
                   <li key={item.to}>
                     <NavLink
                       to={item.to}
-                      className="inline-block origin-center scale-x-150 text-accent transition-colors hover:text-neutral-100"
+                      className="inline-block min-w-[7.5rem] text-center origin-center scale-x-150 whitespace-nowrap text-accent transition-colors hover:text-neutral-100"
                     >
                       {t.nav[item.key]}
                     </NavLink>

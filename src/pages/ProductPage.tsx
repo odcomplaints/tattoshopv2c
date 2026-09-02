@@ -43,7 +43,7 @@ export function ProductPage() {
             width="800"
             height="1000"
             decoding="async"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
           />
           {!available && (
             <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">
