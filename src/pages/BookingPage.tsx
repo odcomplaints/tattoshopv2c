@@ -4,6 +4,7 @@ import { GlobeIcon } from '../components/icons'
 import { useLanguage } from '../context/LanguageContext'
 
 const DEPOSIT = '50,00 EUR'
+const DEPOSIT_PAYMENT_LINK = 'https://buy.stripe.com/6oU6oI5LCadqeOZ0Nz6c000'
 
 const fieldClass = 'mt-2 w-full border border-neutral-700 bg-neutral-900 px-3 py-3 text-sm text-neutral-100 outline-none transition-colors placeholder:text-neutral-600 focus:border-neutral-200'
 const labelClass = 'block text-xs uppercase tracking-widest text-neutral-400'
@@ -42,7 +43,7 @@ export function BookingPage() {
             <section>
               <h2 className={sectionTitle}>{b.expressCheckout}</h2>
               <div className="mt-4 max-w-sm">
-                <ExpressPay onPay={() => {}} />
+                <ExpressPay onPay={() => { window.location.href = DEPOSIT_PAYMENT_LINK }} />
               </div>
               <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-widest text-neutral-600">
                 <span className="h-px flex-1 bg-neutral-800" />
@@ -84,26 +85,15 @@ export function BookingPage() {
                 </div>
               </section>
 
-              {/* Payment (visual mockup) */}
-              <section className="grid gap-6">
-                <div className="flex items-baseline justify-between gap-3">
-                  <h2 className={sectionTitle}>{b.payment}</h2>
-                  <span className="text-[10px] uppercase tracking-widest text-neutral-600">{b.demoNote}</span>
-                </div>
-                {/* Card fields are visual only and are intentionally not submitted (no name attribute). */}
-                <label className={labelClass}>{b.cardNumber}<input className={fieldClass} inputMode="numeric" placeholder="4242 4242 4242 4242" autoComplete="off" /></label>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <label className={labelClass}>{b.expiry}<input className={fieldClass} placeholder="MM / YY" autoComplete="off" /></label>
-                  <label className={labelClass}>{b.cvc}<input className={fieldClass} inputMode="numeric" placeholder="123" autoComplete="off" /></label>
-                </div>
-              </section>
-
-              <button className="w-full border border-accent px-5 py-4 text-xs uppercase tracking-widest transition-colors hover:border-neutral-100 sm:w-fit" type="submit">
+              <button
+                type="button"
+                onClick={() => { window.location.href = DEPOSIT_PAYMENT_LINK }}
+                className="w-full border border-accent px-5 py-4 text-xs uppercase tracking-widest transition-colors hover:border-neutral-100 sm:w-fit"
+              >
                 {b.payDeposit} · {DEPOSIT}
               </button>
             </form>
           </div>
-
           {/* Right: order summary */}
           <aside className="lg:sticky lg:top-8 lg:self-start">
             <div className="border border-neutral-800 p-6">
