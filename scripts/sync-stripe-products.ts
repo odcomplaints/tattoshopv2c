@@ -105,18 +105,21 @@ async function syncItem(item: (typeof shopItems)[number]) {
     return
   }
 
-  // Archive old prices so the product doesn't accumulate stale ones, then
-  // create the new price and set it as default.
-  for (const oldPrice of existingPrices.data) {
-    await stripe.prices.update(oldPrice.id, { active: false })
-  }
-
+  // Create the new price and set it as the product's default first — Stripe
+  // refuses to archive a price while it is still the product's default_price.
+  // Only after the new default is in place can we safely archive the old ones.
   const newPrice = await stripe.prices.create({
     product: product.id,
     unit_amount: amount,
     currency,
   })
   await stripe.products.update(product.id, { default_price: newPrice.id })
+
+  for (const oldPrice of existingPrices.data) {
+    if (oldPrice.id === newPrice.id) continue
+    await stripe.prices.update(oldPrice.id, { active: false })
+  }
+
   console.log(`  Created new price ${newPrice.id}`)
 }
 
