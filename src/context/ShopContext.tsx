@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
+import { shopItems } from '../data/shop'
 
 export type CartItem = { id: string; quantity: number }
 
@@ -52,9 +53,11 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   }, [favorites])
 
   const addToCart = (id: string) => {
+    const maxStock = shopItems.find((item) => item.id === id)?.stock ?? 1
     setCart((current) => {
       const existing = current.find((entry) => entry.id === id)
       if (existing) {
+        if (existing.quantity >= maxStock) return current
         return current.map((entry) => (entry.id === id ? { ...entry, quantity: entry.quantity + 1 } : entry))
       }
       return [...current, { id, quantity: 1 }]
@@ -74,7 +77,9 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       removeFromCart(id)
       return
     }
-    setCart((current) => current.map((entry) => (entry.id === id ? { ...entry, quantity } : entry)))
+    const maxStock = shopItems.find((item) => item.id === id)?.stock ?? 1
+    const clamped = Math.min(quantity, maxStock)
+    setCart((current) => current.map((entry) => (entry.id === id ? { ...entry, quantity: clamped } : entry)))
   }
 
   const toggleFavorite = (id: string) => {

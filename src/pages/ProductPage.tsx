@@ -7,7 +7,7 @@ import { shopItems } from '../data/shop'
 export function ProductPage() {
   const { id } = useParams()
   const item = shopItems.find((product) => product.id === id)
-  const { addToCart, isFavorite, toggleFavorite } = useShop()
+  const { addToCart, isFavorite, toggleFavorite, cart } = useShop()
 
   if (!item) {
     return (
@@ -22,7 +22,9 @@ export function ProductPage() {
     )
   }
 
+  const inCartQuantity = cart.find((entry) => entry.id === item.id)?.quantity ?? 0
   const available = item.availability === 'available'
+  const canAddToCart = available && inCartQuantity < item.stock
   const favorite = isFavorite(item.id)
   const mailto = `mailto:hello@example.com?subject=${encodeURIComponent(`Shop Inquiry: ${item.name}`)}`
 
@@ -85,14 +87,14 @@ export function ProductPage() {
             <button
               type="button"
               onClick={() => addToCart(item.id)}
-              disabled={!available}
+              disabled={!canAddToCart}
               className={`cta-solid inline-block w-fit border px-6 py-3 text-xs uppercase tracking-widest transition-colors ${
-                available
+                canAddToCart
                   ? 'border-accent bg-accent hover:opacity-90'
                   : 'pointer-events-none border-neutral-800 text-neutral-700'
               }`}
             >
-              {available ? 'Add to cart' : 'Unavailable'}
+              {available ? (canAddToCart ? 'Add to cart' : 'Already in cart') : 'Unavailable'}
             </button>
             <a
               href={available ? mailto : undefined}

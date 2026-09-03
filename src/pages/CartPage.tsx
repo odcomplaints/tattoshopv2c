@@ -68,8 +68,8 @@ export function CartPage() {
             <ul className="flex flex-col gap-6">
               {items.map(({ id, quantity, product }) => (
                 <li key={id} className="flex gap-4 border-b border-neutral-800 pb-6">
-                  <Link to={`/shop/${id}`} className="h-24 w-20 shrink-0 overflow-hidden bg-neutral-900">
-                    <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+                  <Link to={`/shop/${id}`} className="h-24 w-20 shrink-0 overflow-hidden">
+                    <img src={product.image} alt={product.name} className="h-full w-full object-contain" />
                   </Link>
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex items-baseline justify-between gap-3 text-xs uppercase tracking-widest">
@@ -93,7 +93,8 @@ export function CartPage() {
                         <button
                           type="button"
                           onClick={() => updateQuantity(id, quantity + 1)}
-                          className="px-2.5 py-1 text-neutral-300 hover:text-accent"
+                          disabled={quantity >= product.stock}
+                          className="px-2.5 py-1 text-neutral-300 transition-colors hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-neutral-300"
                           aria-label={`Increase quantity of ${product.name}`}
                         >
                           +
