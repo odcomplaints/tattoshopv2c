@@ -33,6 +33,18 @@ export function ImprintPage() {
           <p>{t.imprint.closing}</p>
         </div>
       </article>
+
+      <article className="mt-14 max-w-2xl text-left">
+        <h2 className="text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.withdrawal.title}</h2>
+        <div className="mt-6 space-y-7 text-sm leading-7 text-neutral-400">
+          {t.withdrawal.sections.map((section) => (
+            <section key={section.heading}>
+              <h3 className="text-xs uppercase tracking-widest text-neutral-200">{section.heading}</h3>
+              <p className="mt-2" dangerouslySetInnerHTML={{ __html: section.body }} />
+            </section>
+          ))}
+        </div>
+      </article>
     </Layout>
   )
 }
