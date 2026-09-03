@@ -57,6 +57,7 @@ export function BookingPage() {
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.contact}</h2>
                 <label className={labelClass}>{b.email}<input className={fieldClass} name="email" type="email" autoComplete="email" required /></label>
+                <label className={labelClass}>{b.phone}<input className={fieldClass} name="phone" type="tel" autoComplete="tel" /></label>
               </section>
 
               {/* Appointment details */}
@@ -69,20 +70,6 @@ export function BookingPage() {
                   <label className={labelClass}>{b.size}<input className={fieldClass} name="size" inputMode="decimal" placeholder={b.sizePlaceholder} required /></label>
                 </div>
                 <label className={labelClass}>{b.preferredDate}<input className={fieldClass} name="date" type="date" /></label>
-              </section>
-
-              {/* Billing address */}
-              <section className="grid gap-6">
-                <h2 className={sectionTitle}>{b.billingAddress}</h2>
-                <label className={labelClass}>{b.address}<input className={fieldClass} name="address" autoComplete="street-address" required /></label>
-                <div className="grid gap-6 sm:grid-cols-[minmax(0,0.4fr)_minmax(0,0.6fr)]">
-                  <label className={labelClass}>{b.zip}<input className={fieldClass} name="zip" autoComplete="postal-code" required /></label>
-                  <label className={labelClass}>{b.city}<input className={fieldClass} name="city" autoComplete="address-level2" required /></label>
-                </div>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <label className={labelClass}>{b.country}<input className={fieldClass} name="country" autoComplete="country-name" defaultValue="Germany" required /></label>
-                  <label className={labelClass}>{b.phone}<input className={fieldClass} name="phone" type="tel" autoComplete="tel" /></label>
-                </div>
               </section>
 
               <button

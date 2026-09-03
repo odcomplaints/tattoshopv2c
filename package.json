@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:full": "wrangler pages dev --port 8788 --compatibility-date=2024-09-01 -- npm run dev",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync-stripe": "tsx scripts/sync-stripe-products.ts",
+    "sync-stripe:dry-run": "tsx scripts/sync-stripe-products.ts --dry-run"
   },
   "dependencies": {
     "@react-three/fiber": "^9.6.1",
@@ -37,8 +40,11 @@
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
     "postcss": "^8.5.21",
+    "stripe": "^22.6.1",
+    "tsx": "^4.23.13",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",
-    "vite": "^8.1.1"
+    "vite": "^8.1.1",
+    "wrangler": "^4.128.0"
   }
 }

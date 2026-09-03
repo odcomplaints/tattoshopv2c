@@ -5,6 +5,7 @@ import { ExpressPay } from '../components/ExpressPay'
 import { useShop } from '../context/ShopContext'
 import { shopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
+import { startCheckout } from '../lib/checkout'
 
 function parsePrice(price: string) {
   const match = price.match(/[\d.,]+/)
@@ -15,9 +16,8 @@ export function CartPage() {
   const { cart, updateQuantity, removeFromCart, cartCount } = useShop()
   const [searchParams] = useSearchParams()
   const canceled = searchParams.get('canceled') === '1'
-  const [_loading, _setLoading] = useState(false);
-const [_error, _setError] = useState<string | null>(null);
-  
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const items = cart
     .map((entry) => {
@@ -27,6 +27,19 @@ const [_error, _setError] = useState<string | null>(null);
     .filter((entry): entry is { id: string; quantity: number; product: ShopItem } => entry !== null)
 
   const subtotal = items.reduce((total, entry) => total + parsePrice(entry.product.price) * entry.quantity, 0)
+
+  async function handleCheckout() {
+    setError(null)
+    setLoading(true)
+    try {
+      await startCheckout(cart)
+      // On success the browser is redirected to Stripe, so no further state
+      // update is needed here.
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Checkout could not be started. Please try again.')
+      setLoading(false)
+    }
+  }
 
   return (
     <Layout title="Cart | OD COMPLAINTS" description="Your shopping cart at OD COMPLAINTS.">
@@ -107,10 +120,23 @@ const [_error, _setError] = useState<string | null>(null);
                 <p className="text-neutral-100">{subtotal.toFixed(2)} EUR</p>
               </div>
               <p className="text-xs leading-6 text-neutral-400">
-                Shipping and taxes are calculated at checkout. Payment is not connected yet — the buttons below are a
-                preview.
+                Shipping and taxes are calculated at checkout.
               </p>
-<ExpressPay onPay={() => {}} />            </div>
+              {error && (
+                <p className="border border-accent bg-neutral-900/40 px-4 py-3 text-xs uppercase tracking-widest text-accent">
+                  {error}
+                </p>
+              )}
+              <ExpressPay onPay={handleCheckout} loading={loading} />
+              <button
+                type="button"
+                onClick={handleCheckout}
+                disabled={loading}
+                className="w-full border border-accent px-5 py-3.5 text-xs uppercase tracking-widest text-neutral-100 transition-colors hover:border-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {loading ? 'Redirecting…' : 'Pay by card'}
+              </button>
+            </div>
           </div>
         )}
       </div>

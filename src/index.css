@@ -83,6 +83,14 @@ body::before {
     text-transform: none !important;
   }
 
+  /* Solid accent-background buttons (e.g. "Add to cart"): the global red button
+     text rule above would make the label invisible against the red fill, so
+     force the light contrast colour here instead, both at rest and on hover. */
+  #root button.cta-solid,
+  #root button.cta-solid:hover {
+    color: var(--color-accent-contrast) !important;
+  }
+
   /* Favorite (heart) toggle buttons: grey outline until favorited or hovered. */
   #root button.favorite-toggle {
     color: var(--color-neutral-400) !important;

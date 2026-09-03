@@ -86,9 +86,9 @@ export function ProductPage() {
               type="button"
               onClick={() => addToCart(item.id)}
               disabled={!available}
-              className={`inline-block w-fit border px-6 py-3 text-xs uppercase tracking-widest transition-colors ${
+              className={`cta-solid inline-block w-fit border px-6 py-3 text-xs uppercase tracking-widest transition-colors ${
                 available
-                  ? 'border-accent bg-accent text-accent-contrast hover:opacity-90'
+                  ? 'border-accent bg-accent hover:opacity-90'
                   : 'pointer-events-none border-neutral-800 text-neutral-700'
               }`}
             >

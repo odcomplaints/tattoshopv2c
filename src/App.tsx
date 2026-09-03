@@ -9,6 +9,7 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { ProductPage } from './pages/ProductPage'
 import { ShopPage } from './pages/ShopPage'
+import { SuccessPage } from './pages/SuccessPage'
 import { WorkPage } from './pages/WorkPage'
 import { ScrollToTop } from './components/ScrollToTop'
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/work" element={<WorkPage />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/shop/cart" element={<CartPage />} />
+        <Route path="/shop/success" element={<SuccessPage />} />
         <Route path="/shop/favorites" element={<FavoritesPage />} />
         <Route path="/shop/:id" element={<ProductPage />} />
         <Route path="/booking" element={<BookingPage />} />
