@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { AboutPage } from './pages/AboutPage'
+import { AdminPage } from './pages/AdminPage'
 import { BookingPage } from './pages/BookingPage'
 import { CartPage } from './pages/CartPage'
 import { FavoritesPage } from './pages/FavoritesPage'
@@ -29,6 +30,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/imprint" element={<ImprintPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
