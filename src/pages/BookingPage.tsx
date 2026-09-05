@@ -9,6 +9,7 @@ const DEPOSIT = '50,00 EUR'
 const DEPOSIT_PAYMENT_LINK = 'https://buy.stripe.com/6oU6oI5LCadqeOZ0Nz6c000'
 
 const fieldClass = 'mt-2 w-full border border-neutral-700 bg-neutral-900 px-3 py-3 text-sm text-neutral-100 outline-none transition-colors placeholder:text-neutral-600 focus:border-neutral-200'
+const fieldMissingClass = 'border-neutral-400'
 const labelClass = 'block text-xs uppercase tracking-widest text-neutral-400'
 const sectionTitle = 'text-sm font-medium uppercase tracking-widest text-neutral-100'
 
@@ -17,34 +18,41 @@ export function BookingPage() {
   const b = t.booking
   const formRef = useRef<HTMLFormElement>(null)
   const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [missingFields, setMissingFields] = useState<Set<string>>(new Set())
 
   // Fields that are always required, even for the Apple/Google Pay express
   // buttons: enough to reach the customer and know their preferred date.
-  const EXPRESS_REQUIRED_FIELDS: Array<[string, string]> = [
-    ['email', b.email],
-    ['phone', b.phone],
-    ['date', b.preferredDate],
-  ]
+  const EXPRESS_REQUIRED_FIELDS = ['email', 'phone', 'date']
   // Additional fields only required when using the full "Pay Deposit" form,
   // where we ask for the tattoo details up front.
-  const FULL_ONLY_REQUIRED_FIELDS: Array<[string, string]> = [
-    ['name', b.name],
-    ['motif', b.motif],
-    ['bodyPart', b.placement],
-    ['size', b.size],
-  ]
+  const FULL_ONLY_REQUIRED_FIELDS = ['name', 'motif', 'bodyPart', 'size']
 
   // Deliberately bypasses the browser's native constraint validation
-  // (`reportValidity`/`required`) in favour of a plain JS check + inline
-  // error message — this keeps behaviour identical and predictable across
-  // browsers regardless of how the "required" attributes are toggled.
-  function findMissingField(form: HTMLFormElement, fields: Array<[string, string]>): string | null {
-    for (const [fieldName, label] of fields) {
+  // (`reportValidity`/`required`) in favour of a plain JS check that marks
+  // each empty field individually — no native validation bubbles, no red
+  // error copy, just a subtle highlight on the fields that still need input.
+  function getMissingFields(form: HTMLFormElement, fieldNames: string[]): Set<string> {
+    const missing = new Set<string>()
+    for (const fieldName of fieldNames) {
       const field = form.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement | null
-      if (!field || !field.value.trim()) return label
+      if (!field || !field.value.trim()) missing.add(fieldName)
     }
-    return null
+    return missing
+  }
+
+  // Clears the subtle highlight on a field as soon as the customer starts
+  // filling it in, without waiting for the next submit attempt.
+  function clearFieldHighlight(fieldName: string) {
+    setMissingFields((current) => {
+      if (!current.has(fieldName)) return current
+      const next = new Set(current)
+      next.delete(fieldName)
+      return next
+    })
+  }
+
+  function inputClassFor(fieldName: string): string {
+    return missingFields.has(fieldName) ? `${fieldClass} ${fieldMissingClass}` : fieldClass
   }
 
   // Shared by the form's own submit button and the Apple/Google Pay express
@@ -54,14 +62,19 @@ export function BookingPage() {
     if (submitting) return
 
     const requiredFields = mode === 'full' ? [...EXPRESS_REQUIRED_FIELDS, ...FULL_ONLY_REQUIRED_FIELDS] : EXPRESS_REQUIRED_FIELDS
-    const missingLabel = findMissingField(form, requiredFields)
-    if (missingLabel) {
-      setSubmitError(`${missingLabel}: bitte ausfüllen.`)
+    const missing = getMissingFields(form, requiredFields)
+    if (missing.size > 0) {
+      setMissingFields(missing)
+      const firstMissingField = form.elements.namedItem(requiredFields.find((name) => missing.has(name))!) as
+        | HTMLInputElement
+        | HTMLTextAreaElement
+        | null
+      firstMissingField?.focus()
       return
     }
 
     setSubmitting(true)
-    setSubmitError(null)
+    setMissingFields(new Set())
 
     const formData = new FormData(form)
     const data: Record<string, string> = {}
@@ -82,12 +95,9 @@ export function BookingPage() {
       // Only continue to the deposit payment once the booking details were
       // successfully delivered to the studio.
       window.location.href = DEPOSIT_PAYMENT_LINK
-    } catch (error) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : 'Deine Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.',
-      )
+    } catch {
+      // Network/delivery error — nothing we can highlight on a specific
+      // field, so just stop the spinner and let the customer retry.
     } finally {
       setSubmitting(false)
     }
@@ -136,9 +146,6 @@ export function BookingPage() {
               <div className="mt-4 max-w-sm">
                 <ExpressPay onPay={handleExpressPay} disabled={submitting} loading={submitting} />
               </div>
-              {submitError && (
-                <p className="mt-3 max-w-sm text-xs uppercase tracking-widest text-accent">{submitError}</p>
-              )}
               <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-widest text-neutral-600">
                 <span className="h-px flex-1 bg-neutral-800" />
               </div>
@@ -148,25 +155,86 @@ export function BookingPage() {
               {/* Contact */}
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.contact}</h2>
-                <label className={labelClass}>{b.email}<input className={fieldClass} name="email" type="email" autoComplete="email" /></label>
-                <label className={labelClass}>{b.phone}<input className={fieldClass} name="phone" type="tel" autoComplete="tel" /></label>
+                <label className={labelClass}>
+                  {b.email}
+                  {missingFields.has('email') && <span className="ml-1 text-neutral-500">!</span>}
+                  <input
+                    className={inputClassFor('email')}
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    onInput={() => clearFieldHighlight('email')}
+                  />
+                </label>
+                <label className={labelClass}>
+                  {b.phone}
+                  {missingFields.has('phone') && <span className="ml-1 text-neutral-500">!</span>}
+                  <input
+                    className={inputClassFor('phone')}
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    onInput={() => clearFieldHighlight('phone')}
+                  />
+                </label>
               </section>
 
               {/* Appointment details */}
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.appointmentDetails}</h2>
-                <label className={labelClass}>{b.name}<input className={fieldClass} name="name" autoComplete="name" /></label>
-                <label className={labelClass}>{b.motif}<textarea className={fieldClass} name="motif" rows={4} /></label>
+                <label className={labelClass}>
+                  {b.name}
+                  {missingFields.has('name') && <span className="ml-1 text-neutral-500">!</span>}
+                  <input
+                    className={inputClassFor('name')}
+                    name="name"
+                    autoComplete="name"
+                    onInput={() => clearFieldHighlight('name')}
+                  />
+                </label>
+                <label className={labelClass}>
+                  {b.motif}
+                  {missingFields.has('motif') && <span className="ml-1 text-neutral-500">!</span>}
+                  <textarea
+                    className={inputClassFor('motif')}
+                    name="motif"
+                    rows={4}
+                    onInput={() => clearFieldHighlight('motif')}
+                  />
+                </label>
                 <div className="grid gap-6 sm:grid-cols-2">
-                  <label className={labelClass}>{b.placement}<input className={fieldClass} name="bodyPart" /></label>
-                  <label className={labelClass}>{b.size}<input className={fieldClass} name="size" inputMode="decimal" placeholder={b.sizePlaceholder} /></label>
+                  <label className={labelClass}>
+                    {b.placement}
+                    {missingFields.has('bodyPart') && <span className="ml-1 text-neutral-500">!</span>}
+                    <input
+                      className={inputClassFor('bodyPart')}
+                      name="bodyPart"
+                      onInput={() => clearFieldHighlight('bodyPart')}
+                    />
+                  </label>
+                  <label className={labelClass}>
+                    {b.size}
+                    {missingFields.has('size') && <span className="ml-1 text-neutral-500">!</span>}
+                    <input
+                      className={inputClassFor('size')}
+                      name="size"
+                      inputMode="decimal"
+                      placeholder={b.sizePlaceholder}
+                      onInput={() => clearFieldHighlight('size')}
+                    />
+                  </label>
                 </div>
-                <label className={labelClass}>{b.preferredDate}<input className={fieldClass} name="date" type="date" /></label>
+                <label className={labelClass}>
+                  {b.preferredDate}
+                  {missingFields.has('date') && <span className="ml-1 text-neutral-500">!</span>}
+                  <input
+                    className={inputClassFor('date')}
+                    name="date"
+                    type="date"
+                    onInput={() => clearFieldHighlight('date')}
+                  />
+                </label>
               </section>
-
-              {submitError && (
-                <p className="text-xs uppercase tracking-widest text-accent">{submitError}</p>
-              )}
 
               <button
                 type="submit"
