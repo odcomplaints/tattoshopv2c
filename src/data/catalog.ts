@@ -26,6 +26,7 @@ export const catalog: Record<string, CatalogEntry> = {
   'bape-shark-mickey': { id: 'bape-shark-mickey', name: 'Bape Shark × Mickey Mouse', priceCents: 62000, currency: 'eur', available: true },
   'bape-shark-multicamo': { id: 'bape-shark-multicamo', name: 'Bape Shark Multi-Camo', priceCents: 47000, currency: 'eur', available: true },
   'bape-shark-pink': { id: 'bape-shark-pink', name: 'Bape Shark Hoodie Pink', priceCents: 45000, currency: 'eur', available: true },
+  'bape-shark-rot': { id: 'bape-shark-rot', name: 'Bape Shark Hoodie Rot', priceCents: 42000, currency: 'eur', available: true },
   'supreme-sweatjacke': { id: 'supreme-sweatjacke', name: 'Supreme Sweatjacke', priceCents: 26000, currency: 'eur', available: true },
   'supreme-tshirt': { id: 'supreme-tshirt', name: 'Supreme T-Shirt', priceCents: 11000, currency: 'eur', available: true },
   'balenciaga-sweatjacke': { id: 'balenciaga-sweatjacke', name: 'Balenciaga Sweatjacke', priceCents: 59000, currency: 'eur', available: false },

@@ -72,6 +72,18 @@ export const shopItems: ShopItem[] = [
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Pink', 'Zustand: gut', 'Größe: bitte M'],
   },
   {
+    id: 'bape-shark-rot',
+    name: 'Bape Shark Hoodie Rot',
+    price: '420 EUR',
+    category: 'Streetwear / Hoodie',
+    image: '/assets/shop/roterbapeshark.png',
+    availability: 'available',
+    stock: 1,
+    description:
+      'BAPE Shark Hoodie in kräftigem Rot. Klassisches Haifischmaul-Design, Full-Zip-Reißverschluss, schwere Qualität.',
+    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Rot', 'Zustand: gut', 'Größe:M'],
+  },
+  {
     id: 'supreme-sweatjacke',
     name: 'Supreme Sweatjacke',
     price: '260 EUR',
