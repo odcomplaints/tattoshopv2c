@@ -19,12 +19,44 @@ export function BookingPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
 
+  // Fields that are always required, even for the Apple/Google Pay express
+  // buttons: enough to reach the customer and know their preferred date.
+  const EXPRESS_REQUIRED_FIELDS = ['email', 'phone', 'date'] as const
+  // Additional fields only required when using the full "Pay Deposit" form,
+  // where we ask for the tattoo details up front.
+  const FULL_ONLY_REQUIRED_FIELDS = ['name', 'motif', 'bodyPart', 'size'] as const
+
+  function validateRequiredFields(form: HTMLFormElement, fieldNames: readonly string[]): boolean {
+    let valid = true
+    for (const fieldName of fieldNames) {
+      const field = form.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement | null
+      if (!field) continue
+      const isEmpty = !field.value.trim()
+      field.setCustomValidity(isEmpty ? 'Dieses Feld wird benötigt.' : '')
+      if (isEmpty) valid = false
+    }
+    // reportValidity() shows the browser's native validation bubble on the
+    // first invalid field (including any HTML5 `required`/type checks) and
+    // returns false if anything is invalid.
+    const reported = form.reportValidity()
+    return valid && reported
+  }
+
   // Shared by the form's own submit button and the Apple/Google Pay express
-  // buttons: validates the required fields first, then sends them to the
+  // buttons: validates the relevant fields first, then sends them to the
   // booking notification endpoint, and only proceeds to payment on success.
-  async function submitBookingAndPay(form: HTMLFormElement) {
+  async function submitBookingAndPay(form: HTMLFormElement, mode: 'full' | 'express') {
     if (submitting) return
-    if (!form.reportValidity()) return
+
+    const requiredFields =
+      mode === 'full' ? [...EXPRESS_REQUIRED_FIELDS, ...FULL_ONLY_REQUIRED_FIELDS] : EXPRESS_REQUIRED_FIELDS
+    // Clear custom validity on the fields only required for the full form so
+    // an earlier express attempt never blocks a later full submit or vice versa.
+    for (const fieldName of FULL_ONLY_REQUIRED_FIELDS) {
+      const field = form.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement | null
+      if (field && mode === 'express') field.setCustomValidity('')
+    }
+    if (!validateRequiredFields(form, requiredFields)) return
 
     setSubmitting(true)
     setSubmitError(null)
@@ -39,7 +71,7 @@ export function BookingPage() {
       const response = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, checkoutType: mode }),
       })
       if (!response.ok) {
         const body = (await response.json().catch(() => ({}))) as { error?: string }
@@ -61,12 +93,12 @@ export function BookingPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    await submitBookingAndPay(event.currentTarget)
+    await submitBookingAndPay(event.currentTarget, 'full')
   }
 
   async function handleExpressPay() {
     if (formRef.current) {
-      await submitBookingAndPay(formRef.current)
+      await submitBookingAndPay(formRef.current, 'express')
     }
   }
 
@@ -114,19 +146,20 @@ export function BookingPage() {
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.contact}</h2>
                 <label className={labelClass}>{b.email}<input className={fieldClass} name="email" type="email" autoComplete="email" required /></label>
-                <label className={labelClass}>{b.phone}<input className={fieldClass} name="phone" type="tel" autoComplete="tel" /></label>
+                <label className={labelClass}>{b.phone}<input className={fieldClass} name="phone" type="tel" autoComplete="tel" required /></label>
               </section>
 
               {/* Appointment details */}
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.appointmentDetails}</h2>
-                <label className={labelClass}>{b.name}<input className={fieldClass} name="name" autoComplete="name" required /></label>
-                <label className={labelClass}>{b.motif}<textarea className={fieldClass} name="motif" rows={4} required /></label>
+                <p className="-mt-2 text-xs leading-5 text-neutral-500">{b.appointmentDetailsHint}</p>
+                <label className={labelClass}>{b.name}<input className={fieldClass} name="name" autoComplete="name" /></label>
+                <label className={labelClass}>{b.motif}<textarea className={fieldClass} name="motif" rows={4} /></label>
                 <div className="grid gap-6 sm:grid-cols-2">
-                  <label className={labelClass}>{b.placement}<input className={fieldClass} name="bodyPart" required /></label>
-                  <label className={labelClass}>{b.size}<input className={fieldClass} name="size" inputMode="decimal" placeholder={b.sizePlaceholder} required /></label>
+                  <label className={labelClass}>{b.placement}<input className={fieldClass} name="bodyPart" /></label>
+                  <label className={labelClass}>{b.size}<input className={fieldClass} name="size" inputMode="decimal" placeholder={b.sizePlaceholder} /></label>
                 </div>
-                <label className={labelClass}>{b.preferredDate}<input className={fieldClass} name="date" type="date" /></label>
+                <label className={labelClass}>{b.preferredDate}<input className={fieldClass} name="date" type="date" required /></label>
               </section>
 
               {submitError && (

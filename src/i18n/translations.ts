@@ -36,6 +36,7 @@ type TranslationShape = {
     contact: string
     email: string
     appointmentDetails: string
+    appointmentDetailsHint: string
     name: string
     motif: string
     placement: string
@@ -124,6 +125,7 @@ export const translations: Record<Language, TranslationShape> = {
       contact: 'Contact',
       email: 'Email',
       appointmentDetails: 'Appointment Details',
+      appointmentDetailsHint: 'Optional for Apple Pay / Google Pay — required only when paying by card below.',
       name: 'Name',
       motif: 'Motif description',
       placement: 'Placement',
@@ -239,6 +241,7 @@ export const translations: Record<Language, TranslationShape> = {
       contact: 'Kontakt',
       email: 'E-Mail',
       appointmentDetails: 'Termindetails',
+      appointmentDetailsHint: 'Optional bei Apple Pay / Google Pay — nur bei Zahlung per Karte unten erforderlich.',
       name: 'Name',
       motif: 'Motivbeschreibung',
       placement: 'Platzierung',
