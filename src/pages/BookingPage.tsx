@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react'
+import type { FormEvent } from 'react'
 import { Layout } from '../components/Layout'
 import { ExpressPay } from '../components/ExpressPay'
 import { GlobeIcon } from '../components/icons'
@@ -13,6 +15,60 @@ const sectionTitle = 'text-sm font-medium uppercase tracking-widest text-neutral
 export function BookingPage() {
   const { language, toggleLanguage, t } = useLanguage()
   const b = t.booking
+  const formRef = useRef<HTMLFormElement>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  // Shared by the form's own submit button and the Apple/Google Pay express
+  // buttons: validates the required fields first, then sends them to the
+  // booking notification endpoint, and only proceeds to payment on success.
+  async function submitBookingAndPay(form: HTMLFormElement) {
+    if (submitting) return
+    if (!form.reportValidity()) return
+
+    setSubmitting(true)
+    setSubmitError(null)
+
+    const formData = new FormData(form)
+    const data: Record<string, string> = {}
+    formData.forEach((value, key) => {
+      data[key] = typeof value === 'string' ? value : ''
+    })
+
+    try {
+      const response = await fetch('/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!response.ok) {
+        const body = (await response.json().catch(() => ({}))) as { error?: string }
+        throw new Error(body.error || 'Could not submit the form.')
+      }
+      // Only continue to the deposit payment once the booking details were
+      // successfully delivered to the studio.
+      window.location.href = DEPOSIT_PAYMENT_LINK
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : 'Deine Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.',
+      )
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    await submitBookingAndPay(event.currentTarget)
+  }
+
+  async function handleExpressPay() {
+    if (formRef.current) {
+      await submitBookingAndPay(formRef.current)
+    }
+  }
 
   return (
     <Layout
@@ -42,8 +98,9 @@ export function BookingPage() {
             {/* Express checkout */}
             <section>
               <h2 className={sectionTitle}>{b.expressCheckout}</h2>
+              <p className="mt-2 max-w-sm text-xs leading-5 text-neutral-500">{b.expressCheckoutHint}</p>
               <div className="mt-4 max-w-sm">
-                <ExpressPay onPay={() => { window.location.href = DEPOSIT_PAYMENT_LINK }} />
+                <ExpressPay onPay={handleExpressPay} disabled={submitting} loading={submitting} />
               </div>
               <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-widest text-neutral-600">
                 <span className="h-px flex-1 bg-neutral-800" />
@@ -52,7 +109,7 @@ export function BookingPage() {
               </div>
             </section>
 
-            <form className="grid gap-10" action="https://formspree.io/f/PLACEHOLDER" method="POST">
+            <form ref={formRef} className="grid gap-10" onSubmit={handleSubmit}>
               {/* Contact */}
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.contact}</h2>
@@ -72,12 +129,16 @@ export function BookingPage() {
                 <label className={labelClass}>{b.preferredDate}<input className={fieldClass} name="date" type="date" /></label>
               </section>
 
+              {submitError && (
+                <p className="text-xs uppercase tracking-widest text-accent">{submitError}</p>
+              )}
+
               <button
-                type="button"
-                onClick={() => { window.location.href = DEPOSIT_PAYMENT_LINK }}
-                className="w-full border border-accent px-5 py-4 text-xs uppercase tracking-widest transition-colors hover:border-neutral-100 sm:w-fit"
+                type="submit"
+                disabled={submitting}
+                className="w-full border border-accent px-5 py-4 text-xs uppercase tracking-widest transition-colors hover:border-neutral-100 disabled:opacity-60 sm:w-fit"
               >
-                {b.payDeposit} · {DEPOSIT}
+                {submitting ? '…' : `${b.payDeposit} · ${DEPOSIT}`}
               </button>
             </form>
           </div>

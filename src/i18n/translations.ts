@@ -31,6 +31,7 @@ type TranslationShape = {
     title: string
     intro: string
     expressCheckout: string
+    expressCheckoutHint: string
     orPayByCard: string
     contact: string
     email: string
@@ -118,6 +119,7 @@ export const translations: Record<Language, TranslationShape> = {
       title: 'Booking',
       intro: 'Secure your appointment with a deposit of {deposit}. The amount is credited towards the final price of your tattoo.',
       expressCheckout: 'Express Checkout',
+      expressCheckoutHint: 'Fill in the form below first — Apple Pay / Google Pay start once your details are complete.',
       orPayByCard: 'or pay by card',
       contact: 'Contact',
       email: 'Email',
@@ -232,6 +234,7 @@ export const translations: Record<Language, TranslationShape> = {
       title: 'Termin',
       intro: 'Sichere dir deinen Termin mit einer Anzahlung von {deposit}. Der Betrag wird auf den Endpreis deines Tattoos angerechnet.',
       expressCheckout: 'Express-Kasse',
+      expressCheckoutHint: 'Fülle zuerst das Formular unten aus — Apple Pay / Google Pay starten erst, wenn deine Angaben vollständig sind.',
       orPayByCard: 'oder mit Karte bezahlen',
       contact: 'Kontakt',
       email: 'E-Mail',
