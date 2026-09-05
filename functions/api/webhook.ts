@@ -100,6 +100,75 @@ function formatAddress(details: Record<string, unknown> | undefined): string {
   return [name, ...parts].filter(Boolean).join('\n')
 }
 
+// Shared branded HTML wrapper for all outgoing order emails. Uses inline
+// styles and no external images so it renders consistently across email
+// clients (Gmail strips <style> blocks and blocks remote images by default).
+function renderOrderEmailHtml(options: {
+  eyebrow: string
+  heading: string
+  intro: string
+  itemRows: Array<{ label: string; amount: string }>
+  total: string
+  shippingAddress: string
+  footerNote: string
+}): string {
+  const { eyebrow, heading, intro, itemRows, total, shippingAddress, footerNote } = options
+  const rows = itemRows
+    .map(
+      (row) => `
+        <tr>
+          <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#e5e5e5;font-size:13px;">${row.label}</td>
+          <td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#e5e5e5;font-size:13px;text-align:right;white-space:nowrap;">${row.amount}</td>
+        </tr>`,
+    )
+    .join('')
+
+  return `
+<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#0a0a0a;border-radius:2px;overflow:hidden;">
+            <tr>
+              <td style="padding:28px 32px;background-color:#000000;">
+                <p style="margin:0;color:#ffffff;font-size:14px;letter-spacing:4px;text-transform:uppercase;font-weight:600;">OD COMPLAINTS</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:32px;">
+                <p style="margin:0 0 6px;color:#FF3939;font-size:11px;letter-spacing:2px;text-transform:uppercase;">${eyebrow}</p>
+                <h1 style="margin:0 0 16px;color:#f5f5f5;font-size:22px;letter-spacing:1px;text-transform:uppercase;font-weight:500;">${heading}</h1>
+                <p style="margin:0 0 24px;color:#b5b5b5;font-size:13px;line-height:1.6;">${intro}</p>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+                  ${rows}
+                  <tr>
+                    <td style="padding:14px 0 0;color:#ffffff;font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Gesamt</td>
+                    <td style="padding:14px 0 0;color:#ffffff;font-size:13px;text-align:right;font-weight:600;">${total}</td>
+                  </tr>
+                </table>
+
+                <p style="margin:24px 0 6px;color:#7a7a7a;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Lieferadresse</p>
+                <p style="margin:0;color:#d5d5d5;font-size:13px;line-height:1.6;white-space:pre-line;">${shippingAddress}</p>
+
+                <p style="margin:28px 0 0;color:#7a7a7a;font-size:12px;line-height:1.6;">${footerNote}</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:20px 32px;background-color:#000000;">
+                <p style="margin:0;color:#5a5a5a;font-size:10px;letter-spacing:1px;text-transform:uppercase;">OD COMPLAINTS · odcomplaints.com</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`
+}
+
 async function notifyEmail(apiKey: string, to: string, from: string, subject: string, text: string, html: string): Promise<void> {
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -129,6 +198,12 @@ async function handleCheckoutCompleted(session: Record<string, unknown>, env: En
   const itemLines = lineItems.length
     ? lineItems.map((item) => `  • ${item.quantity ?? 1}× ${item.description ?? 'Artikel'} — ${formatMoney(item.amount_total, item.currency ?? currency)}`).join('\n')
     : '  (Artikel konnten nicht geladen werden — siehe Stripe Dashboard)'
+  const itemRows = lineItems.length
+    ? lineItems.map((item) => ({
+        label: `${item.quantity ?? 1}× ${item.description ?? 'Artikel'}`,
+        amount: formatMoney(item.amount_total, item.currency ?? currency),
+      }))
+    : [{ label: 'Artikel konnten nicht geladen werden', amount: '—' }]
   const shippingAddress = formatAddress(shippingDetails)
   const total = formatMoney(amountTotal, currency)
 
@@ -146,12 +221,21 @@ async function handleCheckoutCompleted(session: Record<string, unknown>, env: En
     `Lieferadresse:`,
     shippingAddress,
   ].join('\n')
+  const adminHtml = renderOrderEmailHtml({
+    eyebrow: 'Neue Bestellung',
+    heading: total,
+    intro: `Kunde: ${customerDetails?.name || '—'} &lt;${customerEmail || 'keine E-Mail'}&gt; · Session ${sessionId}`,
+    itemRows,
+    total,
+    shippingAddress,
+    footerNote: 'Diese Benachrichtigung wurde automatisch anhand des Stripe-Webhooks erstellt.',
+  })
 
   const from = env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL
   const adminTo = env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
 
   const tasks: Promise<unknown>[] = [
-    notifyEmail(env.RESEND_API_KEY, adminTo, from, adminSubject, adminText, `<pre style="font-family:sans-serif;white-space:pre-wrap;">${adminText}</pre>`),
+    notifyEmail(env.RESEND_API_KEY, adminTo, from, adminSubject, adminText, adminHtml),
   ]
 
   if (customerEmail) {
@@ -171,16 +255,16 @@ async function handleCheckoutCompleted(session: Record<string, unknown>, env: En
       ``,
       `— OD COMPLAINTS`,
     ].join('\n')
-    tasks.push(
-      notifyEmail(
-        env.RESEND_API_KEY,
-        customerEmail,
-        from,
-        customerSubject,
-        customerText,
-        `<pre style="font-family:sans-serif;white-space:pre-wrap;">${customerText}</pre>`,
-      ),
-    )
+    const customerHtml = renderOrderEmailHtml({
+      eyebrow: 'Bestellbestätigung',
+      heading: `Danke${customerDetails?.name ? `, ${customerDetails.name}` : ''}!`,
+      intro: 'Wir haben deine Bestellung erhalten und bereiten sie für den Versand vor.',
+      itemRows,
+      total,
+      shippingAddress,
+      footerNote: 'Wir versenden deine Bestellung in Kürze und melden uns bei Fragen.',
+    })
+    tasks.push(notifyEmail(env.RESEND_API_KEY, customerEmail, from, customerSubject, customerText, customerHtml))
   }
 
   await Promise.allSettled(tasks)
