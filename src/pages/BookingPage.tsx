@@ -21,25 +21,30 @@ export function BookingPage() {
 
   // Fields that are always required, even for the Apple/Google Pay express
   // buttons: enough to reach the customer and know their preferred date.
-  const EXPRESS_REQUIRED_FIELDS = ['email', 'phone', 'date'] as const
+  const EXPRESS_REQUIRED_FIELDS: Array<[string, string]> = [
+    ['email', b.email],
+    ['phone', b.phone],
+    ['date', b.preferredDate],
+  ]
   // Additional fields only required when using the full "Pay Deposit" form,
   // where we ask for the tattoo details up front.
-  const FULL_ONLY_REQUIRED_FIELDS = ['name', 'motif', 'bodyPart', 'size'] as const
+  const FULL_ONLY_REQUIRED_FIELDS: Array<[string, string]> = [
+    ['name', b.name],
+    ['motif', b.motif],
+    ['bodyPart', b.placement],
+    ['size', b.size],
+  ]
 
-  function validateRequiredFields(form: HTMLFormElement, fieldNames: readonly string[]): boolean {
-    let valid = true
-    for (const fieldName of fieldNames) {
+  // Deliberately bypasses the browser's native constraint validation
+  // (`reportValidity`/`required`) in favour of a plain JS check + inline
+  // error message — this keeps behaviour identical and predictable across
+  // browsers regardless of how the "required" attributes are toggled.
+  function findMissingField(form: HTMLFormElement, fields: Array<[string, string]>): string | null {
+    for (const [fieldName, label] of fields) {
       const field = form.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement | null
-      if (!field) continue
-      const isEmpty = !field.value.trim()
-      field.setCustomValidity(isEmpty ? 'Dieses Feld wird benötigt.' : '')
-      if (isEmpty) valid = false
+      if (!field || !field.value.trim()) return label
     }
-    // reportValidity() shows the browser's native validation bubble on the
-    // first invalid field (including any HTML5 `required`/type checks) and
-    // returns false if anything is invalid.
-    const reported = form.reportValidity()
-    return valid && reported
+    return null
   }
 
   // Shared by the form's own submit button and the Apple/Google Pay express
@@ -48,15 +53,12 @@ export function BookingPage() {
   async function submitBookingAndPay(form: HTMLFormElement, mode: 'full' | 'express') {
     if (submitting) return
 
-    const requiredFields =
-      mode === 'full' ? [...EXPRESS_REQUIRED_FIELDS, ...FULL_ONLY_REQUIRED_FIELDS] : EXPRESS_REQUIRED_FIELDS
-    // Clear custom validity on the fields only required for the full form so
-    // an earlier express attempt never blocks a later full submit or vice versa.
-    for (const fieldName of FULL_ONLY_REQUIRED_FIELDS) {
-      const field = form.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement | null
-      if (field && mode === 'express') field.setCustomValidity('')
+    const requiredFields = mode === 'full' ? [...EXPRESS_REQUIRED_FIELDS, ...FULL_ONLY_REQUIRED_FIELDS] : EXPRESS_REQUIRED_FIELDS
+    const missingLabel = findMissingField(form, requiredFields)
+    if (missingLabel) {
+      setSubmitError(`${missingLabel}: bitte ausfüllen.`)
+      return
     }
-    if (!validateRequiredFields(form, requiredFields)) return
 
     setSubmitting(true)
     setSubmitError(null)
@@ -134,6 +136,9 @@ export function BookingPage() {
               <div className="mt-4 max-w-sm">
                 <ExpressPay onPay={handleExpressPay} disabled={submitting} loading={submitting} />
               </div>
+              {submitError && (
+                <p className="mt-3 max-w-sm text-xs uppercase tracking-widest text-accent">{submitError}</p>
+              )}
               <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-widest text-neutral-600">
                 <span className="h-px flex-1 bg-neutral-800" />
                 <span>{b.orPayByCard}</span>
@@ -145,8 +150,8 @@ export function BookingPage() {
               {/* Contact */}
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.contact}</h2>
-                <label className={labelClass}>{b.email}<input className={fieldClass} name="email" type="email" autoComplete="email" required /></label>
-                <label className={labelClass}>{b.phone}<input className={fieldClass} name="phone" type="tel" autoComplete="tel" required /></label>
+                <label className={labelClass}>{b.email}<input className={fieldClass} name="email" type="email" autoComplete="email" /></label>
+                <label className={labelClass}>{b.phone}<input className={fieldClass} name="phone" type="tel" autoComplete="tel" /></label>
               </section>
 
               {/* Appointment details */}
@@ -159,7 +164,7 @@ export function BookingPage() {
                   <label className={labelClass}>{b.placement}<input className={fieldClass} name="bodyPart" /></label>
                   <label className={labelClass}>{b.size}<input className={fieldClass} name="size" inputMode="decimal" placeholder={b.sizePlaceholder} /></label>
                 </div>
-                <label className={labelClass}>{b.preferredDate}<input className={fieldClass} name="date" type="date" required /></label>
+                <label className={labelClass}>{b.preferredDate}<input className={fieldClass} name="date" type="date" /></label>
               </section>
 
               {submitError && (
