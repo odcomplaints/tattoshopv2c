@@ -11,21 +11,6 @@ export type ShopItem = {
 }
 
 export const shopItems: ShopItem[] = [
-  // TEMPORARY test product — used to verify the Stripe checkout + webhook +
-  // order confirmation emails end-to-end for just 1,00 EUR instead of
-  // refunding a real item. Remove this entry (and its counterpart in
-  // src/data/catalog.ts) once testing is done.
-  {
-    id: 'test-produkt',
-    name: 'Test-Produkt (bitte nicht kaufen)',
-    price: '1,00 EUR',
-    category: 'Test',
-    image: '/assets/shop/1.png',
-    availability: 'available',
-    stock: 999,
-    description: 'Interner Testartikel für 1,00 EUR, um den Checkout- und E-Mail-Ablauf zu testen.',
-    details: ['Nur für Testzwecke'],
-  },
   {
     id: 'bape-shark-glow',
     name: 'Bape Shark Glow in the Dark',

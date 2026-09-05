@@ -21,11 +21,6 @@ export type CatalogEntry = {
 }
 
 export const catalog: Record<string, CatalogEntry> = {
-  // TEMPORARY test product — used to verify the Stripe checkout + webhook +
-  // order confirmation emails end-to-end without refunding a real item.
-  // Remove this entry (and its counterpart in src/data/shop.ts) once testing
-  // is done.
-  'test-produkt': { id: 'test-produkt', name: 'Test-Produkt (bitte nicht kaufen)', priceCents: 100, currency: 'eur', available: true },
   'bape-shark-glow': { id: 'bape-shark-glow', name: 'Bape Shark Glow in the Dark', priceCents: 39000, currency: 'eur', available: true },
   'bape-shark-lila': { id: 'bape-shark-lila', name: 'Bape Shark Hoodie Lila', priceCents: 45000, currency: 'eur', available: true },
   'bape-shark-mickey': { id: 'bape-shark-mickey', name: 'Bape Shark × Mickey Mouse', priceCents: 62000, currency: 'eur', available: true },
