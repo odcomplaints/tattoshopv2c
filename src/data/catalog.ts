@@ -26,7 +26,6 @@ export const catalog: Record<string, CatalogEntry> = {
   'bape-shark-mickey': { id: 'bape-shark-mickey', name: 'Bape Shark × Mickey Mouse', priceCents: 62000, currency: 'eur', available: true },
   'bape-shark-multicamo': { id: 'bape-shark-multicamo', name: 'Bape Shark Multi-Camo', priceCents: 47000, currency: 'eur', available: true },
   'bape-shark-pink': { id: 'bape-shark-pink', name: 'Bape Shark Hoodie Pink', priceCents: 45000, currency: 'eur', available: true },
-  'bape-shark-rot': { id: 'bape-shark-rot', name: 'Bape Shark Hoodie Rot', priceCents: 42000, currency: 'eur', available: true },
   'supreme-sweatjacke': { id: 'supreme-sweatjacke', name: 'Supreme Sweatjacke', priceCents: 26000, currency: 'eur', available: true },
   'supreme-tshirt': { id: 'supreme-tshirt', name: 'Supreme T-Shirt', priceCents: 11000, currency: 'eur', available: true },
   'balenciaga-sweatjacke': { id: 'balenciaga-sweatjacke', name: 'Balenciaga Sweatjacke', priceCents: 59000, currency: 'eur', available: false },
@@ -42,6 +41,14 @@ export const catalog: Record<string, CatalogEntry> = {
   'olympique-marseille': { id: 'olympique-marseille', name: 'Olympique Marseille Trikot', priceCents: 11000, currency: 'eur', available: true },
   'arabic-shirt': { id: 'arabic-shirt', name: 'Arabic Graphic Shirt', priceCents: 9500, currency: 'eur', available: true },
   'redbull-jacket': { id: 'redbull-jacket', name: 'Red Bull Racing Jacke', priceCents: 18000, currency: 'eur', available: true },
+  // --- Platzhalter-Einträge, Preise im Admin-Panel final anpassen ---
+  'goat-tee': { id: 'goat-tee', name: 'GOAT T-Shirt', priceCents: 10000, currency: 'eur', available: true },
+  'lamborghini-polo': { id: 'lamborghini-polo', name: 'Lamborghini Polo', priceCents: 10000, currency: 'eur', available: true },
+  'supreme-hoodie-logo-orange': { id: 'supreme-hoodie-logo-orange', name: 'Supreme Hoodie Logo Orange', priceCents: 10000, currency: 'eur', available: true },
+  'bape-tee-oversize': { id: 'bape-tee-oversize', name: 'Bape T-Shirt Oversize', priceCents: 10000, currency: 'eur', available: true },
+  'chief-keef-polo-newyork': { id: 'chief-keef-polo-newyork', name: 'Chief Keef Polo New York', priceCents: 10000, currency: 'eur', available: true },
+  'supreme-boxlogo-weis': { id: 'supreme-boxlogo-weis', name: 'Supreme Box Logo Weiß', priceCents: 10000, currency: 'eur', available: true },
+  'winterpulli': { id: 'winterpulli', name: 'Winterpulli', priceCents: 10000, currency: 'eur', available: true },
 }
 
 export function getCatalogEntry(id: string): CatalogEntry | undefined {
