@@ -35,6 +35,7 @@ type BookingPayload = {
   bodyPart?: unknown
   size?: unknown
   date?: unknown
+  checkoutType?: unknown
 }
 
 function json(data: unknown, status = 200): Response {
@@ -48,9 +49,9 @@ function str(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
 
-function buildMessage(b: Record<string, string>): string {
+function buildMessage(b: Record<string, string>, checkoutType: string): string {
   return [
-    '📌 Neue Tattoo-Anfrage (Deposit gezahlt / im Zahlungsprozess)',
+    `📌 Neue Tattoo-Anfrage (${checkoutType === 'express' ? 'Express: Apple/Google Pay' : 'Formular + Karte'})`,
     `Name: ${b.name || '—'}`,
     `E-Mail: ${b.email || '—'}`,
     `Telefon: ${b.phone || '—'}`,
@@ -129,18 +130,25 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
     size: str(payload.size),
     date: str(payload.date),
   }
+  const checkoutType = str(payload.checkoutType) === 'express' ? 'express' : 'full'
 
-  if (!b.name || !b.email || !b.motif || !b.bodyPart || !b.size) {
+  // Express checkout (Apple/Google Pay) only requires enough to reach the
+  // customer; the full card-payment form additionally asks for tattoo details.
+  if (!b.email || !b.phone || !b.date) {
+    return json({ error: 'Missing required fields.' }, 400)
+  }
+  if (checkoutType === 'full' && (!b.name || !b.motif || !b.bodyPart || !b.size)) {
     return json({ error: 'Missing required fields.' }, 400)
   }
 
-  const message = buildMessage(b)
+  const message = buildMessage(b, checkoutType)
   const tasks: Promise<unknown>[] = []
 
   if (env.RESEND_API_KEY) {
     const to = env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
     const from = env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL
-    tasks.push(notifyEmail(env.RESEND_API_KEY, to, from, `Neue Tattoo-Anfrage von ${b.name}`, message, buildHtmlMessage(b)))
+    const subject = b.name ? `Neue Tattoo-Anfrage von ${b.name}` : `Neue Tattoo-Anfrage (Express) — ${b.email}`
+    tasks.push(notifyEmail(env.RESEND_API_KEY, to, from, subject, message, buildHtmlMessage(b)))
   }
 
   if (env.DISCORD_WEBHOOK_URL) tasks.push(notifyDiscord(env.DISCORD_WEBHOOK_URL, message))
