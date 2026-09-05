@@ -25,6 +25,9 @@ const STRIPE_API_BASE = 'https://api.stripe.com'
 const STRIPE_API_VERSION = '2026-07-29.dahlia'
 const DEFAULT_NOTIFY_EMAIL = 'od.complaints@gmail.com'
 const DEFAULT_FROM_EMAIL = 'OD COMPLAINTS <onboarding@resend.dev>'
+// Publicly hosted logo used in the email header (email clients need an
+// absolute, publicly reachable URL — they can't use bundled/local assets).
+const LOGO_URL = 'https://www.odcomplaints.com/assets/email/logo.png'
 
 // Tolerate up to 5 minutes of clock skew between Stripe and the edge.
 const TOLERANCE_SECONDS = 60 * 5
@@ -133,7 +136,7 @@ function renderOrderEmailHtml(options: {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#0a0a0a;border-radius:2px;overflow:hidden;">
             <tr>
               <td style="padding:28px 32px;background-color:#000000;">
-                <p style="margin:0;color:#ffffff;font-size:14px;letter-spacing:4px;text-transform:uppercase;font-weight:600;">OD COMPLAINTS</p>
+                <img src="${LOGO_URL}" alt="OD COMPLAINTS" width="140" style="display:block;border:0;outline:none;max-width:140px;height:auto;" />
               </td>
             </tr>
             <tr>
