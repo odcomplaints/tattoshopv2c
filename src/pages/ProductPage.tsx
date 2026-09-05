@@ -28,12 +28,16 @@ export function ProductPage() {
   const favorite = isFavorite(item.id)
   const mailto = `mailto:hello@example.com?subject=${encodeURIComponent(`Shop Inquiry: ${item.name}`)}`
 
+  const sameCategory = shopItems.filter((product) => product.id !== item.id && product.category === item.category)
+  const others = shopItems.filter((product) => product.id !== item.id && product.category !== item.category)
+  const relatedItems = [...sameCategory, ...others].slice(0, 3)
+
   return (
     <Layout
       title={`${item.name} | OD COMPLAINTS`}
       description={`${item.name} – ${item.category} by OD COMPLAINTS, GD.`}
     >
-      <Link to="/shop" className="inline-block text-xs uppercase tracking-widest text-neutral-400 hover:text-accent">
+      <Link to="/shop" className="block text-left text-xs uppercase tracking-widest text-neutral-400 hover:text-accent">
         &larr; Shop
       </Link>
 
@@ -110,6 +114,59 @@ export function ProductPage() {
           </div>
         </div>
       </div>
+
+      {relatedItems.length > 0 && (
+        <section className="mt-16 border-t border-neutral-800 pt-10 text-left sm:mt-24 sm:pt-14" aria-label="Related products">
+          <h2 className="text-xs uppercase tracking-widest text-neutral-200">Das könnte dir auch gefallen</h2>
+          <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 md:gap-y-14">
+            {relatedItems.map((related) => {
+              const relatedFavorite = isFavorite(related.id)
+              return (
+                <div key={related.id} className="group relative">
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <img
+                      src={related.image}
+                      alt={`${related.name}, ${related.category}`}
+                      width="800"
+                      height="1000"
+                      loading="lazy"
+                      decoding="async"
+                      sizes="(min-width: 768px) 33vw, 50vw"
+                      className="h-full w-full object-contain"
+                    />
+                    {related.availability === 'sold-out' && (
+                      <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">
+                        Sold out
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => toggleFavorite(related.id)}
+                      aria-pressed={relatedFavorite}
+                      aria-label={
+                        relatedFavorite
+                          ? `Remove ${related.name} from favorites`
+                          : `Add ${related.name} to favorites`
+                      }
+                      className={`favorite-toggle absolute bottom-2 right-2 z-20 flex h-8 w-8 items-center justify-center transition-colors ${relatedFavorite ? 'text-accent drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]' : ''}`}
+                    >
+                      <HeartIcon filled={relatedFavorite} />
+                    </button>
+                  </div>
+                  <div className="mt-3 flex items-baseline justify-between gap-3 text-xs uppercase tracking-widest">
+                    <h3 className="font-medium text-neutral-100">{related.name}</h3>
+                    <p className="shrink-0 text-neutral-400">{related.price}</p>
+                  </div>
+                  <p className="mt-1 text-xs text-neutral-300">{related.category}</p>
+                  <Link to={`/shop/${related.id}`} className="absolute inset-0 z-10">
+                    <span className="sr-only">View {related.name}</span>
+                  </Link>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
     </Layout>
   )
 }

@@ -14,6 +14,9 @@ type LayoutProps = {
   headerExtra?: ReactNode
 }
 
+const SITE_URL = 'https://odcomplaints.com'
+const SITE_NAME = 'OD COMPLAINTS'
+
 const navigation = [
   { key: 'work', to: '/work' },
   { key: 'shop', to: '/shop' },
@@ -32,12 +35,25 @@ export function Layout({
   const { cartCount, favoritesCount } = useShop()
   const { t } = useLanguage()
   const isShopSection = location.pathname.startsWith('/shop')
+  const canonicalUrl = `${SITE_URL}${location.pathname}`
+  const ogImage = `${SITE_URL}${logo}`
 
   return (
     <div className="relative z-10 flex min-h-screen flex-col text-neutral-200">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={SITE_NAME} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={ogImage} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
       </Helmet>
       <header>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 pb-4 pt-10 lg:px-8 lg:pb-6 lg:pt-16">
