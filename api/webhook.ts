@@ -1,13 +1,24 @@
 // POST /api/webhook — Vercel Edge Function
 //
-// Receives Stripe webhook events and verifies their signature using the Web
-// Crypto API (works on the Vercel Edge Runtime — no Node `crypto` needed).
+// Receives Stripe webhook events, verifies their signature using the Web
+// Crypto API (works on the Vercel Edge Runtime — no Node `crypto` needed),
+// and on a successful checkout:
+//   1. Fetches the paid line items from Stripe (not stored on the event by
+//      default) so the emails below can list what was actually bought.
+//   2. Emails YOU (the studio) an order notification via Resend.
+//   3. Emails the CUSTOMER an order confirmation via Resend.
 //
-// Configure the endpoint in the Stripe Dashboard (or `stripe listen`) and set the
-// signing secret as STRIPE_WEBHOOK_SECRET. Right now the handler just logs the
-// paid order; extend `handleCheckoutCompleted` to email/fulfil as needed.
+// Configure the endpoint in the Stripe Dashboard (or `stripe listen`) and set
+// STRIPE_WEBHOOK_SECRET to the signing secret shown there. Email delivery
+// reuses the same Resend setup as the booking form (RESEND_API_KEY,
+// RESEND_FROM_EMAIL, BOOKING_NOTIFY_EMAIL) — see api/booking.ts for setup.
 
 export const config = { runtime: 'edge' }
+
+const STRIPE_API_BASE = 'https://api.stripe.com'
+const STRIPE_API_VERSION = '2026-07-29.dahlia'
+const DEFAULT_NOTIFY_EMAIL = 'od.complaints@gmail.com'
+const DEFAULT_FROM_EMAIL = 'OD COMPLAINTS <onboarding@resend.dev>'
 
 // Tolerate up to 5 minutes of clock skew between Stripe and the edge.
 const TOLERANCE_SECONDS = 60 * 5
@@ -52,14 +63,123 @@ async function verifyStripeSignature(payload: string, header: string, secret: st
   return signatures.some((sig) => timingSafeEqual(sig, expected))
 }
 
+type LineItem = { description?: string; quantity?: number; amount_total?: number; currency?: string }
+
+async function fetchLineItems(sessionId: string, secretKey: string): Promise<LineItem[]> {
+  const response = await fetch(
+    `${STRIPE_API_BASE}/v1/checkout/sessions/${encodeURIComponent(sessionId)}/line_items?limit=100`,
+    { headers: { Authorization: `Bearer ${secretKey}`, 'Stripe-Version': STRIPE_API_VERSION } },
+  )
+  if (!response.ok) return []
+  const body = (await response.json()) as { data?: LineItem[] }
+  return body.data ?? []
+}
+
+function formatMoney(amountCents: number | undefined, currency: string | undefined): string {
+  if (typeof amountCents !== 'number') return '—'
+  return `${(amountCents / 100).toFixed(2)} ${(currency ?? 'eur').toUpperCase()}`
+}
+
+function formatAddress(details: Record<string, unknown> | undefined): string {
+  if (!details) return '—'
+  const name = typeof details.name === 'string' ? details.name : ''
+  const address = details.address as Record<string, unknown> | undefined
+  if (!address) return name || '—'
+  const parts = [
+    address.line1,
+    address.line2,
+    [address.postal_code, address.city].filter(Boolean).join(' '),
+    address.country,
+  ].filter((part): part is string => typeof part === 'string' && part.length > 0)
+  return [name, ...parts].filter(Boolean).join('\n')
+}
+
+async function notifyEmail(apiKey: string, to: string, from: string, subject: string, text: string, html: string): Promise<void> {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from, to: [to], subject, text, html }),
+  })
+  if (!response.ok) {
+    const body = await response.text().catch(() => '')
+    throw new Error(`Resend request failed (${response.status}): ${body}`)
+  }
+}
+
 async function handleCheckoutCompleted(session: Record<string, unknown>): Promise<void> {
-  // No database/email service is wired up in this project, so we just log.
-  // Replace this with order persistence, an email via your provider, etc.
-  const id = session.id
-  const email = (session.customer_details as { email?: string } | undefined)?.email
-  const amount = session.amount_total
-  const currency = session.currency
-  console.log(`[stripe] checkout.session.completed ${id} — ${amount} ${currency} — ${email ?? 'no email'}`)
+  const sessionId = String(session.id ?? '')
+  const customerDetails = session.customer_details as { email?: string; name?: string } | undefined
+  const customerEmail = customerDetails?.email
+  const amountTotal = session.amount_total as number | undefined
+  const currency = session.currency as string | undefined
+  const shippingDetails = session.shipping_details as Record<string, unknown> | undefined
+
+  const resendKey = process.env.RESEND_API_KEY
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+  if (!resendKey) {
+    console.log(`[stripe] checkout.session.completed ${sessionId} — RESEND_API_KEY not set, skipping emails.`)
+    return
+  }
+
+  const lineItems = stripeSecretKey && sessionId ? await fetchLineItems(sessionId, stripeSecretKey) : []
+  const itemLines = lineItems.length
+    ? lineItems.map((item) => `  • ${item.quantity ?? 1}× ${item.description ?? 'Artikel'} — ${formatMoney(item.amount_total, item.currency ?? currency)}`).join('\n')
+    : '  (Artikel konnten nicht geladen werden — siehe Stripe Dashboard)'
+  const shippingAddress = formatAddress(shippingDetails)
+  const total = formatMoney(amountTotal, currency)
+
+  const adminSubject = `Neue Bestellung — ${total}`
+  const adminText = [
+    `📦 Neue Shop-Bestellung`,
+    `Session: ${sessionId}`,
+    `Kunde: ${customerDetails?.name || '—'} <${customerEmail || 'keine E-Mail'}>`,
+    ``,
+    `Artikel:`,
+    itemLines,
+    ``,
+    `Gesamtbetrag: ${total}`,
+    ``,
+    `Lieferadresse:`,
+    shippingAddress,
+  ].join('\n')
+
+  const from = process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL
+  const adminTo = process.env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
+
+  const tasks: Promise<unknown>[] = [
+    notifyEmail(resendKey, adminTo, from, adminSubject, adminText, `<pre style="font-family:sans-serif;white-space:pre-wrap;">${adminText}</pre>`),
+  ]
+
+  if (customerEmail) {
+    const customerSubject = 'Deine Bestellung bei OD COMPLAINTS'
+    const customerText = [
+      `Danke für deine Bestellung${customerDetails?.name ? `, ${customerDetails.name}` : ''}!`,
+      ``,
+      `Deine Bestellung:`,
+      itemLines,
+      ``,
+      `Gesamtbetrag: ${total}`,
+      ``,
+      `Lieferadresse:`,
+      shippingAddress,
+      ``,
+      `Wir versenden deine Bestellung in Kürze und melden uns bei Fragen.`,
+      ``,
+      `— OD COMPLAINTS`,
+    ].join('\n')
+    tasks.push(
+      notifyEmail(
+        resendKey,
+        customerEmail,
+        from,
+        customerSubject,
+        customerText,
+        `<pre style="font-family:sans-serif;white-space:pre-wrap;">${customerText}</pre>`,
+      ),
+    )
+  }
+
+  await Promise.allSettled(tasks)
 }
 
 export default async function handler(request: Request): Promise<Response> {
