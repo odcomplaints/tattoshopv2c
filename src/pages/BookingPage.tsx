@@ -141,8 +141,6 @@ export function BookingPage() {
               )}
               <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-widest text-neutral-600">
                 <span className="h-px flex-1 bg-neutral-800" />
-                <span>{b.orPayByCard}</span>
-                <span className="h-px flex-1 bg-neutral-800" />
               </div>
             </section>
 
@@ -157,7 +155,6 @@ export function BookingPage() {
               {/* Appointment details */}
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.appointmentDetails}</h2>
-                <p className="-mt-2 text-xs leading-5 text-neutral-500">{b.appointmentDetailsHint}</p>
                 <label className={labelClass}>{b.name}<input className={fieldClass} name="name" autoComplete="name" /></label>
                 <label className={labelClass}>{b.motif}<textarea className={fieldClass} name="motif" rows={4} /></label>
                 <div className="grid gap-6 sm:grid-cols-2">
