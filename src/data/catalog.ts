@@ -42,14 +42,13 @@ export const catalog: Record<string, CatalogEntry> = {
   'olympique-marseille': { id: 'olympique-marseille', name: 'Olympique Marseille Trikot', priceCents: 11000, currency: 'eur', available: true },
   'arabic-shirt': { id: 'arabic-shirt', name: 'Arabic Graphic Shirt', priceCents: 9500, currency: 'eur', available: true },
   'redbull-jacket': { id: 'redbull-jacket', name: 'Red Bull Racing Jacke', priceCents: 18000, currency: 'eur', available: true },
-  // --- Platzhalter-Einträge, Preise im Admin-Panel final anpassen ---
   'goat-tee': { id: 'goat-tee', name: 'GOAT T-Shirt', priceCents: 10000, currency: 'eur', available: true },
   'lamborghini-polo': { id: 'lamborghini-polo', name: 'Lamborghini Polo', priceCents: 10000, currency: 'eur', available: true },
-  'supreme-hoodie-logo-orange': { id: 'supreme-hoodie-logo-orange', name: 'Supreme Hoodie Logo Orange', priceCents: 10000, currency: 'eur', available: true },
+  'supreme-hoodie-logo-orange': { id: 'supreme-hoodie-logo-orange', name: 'Supreme Hoodie Logo Orange', priceCents: 29000, currency: 'eur', available: true },
   'bape-tee-oversize': { id: 'bape-tee-oversize', name: 'Bape T-Shirt Oversize', priceCents: 10000, currency: 'eur', available: true },
-  'chief-keef-polo-newyork': { id: 'chief-keef-polo-newyork', name: 'Chief Keef Polo New York', priceCents: 10000, currency: 'eur', available: true },
-  'supreme-boxlogo-weis': { id: 'supreme-boxlogo-weis', name: 'Supreme Box Logo Weiß', priceCents: 10000, currency: 'eur', available: true },
-  'winterpulli': { id: 'winterpulli', name: 'Winterpulli', priceCents: 10000, currency: 'eur', available: true },
+  'chief-keef-polo-newyork': { id: 'chief-keef-polo-newyork', name: 'Chief Keef Polo New York', priceCents: 13000, currency: 'eur', available: true },
+  'supreme-boxlogo-weis': { id: 'supreme-boxlogo-weis', name: 'Supreme Box Logo Weiß', priceCents: 49000, currency: 'eur', available: true },
+  'winterpulli': { id: 'winterpulli', name: 'Winterpulli', priceCents: 7000, currency: 'eur', available: true },
 }
 
 export function getCatalogEntry(id: string): CatalogEntry | undefined {

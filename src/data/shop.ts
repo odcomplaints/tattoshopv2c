@@ -263,7 +263,6 @@ export const shopItems: ShopItem[] = [
       'Offizielle Red Bull Racing Teamjacke. Leichtes technisches Material, vollständig bestickte Logos, Collector-Item für Motorsportfans.',
     details: ['Marke: Red Bull Racing', 'Material: Technisches Gewebe', 'Offizielle Teamjacke', 'Zustand: sehr gut', 'Größe: M'],
   },
-  // --- Platzhalter-Einträge für neue Fotos, Preise/Texte im Admin-Panel final anpassen ---
   {
     id: 'goat-tee',
     name: 'GOAT T-Shirt',
@@ -272,7 +271,8 @@ export const shopItems: ShopItem[] = [
     image: '/assets/shop/GOATtee.png',
     availability: 'available',
     stock: 1,
-    description: 'Platzhaltertext – bitte im Admin-Panel anpassen.',
+    description:
+      'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
   },
   {
@@ -283,18 +283,20 @@ export const shopItems: ShopItem[] = [
     image: '/assets/shop/Lamborghinipolo.png',
     availability: 'available',
     stock: 1,
-    description: 'Platzhaltertext – bitte im Admin-Panel anpassen.',
+    description:
+      'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
   },
   {
     id: 'supreme-hoodie-logo-orange',
     name: 'Supreme Hoodie Logo Orange',
-    price: '100 EUR',
+    price: '290 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/SupremeHoodieLogoOrange.png',
     availability: 'available',
     stock: 1,
-    description: 'Platzhaltertext – bitte im Admin-Panel anpassen.',
+    description:
+      'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
   },
   {
@@ -305,40 +307,44 @@ export const shopItems: ShopItem[] = [
     image: '/assets/shop/bapeteeOversize.png',
     availability: 'available',
     stock: 1,
-    description: 'Platzhaltertext – bitte im Admin-Panel anpassen.',
+    description:
+      'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
   },
   {
     id: 'chief-keef-polo-newyork',
     name: 'Chief Keef Polo New York',
-    price: '100 EUR',
+    price: '130 EUR',
     category: 'Streetwear / Polo',
     image: '/assets/shop/chiefkeefpolonewyork.png',
     availability: 'available',
     stock: 1,
-    description: 'Platzhaltertext – bitte im Admin-Panel anpassen.',
+    description:
+      'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
   },
   {
     id: 'supreme-boxlogo-weis',
     name: 'Supreme Box Logo Weiß',
-    price: '100 EUR',
+    price: '490 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/supremeboxlogoweis.png',
     availability: 'available',
     stock: 1,
-    description: 'Platzhaltertext – bitte im Admin-Panel anpassen.',
+    description:
+      'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
   },
   {
     id: 'winterpulli',
     name: 'Winterpulli',
-    price: '100 EUR',
+    price: '70 EUR',
     category: 'Streetwear / Pullover',
     image: '/assets/shop/winterpulli.png',
     availability: 'available',
     stock: 1,
-    description: 'Platzhaltertext – bitte im Admin-Panel anpassen.',
+    description:
+      'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
   },
 ]
