@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import type { FormEvent, ReactNode } from 'react'
 import { Layout } from '../components/Layout'
 import { shopItems as initialShopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
@@ -130,7 +131,156 @@ function readDraft(): ShopItem[] | null {
   }
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+type TrackingForm = {
+  customerEmail: string
+  customerName: string
+  orderSummary: string
+  carrier: string
+  trackingUrl: string
+  trackingCode: string
+  note: string
+}
+
+function emptyTrackingForm(): TrackingForm {
+  return {
+    customerEmail: '',
+    customerName: '',
+    orderSummary: '',
+    carrier: '',
+    trackingUrl: '',
+    trackingCode: '',
+    note: '',
+  }
+}
+
+// Sends the shipping-confirmation email through /api/send-tracking. The
+// endpoint is protected by ADMIN_SEND_KEY on the server — we reuse the same
+// password you use to log into this panel so there's nothing extra to
+// remember (set ADMIN_SEND_KEY to the same value in Vercel/Cloudflare env vars).
+function ShippingConfirmationSection() {
+  const [form, setForm] = useState<TrackingForm>(emptyTrackingForm())
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+
+  function update(patch: Partial<TrackingForm>) {
+    setForm((current) => ({ ...current, ...patch }))
+  }
+
+  async function handleSend(e: FormEvent) {
+    e.preventDefault()
+    setStatus('sending')
+    setErrorMessage('')
+    try {
+      const response = await fetch('/api/send-tracking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, adminKey: ADMIN_PASSWORD }),
+      })
+      const data = (await response.json().catch(() => ({}))) as { error?: string }
+      if (!response.ok) {
+        setStatus('error')
+        setErrorMessage(data.error || 'Senden fehlgeschlagen.')
+        return
+      }
+      setStatus('sent')
+      setForm(emptyTrackingForm())
+      setTimeout(() => setStatus('idle'), 3000)
+    } catch {
+      setStatus('error')
+      setErrorMessage('Netzwerkfehler. Bitte erneut versuchen.')
+    }
+  }
+
+  return (
+    <div className="mt-12 border-t border-neutral-800 pt-8">
+      <h2 className="text-lg font-medium uppercase tracking-widest text-neutral-100">Versandbestätigung senden</h2>
+      <p className="mt-2 max-w-2xl text-sm text-neutral-400">
+        Nachdem du das Paket privat verpackt und zur Post/Packstation gebracht hast: hier Kunden-E-Mail und den
+        Tracking-Link eintragen und senden — der Kunde bekommt automatisch eine gebrandete E-Mail mit Trackinglink.
+      </p>
+
+      <form onSubmit={handleSend} className="mt-6 grid gap-5 sm:grid-cols-2">
+        <Field label="Kunden-E-Mail *">
+          <input
+            type="email"
+            required
+            value={form.customerEmail}
+            onChange={(e) => update({ customerEmail: e.target.value })}
+            className={inputClass}
+            placeholder="kunde@example.com"
+          />
+        </Field>
+        <Field label="Kundenname (optional)">
+          <input
+            type="text"
+            value={form.customerName}
+            onChange={(e) => update({ customerName: e.target.value })}
+            className={inputClass}
+          />
+        </Field>
+        <Field label="Versanddienstleister (z. B. DHL)">
+          <input
+            type="text"
+            value={form.carrier}
+            onChange={(e) => update({ carrier: e.target.value })}
+            className={inputClass}
+          />
+        </Field>
+        <Field label="Sendungsnummer (optional)">
+          <input
+            type="text"
+            value={form.trackingCode}
+            onChange={(e) => update({ trackingCode: e.target.value })}
+            className={inputClass}
+          />
+        </Field>
+        <Field label="Tracking-Link">
+          <input
+            type="url"
+            value={form.trackingUrl}
+            onChange={(e) => update({ trackingUrl: e.target.value })}
+            className={inputClass}
+            placeholder="https://www.dhl.de/..."
+          />
+        </Field>
+        <div className="sm:col-span-2">
+          <Field label="Bestellübersicht * (z. B. „1× Bape Shark Hoodie Rot“)">
+            <textarea
+              required
+              value={form.orderSummary}
+              onChange={(e) => update({ orderSummary: e.target.value })}
+              rows={2}
+              className={`${inputClass} leading-6`}
+            />
+          </Field>
+        </div>
+        <div className="sm:col-span-2">
+          <Field label="Zusätzliche Nachricht (optional)">
+            <textarea
+              value={form.note}
+              onChange={(e) => update({ note: e.target.value })}
+              rows={2}
+              className={`${inputClass} leading-6`}
+            />
+          </Field>
+        </div>
+
+        <div className="sm:col-span-2 flex items-center gap-4">
+          <button
+            type="submit"
+            disabled={status === 'sending'}
+            className="cta-solid border border-accent bg-accent px-5 py-3 text-xs uppercase tracking-widest transition-colors hover:opacity-90 disabled:opacity-50"
+          >
+            {status === 'sending' ? 'Wird gesendet…' : status === 'sent' ? '✓ Gesendet' : 'Versandmail senden'}
+          </button>
+          {status === 'error' && <p className="text-xs uppercase tracking-widest text-accent">{errorMessage}</p>}
+        </div>
+      </form>
+    </div>
+  )
+}
+
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="flex flex-col gap-1.5 text-xs uppercase tracking-widest text-neutral-400">
       {label}
@@ -514,6 +664,8 @@ export function AdminPage() {
             <p className="text-sm text-neutral-500">Wähle links einen Artikel aus oder lege einen neuen an.</p>
           )}
         </div>
+
+        <ShippingConfirmationSection />
       </div>
     </Layout>
   )
