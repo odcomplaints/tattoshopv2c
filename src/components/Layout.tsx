@@ -177,7 +177,7 @@ export function Layout({
           <div className="flex justify-center gap-5">
             <Link className="transition-colors hover:text-neutral-100" to="/imprint">{t.footer.legalNotice}</Link>
             <Link className="transition-colors hover:text-neutral-100" to="/privacy">{t.footer.privacy}</Link>
-            <a className="transition-colors hover:text-neutral-100" href="https://instagram.com/" target="_blank" rel="noreferrer">{t.footer.instagram}</a>
+            <a className="transition-colors hover:text-neutral-100" href="https://instagram.com/od.complaints" target="_blank" rel="noreferrer">{t.footer.instagram}</a>
           </div>
         </div>
       </footer>
