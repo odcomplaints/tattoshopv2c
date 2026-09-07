@@ -67,6 +67,13 @@ export const catalog: Record<string, CatalogEntry> = {
   'vintage-printed-tee': { id: 'vintage-printed-tee', name: 'Vintage Printed Tee', priceCents: 10000, currency: 'eur', available: true },
   'supreme-box-tee-black': { id: 'supreme-box-tee-black', name: 'Supreme Box Tee Schwarz', priceCents: 10000, currency: 'eur', available: true },
   'lakers-sweater': { id: 'lakers-sweater', name: 'Lakers Sweater', priceCents: 10000, currency: 'eur', available: true },
+  'billionaire-boys-club-hose': { id: 'billionaire-boys-club-hose', name: 'Billionaire Boys Club Hose', priceCents: 10000, currency: 'eur', available: true },
+  'dior-umhaengetasche-blau': { id: 'dior-umhaengetasche-blau', name: 'Dior Umhängetasche Blau', priceCents: 10000, currency: 'eur', available: true },
+  'bape-miami-shirt': { id: 'bape-miami-shirt', name: 'Bape Miami Shirt', priceCents: 10000, currency: 'eur', available: true },
+  'bape-shirt-blau-rot': { id: 'bape-shirt-blau-rot', name: 'Bape Shirt Blau Rot', priceCents: 10000, currency: 'eur', available: true },
+  'bape-tshirt-japan': { id: 'bape-tshirt-japan', name: 'Bape T-Shirt Japan', priceCents: 10000, currency: 'eur', available: true },
+  'bape-tshirt-schwarz-rot': { id: 'bape-tshirt-schwarz-rot', name: 'Bape T-Shirt Schwarz Rot', priceCents: 10000, currency: 'eur', available: true },
+  'casablanca-tshirt': { id: 'casablanca-tshirt', name: 'Casablanca T-Shirt', priceCents: 10000, currency: 'eur', available: true },
 }
 
 export function getCatalogEntry(id: string): CatalogEntry | undefined {
