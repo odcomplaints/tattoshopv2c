@@ -65,6 +65,8 @@ export const catalog: Record<string, CatalogEntry> = {
   'supreme-boxlogo-hoodie-camo': { id: 'supreme-boxlogo-hoodie-camo', name: 'Supreme Box Logo Hoodie Camo', priceCents: 10000, currency: 'eur', available: true },
   'supreme-scarface-shirt': { id: 'supreme-scarface-shirt', name: 'Supreme Scarface Shirt', priceCents: 10000, currency: 'eur', available: false },
   'vintage-printed-tee': { id: 'vintage-printed-tee', name: 'Vintage Printed Tee', priceCents: 10000, currency: 'eur', available: true },
+  'supreme-box-tee-black': { id: 'supreme-box-tee-black', name: 'Supreme Box Tee Schwarz', priceCents: 10000, currency: 'eur', available: true },
+  'lakers-sweater': { id: 'lakers-sweater', name: 'Lakers Sweater', priceCents: 10000, currency: 'eur', available: true },
 }
 
 export function getCatalogEntry(id: string): CatalogEntry | undefined {
