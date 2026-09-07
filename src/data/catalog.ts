@@ -52,6 +52,19 @@ export const catalog: Record<string, CatalogEntry> = {
   'xtc-sweater': { id: 'xtc-sweater', name: 'XTC Sweater', priceCents: 10000, currency: 'eur', available: true },
   'bleached-cropped-tee': { id: 'bleached-cropped-tee', name: 'Bleached Cropped Tee', priceCents: 10000, currency: 'eur', available: true },
   'supreme-boxlogo-hoodie': { id: 'supreme-boxlogo-hoodie', name: 'Supreme Box Logo Hoodie', priceCents: 10000, currency: 'eur', available: true },
+  'arsenal-trikot': { id: 'arsenal-trikot', name: 'Arsenal Trikot', priceCents: 10000, currency: 'eur', available: true },
+  'bape-tee-superman': { id: 'bape-tee-superman', name: 'Bape T-Shirt Superman', priceCents: 10000, currency: 'eur', available: true },
+  'brasilien-jacket': { id: 'brasilien-jacket', name: 'Brasilien Jacke', priceCents: 10000, currency: 'eur', available: true },
+  'chicago-bulls-boxtee': { id: 'chicago-bulls-boxtee', name: 'Chicago Bulls Box Tee', priceCents: 10000, currency: 'eur', available: true },
+  'dhl-trainingsjacke': { id: 'dhl-trainingsjacke', name: 'DHL Trainingsjacke', priceCents: 10000, currency: 'eur', available: true },
+  'lakers-shirt': { id: 'lakers-shirt', name: 'Lakers Shirt', priceCents: 10000, currency: 'eur', available: true },
+  'newyork-longsleeve': { id: 'newyork-longsleeve', name: 'New York Longsleeve', priceCents: 10000, currency: 'eur', available: true },
+  'nike-hemd': { id: 'nike-hemd', name: 'Nike Hemd', priceCents: 10000, currency: 'eur', available: true },
+  'polo-mit-reiter': { id: 'polo-mit-reiter', name: 'Polo mit Reiter', priceCents: 10000, currency: 'eur', available: true },
+  'supreme-bandana-hoodie': { id: 'supreme-bandana-hoodie', name: 'Supreme Bandana Hoodie', priceCents: 10000, currency: 'eur', available: true },
+  'supreme-boxlogo-hoodie-camo': { id: 'supreme-boxlogo-hoodie-camo', name: 'Supreme Box Logo Hoodie Camo', priceCents: 10000, currency: 'eur', available: true },
+  'supreme-scarface-shirt': { id: 'supreme-scarface-shirt', name: 'Supreme Scarface Shirt', priceCents: 10000, currency: 'eur', available: false },
+  'vintage-printed-tee': { id: 'vintage-printed-tee', name: 'Vintage Printed Tee', priceCents: 10000, currency: 'eur', available: true },
 }
 
 export function getCatalogEntry(id: string): CatalogEntry | undefined {
