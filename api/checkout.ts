@@ -6,6 +6,7 @@
 
 import { getCatalogEntry } from '../src/data/catalog'
 import { stripeRequest, StripeError, randomSuffix } from './_stripe'
+import { getSoldOutIds } from './_soldout'
 
 export const config = { runtime: 'edge' }
 
@@ -44,6 +45,7 @@ export default async function handler(request: Request): Promise<Response> {
   }
 
   // Validate every line against the server catalog and build trusted line items.
+  const soldOutIds = await getSoldOutIds()
   const lineItems: Array<Record<string, unknown>> = []
   for (const raw of rawItems) {
     const id = typeof raw.id === 'string' ? raw.id : ''
@@ -53,7 +55,7 @@ export default async function handler(request: Request): Promise<Response> {
     if (!entry) {
       return json({ error: `Unknown product: ${id || '(missing id)'}.` }, 400)
     }
-    if (!entry.available) {
+    if (!entry.available || soldOutIds.includes(id)) {
       return json({ error: `${entry.name} is sold out.` }, 409)
     }
     if (!Number.isFinite(quantity) || quantity < 1 || quantity > 20) {

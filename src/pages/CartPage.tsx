@@ -13,7 +13,7 @@ function parsePrice(price: string) {
 }
 
 export function CartPage() {
-  const { cart, updateQuantity, removeFromCart, cartCount } = useShop()
+  const { cart, updateQuantity, removeFromCart, cartCount, isSoldOut } = useShop()
   const [searchParams] = useSearchParams()
   const canceled = searchParams.get('canceled') === '1'
   const [loading, setLoading] = useState(false)
@@ -27,6 +27,9 @@ export function CartPage() {
     .filter((entry): entry is { id: string; quantity: number; product: ShopItem } => entry !== null)
 
   const subtotal = items.reduce((total, entry) => total + parsePrice(entry.product.price) * entry.quantity, 0)
+  const hasSoldOutItem = items.some(
+    (entry) => entry.product.availability === 'sold-out' || isSoldOut(entry.product.id),
+  )
 
   async function handleCheckout() {
     setError(null)
@@ -66,10 +69,12 @@ export function CartPage() {
         ) : (
           <div className="mt-8 grid gap-12 lg:grid-cols-[1.4fr_1fr]">
             <ul className="flex flex-col gap-6">
-              {items.map(({ id, quantity, product }) => (
+              {items.map(({ id, quantity, product }) => {
+                const soldOut = product.availability === 'sold-out' || isSoldOut(product.id)
+                return (
                 <li key={id} className="flex gap-4 border-b border-neutral-800 pb-6">
                   <Link to={`/shop/${id}`} className="h-24 w-20 shrink-0 overflow-hidden">
-                    <img src={product.image} alt={product.name} className="h-full w-full object-contain" />
+                    <img src={product.image} alt={product.name} className={`h-full w-full object-contain ${soldOut ? 'blur-[2px]' : ''}`} />
                   </Link>
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex items-baseline justify-between gap-3 text-xs uppercase tracking-widest">
@@ -79,6 +84,11 @@ export function CartPage() {
                       <p className="shrink-0 text-neutral-400">{product.price}</p>
                     </div>
                     <p className="text-xs text-neutral-300">{product.category}</p>
+                    {soldOut && (
+                      <p className="text-xs uppercase tracking-widest text-accent">
+                        Dieser Artikel ist leider ausverkauft — bitte entferne ihn, um fortzufahren.
+                      </p>
+                    )}
                     <div className="mt-1 flex items-center gap-3 text-xs uppercase tracking-widest">
                       <div className="flex items-center border border-neutral-800">
                         <button
@@ -93,7 +103,7 @@ export function CartPage() {
                         <button
                           type="button"
                           onClick={() => updateQuantity(id, quantity + 1)}
-                          disabled={quantity >= product.stock}
+                          disabled={soldOut || quantity >= product.stock}
                           className="px-2.5 py-1 text-neutral-300 transition-colors hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-neutral-300"
                           aria-label={`Increase quantity of ${product.name}`}
                         >
@@ -110,7 +120,8 @@ export function CartPage() {
                     </div>
                   </div>
                 </li>
-              ))}
+                )
+              })}
             </ul>
 
             <div className="flex flex-col gap-6 border-t border-neutral-800 pt-6 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
@@ -128,11 +139,16 @@ export function CartPage() {
                   {error}
                 </p>
               )}
-              <ExpressPay onPay={handleCheckout} loading={loading} />
+              {hasSoldOutItem && (
+                <p className="border border-accent bg-neutral-900/40 px-4 py-3 text-xs uppercase tracking-widest text-accent">
+                  Bitte entferne die ausverkauften Artikel aus deinem Warenkorb, um fortzufahren.
+                </p>
+              )}
+              <ExpressPay onPay={handleCheckout} loading={loading || hasSoldOutItem} />
               <button
                 type="button"
                 onClick={handleCheckout}
-                disabled={loading}
+                disabled={loading || hasSoldOutItem}
                 className="w-full border border-accent px-5 py-3.5 text-xs uppercase tracking-widest text-neutral-100 transition-colors hover:border-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? 'Redirecting…' : 'Pay by card'}

@@ -19,7 +19,14 @@ interface Env {
   RESEND_API_KEY?: string
   RESEND_FROM_EMAIL?: string
   BOOKING_NOTIFY_EMAIL?: string
+  KV_REST_API_URL?: string
+  KV_REST_API_TOKEN?: string
+  UPSTASH_REDIS_REST_URL?: string
+  UPSTASH_REDIS_REST_TOKEN?: string
 }
+
+import { getCatalogEntry } from '../../src/data/catalog'
+import { recordPurchases } from '../_soldout'
 
 const STRIPE_API_BASE = 'https://api.stripe.com'
 const STRIPE_API_VERSION = '2026-07-29.dahlia'
@@ -72,11 +79,17 @@ async function verifyStripeSignature(payload: string, header: string, secret: st
   return signatures.some((sig) => timingSafeEqual(sig, expected))
 }
 
-type LineItem = { description?: string; quantity?: number; amount_total?: number; currency?: string }
+type LineItem = {
+  description?: string
+  quantity?: number
+  amount_total?: number
+  currency?: string
+  price?: { product?: { metadata?: { product_id?: string } } }
+}
 
 async function fetchLineItems(sessionId: string, secretKey: string): Promise<LineItem[]> {
   const response = await fetch(
-    `${STRIPE_API_BASE}/v1/checkout/sessions/${encodeURIComponent(sessionId)}/line_items?limit=100`,
+    `${STRIPE_API_BASE}/v1/checkout/sessions/${encodeURIComponent(sessionId)}/line_items?limit=100&expand[]=data.price.product`,
     { headers: { Authorization: `Bearer ${secretKey}`, 'Stripe-Version': STRIPE_API_VERSION } },
   )
   if (!response.ok) return []
@@ -194,10 +207,30 @@ async function handleCheckoutCompleted(session: Record<string, unknown>, env: En
 
   if (!env.RESEND_API_KEY) {
     console.log(`[stripe] checkout.session.completed ${sessionId} — RESEND_API_KEY not set, skipping emails.`)
-    return
   }
 
   const lineItems = env.STRIPE_SECRET_KEY && sessionId ? await fetchLineItems(sessionId, env.STRIPE_SECRET_KEY) : []
+
+  // Auto-mark purchased items as sold-out once their stock is exhausted.
+  // Runs independently of email delivery so it still happens even if Resend
+  // isn't configured.
+  const purchases = lineItems
+    .map((item) => {
+      const productId = item.price?.product?.metadata?.product_id
+      const quantity = item.quantity ?? 1
+      const entry = productId ? getCatalogEntry(productId) : undefined
+      if (!productId || !entry) return null
+      return { id: productId, quantity, initialStock: entry.stock }
+    })
+    .filter((entry): entry is { id: string; quantity: number; initialStock: number } => entry !== null)
+  if (purchases.length > 0) {
+    await recordPurchases(env, purchases).catch((error) => {
+      console.error('[soldout] Failed to record purchases:', error)
+    })
+  }
+
+  if (!env.RESEND_API_KEY) return
+
   const itemLines = lineItems.length
     ? lineItems.map((item) => `  • ${item.quantity ?? 1}× ${item.description ?? 'Artikel'} — ${formatMoney(item.amount_total, item.currency ?? currency)}`).join('\n')
     : '  (Artikel konnten nicht geladen werden — siehe Stripe Dashboard)'

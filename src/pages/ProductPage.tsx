@@ -7,7 +7,7 @@ import { shopItems } from '../data/shop'
 export function ProductPage() {
   const { id } = useParams()
   const item = shopItems.find((product) => product.id === id)
-  const { addToCart, isFavorite, toggleFavorite, cart } = useShop()
+  const { addToCart, isFavorite, toggleFavorite, cart, isSoldOut } = useShop()
 
   if (!item) {
     return (
@@ -23,7 +23,7 @@ export function ProductPage() {
   }
 
   const inCartQuantity = cart.find((entry) => entry.id === item.id)?.quantity ?? 0
-  const available = item.availability === 'available'
+  const available = item.availability === 'available' && !isSoldOut(item.id)
   const canAddToCart = available && inCartQuantity < item.stock
   const favorite = isFavorite(item.id)
   const mailto = `mailto:hello@example.com?subject=${encodeURIComponent(`Shop Inquiry: ${item.name}`)}`
@@ -121,6 +121,7 @@ export function ProductPage() {
           <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 md:gap-y-14">
             {relatedItems.map((related) => {
               const relatedFavorite = isFavorite(related.id)
+              const relatedSoldOut = related.availability === 'sold-out' || isSoldOut(related.id)
               return (
                 <div key={related.id} className="group relative">
                   <div className="relative aspect-[4/5] overflow-hidden">
@@ -132,9 +133,9 @@ export function ProductPage() {
                       loading="lazy"
                       decoding="async"
                       sizes="(min-width: 768px) 33vw, 50vw"
-                      className={`h-full w-full object-contain ${related.availability === 'sold-out' ? 'blur-[2px]' : ''}`}
+                      className={`h-full w-full object-contain ${relatedSoldOut ? 'blur-[2px]' : ''}`}
                     />
-                    {related.availability === 'sold-out' && (
+                    {relatedSoldOut && (
                       <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">
                         Sold out
                       </span>

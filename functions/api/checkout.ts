@@ -6,12 +6,17 @@
 
 import { getCatalogEntry } from '../../src/data/catalog'
 import { stripeRequest, StripeError, randomSuffix } from '../_stripe'
+import { getSoldOutIds } from '../_soldout'
 
 interface Env {
   STRIPE_SECRET_KEY: string
   // Optional override for the public site origin (e.g. https://od-complaints.pages.dev).
   // Falls back to the request origin when unset.
   SITE_URL?: string
+  KV_REST_API_URL?: string
+  KV_REST_API_TOKEN?: string
+  UPSTASH_REDIS_REST_URL?: string
+  UPSTASH_REDIS_REST_TOKEN?: string
 }
 
 type CartLine = { id: unknown; quantity: unknown }
@@ -46,6 +51,7 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
   }
 
   // Validate every line against the server catalog and build trusted line items.
+  const soldOutIds = await getSoldOutIds(env)
   const lineItems: Array<Record<string, unknown>> = []
   for (const raw of rawItems) {
     const id = typeof raw.id === 'string' ? raw.id : ''
@@ -55,7 +61,7 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
     if (!entry) {
       return json({ error: `Unknown product: ${id || '(missing id)'}.` }, 400)
     }
-    if (!entry.available) {
+    if (!entry.available || soldOutIds.includes(id)) {
       return json({ error: `${entry.name} is sold out.` }, 409)
     }
     if (!Number.isFinite(quantity) || quantity < 1 || quantity > 20) {

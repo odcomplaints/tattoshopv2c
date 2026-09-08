@@ -28,6 +28,7 @@ type BookingPayload = {
   bodyPart?: unknown
   size?: unknown
   date?: unknown
+  
   checkoutType?: unknown
 }
 

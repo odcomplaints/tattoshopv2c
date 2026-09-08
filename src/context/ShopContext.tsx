@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { shopItems } from '../data/shop'
+import { fetchSoldOutIds } from '../lib/soldOut'
 
 export type CartItem = { id: string; quantity: number }
 
@@ -15,6 +16,8 @@ type ShopContextValue = {
   favoritesCount: number
   isFavorite: (id: string) => boolean
   toggleFavorite: (id: string) => void
+  /** True if this product was auto-marked sold-out by a real purchase (live, not from shop.ts). */
+  isSoldOut: (id: string) => boolean
 }
 
 const ShopContext = createContext<ShopContextValue | null>(null)
@@ -43,6 +46,17 @@ function readFavorites(): string[] {
 export function ShopProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>(() => readCart())
   const [favorites, setFavorites] = useState<string[]>(() => readFavorites())
+  const [soldOutIds, setSoldOutIds] = useState<string[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+    fetchSoldOutIds().then((ids) => {
+      if (!cancelled) setSoldOutIds(ids)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     window.localStorage.setItem(CART_KEY, JSON.stringify(cart))
@@ -52,7 +66,10 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites))
   }, [favorites])
 
+  const isSoldOut = (id: string) => soldOutIds.includes(id)
+
   const addToCart = (id: string) => {
+    if (isSoldOut(id)) return
     const maxStock = shopItems.find((item) => item.id === id)?.stock ?? 1
     setCart((current) => {
       const existing = current.find((entry) => entry.id === id)
@@ -103,6 +120,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
         favoritesCount: favorites.length,
         isFavorite,
         toggleFavorite,
+        isSoldOut,
       }}
     >
       {children}

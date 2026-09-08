@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { FormEvent, ReactNode } from 'react'
+import type { DragEvent, FormEvent, ReactNode } from 'react'
 import { Layout } from '../components/Layout'
 import { shopItems as initialShopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
@@ -34,6 +34,7 @@ function emptyItem(): ShopItem {
     stock: 1,
     description: '',
     details: [],
+    color: '',
   }
 }
 
@@ -59,6 +60,8 @@ function generateShopTs(items: ShopItem[]): string {
   lines.push(`  stock: number`)
   lines.push(`  description: string`)
   lines.push(`  details: string[]`)
+  lines.push(`  /** Optional color label for the item, editable in the admin panel. */`)
+  lines.push(`  color?: string`)
   lines.push(`}`)
   lines.push(``)
   lines.push(`export const shopItems: ShopItem[] = [`)
@@ -74,6 +77,9 @@ function generateShopTs(items: ShopItem[]): string {
     lines.push(`    description:`)
     lines.push(`      '${escapeSingle(item.description)}',`)
     lines.push(`    details: [${item.details.map((d) => `'${escapeSingle(d)}'`).join(', ')}],`)
+    if (item.color) {
+      lines.push(`    color: '${escapeSingle(item.color)}',`)
+    }
     lines.push(`  },`)
   }
   lines.push(`]`)
@@ -103,6 +109,8 @@ function generateCatalogTs(items: ShopItem[]): string {
   lines.push(`  currency: string`)
   lines.push(`  /** Whether the item can currently be purchased */`)
   lines.push(`  available: boolean`)
+  lines.push(`  /** Number of units in stock. Used to auto-mark items sold-out after purchase. */`)
+  lines.push(`  stock: number`)
   lines.push(`}`)
   lines.push(``)
   lines.push(`export const catalog: Record<string, CatalogEntry> = {`)
@@ -110,7 +118,7 @@ function generateCatalogTs(items: ShopItem[]): string {
     const cents = parsePriceToCents(item.price)
     const available = item.availability === 'available' && item.stock > 0
     lines.push(
-      `  '${item.id}': { id: '${item.id}', name: '${escapeSingle(item.name)}', priceCents: ${cents}, currency: 'eur', available: ${available} },`,
+      `  '${item.id}': { id: '${item.id}', name: '${escapeSingle(item.name)}', priceCents: ${cents}, currency: 'eur', available: ${available}, stock: ${item.stock} },`,
     )
   }
   lines.push(`}`)
@@ -129,6 +137,22 @@ function readDraft(): ShopItem[] | null {
   } catch {
     return null
   }
+}
+
+// Merges a locally saved draft with the current source-of-truth items from
+// src/data/shop.ts. This prevents a stale localStorage draft (saved before
+// new items were added directly to the file) from hiding those new items:
+// - Items that exist in the file always show up, using the draft's edited
+//   values when available.
+// - Items only present in the draft (e.g. newly added in the panel but not
+//   yet pasted back into shop.ts) are kept too.
+function mergeWithDraft(draft: ShopItem[] | null, source: ShopItem[]): ShopItem[] {
+  if (!draft) return source
+  const draftById = new Map(draft.map((item) => [item.id, item]))
+  const merged = source.map((item) => draftById.get(item.id) ?? item)
+  const sourceIds = new Set(source.map((item) => item.id))
+  const draftOnly = draft.filter((item) => !sourceIds.has(item.id))
+  return [...merged, ...draftOnly]
 }
 
 type TrackingForm = {
@@ -290,14 +314,192 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 }
 
 const inputClass =
-  'border border-neutral-800 bg-neutral-950 px-3 py-2.5 text-sm normal-case tracking-normal text-neutral-100 outline-none transition-colors focus:border-accent'
+  'border border-neutral-800 bg-neutral-950 px-4 py-3 text-base normal-case tracking-normal text-neutral-100 outline-none transition-colors focus:border-accent'
+
+// Lets you drag & drop the full item list into a custom order, then copy
+// that order (as a plain list of ids/names) so it can be handed over as
+// instructions — this section doesn't change shop.ts/catalog.ts itself.
+function SortSection({ items }: { items: ShopItem[] }) {
+  const [order, setOrder] = useState<ShopItem[]>(items)
+  const [dragIndex, setDragIndex] = useState<number | null>(null)
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied'>('idle')
+  const [positionDrafts, setPositionDrafts] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    // Keep the sort list in sync when items are added/removed/edited
+    // elsewhere, but preserve the custom order for items that still exist.
+    setOrder((current) => {
+      const byId = new Map(current.map((item) => [item.id, item]))
+      const kept = current.filter((item) => items.some((i) => i.id === item.id)).map((item) => byId.get(item.id)!)
+      const newOnes = items.filter((item) => !current.some((i) => i.id === item.id))
+      const updated = [...kept, ...newOnes].map((item) => items.find((i) => i.id === item.id) ?? item)
+      return updated
+    })
+  }, [items])
+
+  function handleDragStart(index: number) {
+    setDragIndex(index)
+  }
+
+  function handleDragOver(event: DragEvent<HTMLLIElement>, index: number) {
+    event.preventDefault()
+    if (dragIndex === null || dragIndex === index) return
+    setOrder((current) => {
+      const next = [...current]
+      const [moved] = next.splice(dragIndex, 1)
+      next.splice(index, 0, moved)
+      return next
+    })
+    setDragIndex(index)
+  }
+
+  function handleDragEnd() {
+    setDragIndex(null)
+  }
+
+  function moveItem(index: number, direction: -1 | 1) {
+    setOrder((current) => {
+      const target = index + direction
+      if (target < 0 || target >= current.length) return current
+      const next = [...current]
+      const [moved] = next.splice(index, 1)
+      next.splice(target, 0, moved)
+      return next
+    })
+  }
+
+  function moveToPosition(index: number, position: number) {
+    setOrder((current) => {
+      if (!Number.isFinite(position)) return current
+      const target = Math.min(Math.max(Math.round(position) - 1, 0), current.length - 1)
+      if (target === index) return current
+      const next = [...current]
+      // Swap: the item that was at the target position takes the moved
+      // item's old spot, instead of shifting everything in between.
+      ;[next[index], next[target]] = [next[target], next[index]]
+      return next
+    })
+  }
+
+  async function copyOrder() {
+    const text = order.map((item, i) => `${i + 1}. ${item.name} (${item.id})`).join('\n')
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopyStatus('copied')
+      setTimeout(() => setCopyStatus('idle'), 2500)
+    } catch {
+      window.alert('Kopieren fehlgeschlagen. Bitte versuche es erneut.')
+    }
+  }
+
+  return (
+    <div className="mt-12 border-t border-neutral-800 pt-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-medium uppercase tracking-widest text-neutral-100">Sortierung</h2>
+          <p className="mt-2 max-w-2xl text-sm text-neutral-400">
+            Alle Artikel in einer einfachen Liste — per Drag &amp; Drop, den Pfeilen oder direkter Eingabe der
+            Platznummer in die gewünschte Reihenfolge bringen, dann die Liste kopieren, um sie weiterzugeben.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={copyOrder}
+          className="cta-solid border border-accent bg-accent px-5 py-3 text-xs uppercase tracking-widest transition-colors hover:opacity-90"
+        >
+          {copyStatus === 'copied' ? '✓ Kopiert' : 'Reihenfolge kopieren'}
+        </button>
+      </div>
+
+      <ul className="mt-6 flex max-h-[70vh] flex-col gap-2 overflow-y-auto">
+        {order.map((item, index) => (
+          <li
+            key={item.id}
+            draggable
+            onDragStart={() => handleDragStart(index)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDragEnd={handleDragEnd}
+            className={`flex items-center gap-4 border px-3 py-3 transition-colors ${
+              dragIndex === index ? 'border-accent bg-neutral-900' : 'border-neutral-800 bg-neutral-950/40'
+            }`}
+          >
+            <span className="cursor-grab select-none text-neutral-600" aria-hidden="true">
+              ⠿
+            </span>
+            <span className="w-8 shrink-0 text-sm text-neutral-500">{index + 1}.</span>
+            <span className="h-16 w-16 shrink-0 overflow-hidden bg-neutral-900/60">
+              {item.image && <img src={item.image} alt="" className="h-full w-full object-contain" loading="lazy" />}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm uppercase tracking-widest text-neutral-200">{item.name}</span>
+              <span className="block truncate text-xs text-neutral-500">
+                {item.price}
+                {item.color ? ` · ${item.color}` : ''}
+              </span>
+            </span>
+            <div className="flex shrink-0 items-center gap-2">
+              <input
+                type="number"
+                min={1}
+                max={order.length}
+                value={positionDrafts[item.id] ?? String(index + 1)}
+                onChange={(e) => setPositionDrafts((current) => ({ ...current, [item.id]: e.target.value }))}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter') return
+                  const value = Number((e.target as HTMLInputElement).value)
+                  moveToPosition(index, value)
+                  setPositionDrafts((current) => {
+                    const next = { ...current }
+                    delete next[item.id]
+                    return next
+                  })
+                }}
+                onBlur={(e) => {
+                  const value = Number(e.target.value)
+                  moveToPosition(index, value)
+                  setPositionDrafts((current) => {
+                    const next = { ...current }
+                    delete next[item.id]
+                    return next
+                  })
+                }}
+                aria-label="Platz in der Liste"
+                className="w-16 border border-neutral-700 bg-neutral-950 px-2 py-1 text-center text-sm text-neutral-200 focus:border-accent focus:outline-none"
+              />
+              <div className="flex shrink-0 flex-col gap-1">
+                <button
+                  type="button"
+                  onClick={() => moveItem(index, -1)}
+                  disabled={index === 0}
+                  className="px-2 text-neutral-400 hover:text-accent disabled:opacity-20"
+                  aria-label="Nach oben"
+                >
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveItem(index, 1)}
+                  disabled={index === order.length - 1}
+                  className="px-2 text-neutral-400 hover:text-accent disabled:opacity-20"
+                  aria-label="Nach unten"
+                >
+                  ▼
+                </button>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 export function AdminPage() {
   const [authed, setAuthed] = useState(false)
   const [passwordInput, setPasswordInput] = useState('')
   const [authError, setAuthError] = useState(false)
 
-  const [items, setItems] = useState<ShopItem[]>(() => readDraft() ?? initialShopItems)
+  const [items, setItems] = useState<ShopItem[]>(() => mergeWithDraft(readDraft(), initialShopItems))
   const [selectedId, setSelectedId] = useState<string | null>(items[0]?.id ?? null)
   const [copyStatus, setCopyStatus] = useState<'idle' | 'shop' | 'catalog'>('idle')
   const [search, setSearch] = useState('')
@@ -430,10 +632,10 @@ export function AdminPage() {
 
   return (
     <Layout title="Admin | OD COMPLAINTS" description="Shop admin tool.">
-      <div className="mx-auto max-w-4xl text-left">
+      <div className="mx-auto max-w-6xl text-left">
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="text-2xl font-medium uppercase tracking-widest text-neutral-100">Shop verwalten</h1>
+          <h1 className="text-3xl font-medium uppercase tracking-widest text-neutral-100">Shop verwalten</h1>
           <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
@@ -485,7 +687,7 @@ export function AdminPage() {
           <p className="text-xs text-neutral-500">{items.length} Artikel insgesamt</p>
         </div>
 
-        <div className="mt-8 grid gap-8 md:grid-cols-[240px_1fr]">
+        <div className="mt-8 grid gap-8 md:grid-cols-[320px_1fr]">
           {/* Item list */}
           <div className="flex flex-col gap-3">
             <input
@@ -502,35 +704,38 @@ export function AdminPage() {
             >
               + Neuer Artikel
             </button>
-            <ul className="flex max-h-[65vh] flex-col gap-1 overflow-y-auto">
+            <ul className="flex max-h-[70vh] flex-col gap-2 overflow-y-auto">
               {filteredItems.map((item) => (
                 <li key={item.id}>
                   <button
                     type="button"
                     onClick={() => setSelectedId(item.id)}
-                    className={`flex w-full items-center gap-3 border px-2.5 py-2 text-left transition-colors ${
+                    className={`flex w-full items-center gap-4 border px-3 py-3 text-left transition-colors ${
                       item.id === selectedId
                         ? 'border-accent bg-neutral-900'
                         : 'border-transparent hover:border-neutral-800 hover:bg-neutral-900/50'
                     }`}
                   >
-                    <span className="h-10 w-10 shrink-0 overflow-hidden bg-neutral-900/60">
+                    <span className="h-16 w-16 shrink-0 overflow-hidden bg-neutral-900/60">
                       {item.image && (
                         <img src={item.image} alt="" className="h-full w-full object-contain" loading="lazy" />
                       )}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span
-                        className={`block truncate text-xs uppercase tracking-widest ${
+                        className={`block truncate text-sm uppercase tracking-widest ${
                           item.id === selectedId ? 'text-accent' : 'text-neutral-200'
                         }`}
                       >
                         {item.name || '(ohne Namen)'}
                       </span>
-                      <span className="block truncate text-[11px] text-neutral-500">{item.price}</span>
+                      <span className="block truncate text-xs text-neutral-500">
+                        {item.price}
+                        {item.color ? ` · ${item.color}` : ''}
+                      </span>
                     </span>
                     {item.availability === 'sold-out' && (
-                      <span className="shrink-0 text-[9px] uppercase tracking-widest text-neutral-600">Sold out</span>
+                      <span className="shrink-0 text-[10px] uppercase tracking-widest text-neutral-600">Sold out</span>
                     )}
                   </button>
                 </li>
@@ -544,18 +749,21 @@ export function AdminPage() {
           {/* Editor */}
           {selected ? (
             <div className="flex flex-col gap-6">
-              <div className="flex items-start gap-5 border-b border-neutral-800 pb-6">
-                <div className="h-28 w-24 shrink-0 overflow-hidden bg-neutral-900/40">
+              <div className="flex items-start gap-6 border-b border-neutral-800 pb-6">
+                <div className="h-40 w-36 shrink-0 overflow-hidden bg-neutral-900/40">
                   {selected.image && (
                     <img src={selected.image} alt="Vorschau" className="h-full w-full object-contain" />
                   )}
                 </div>
                 <div className="flex flex-1 flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-lg font-medium uppercase tracking-widest text-neutral-100">
+                    <p className="text-xl font-medium uppercase tracking-widest text-neutral-100">
                       {selected.name || '(ohne Namen)'}
                     </p>
-                    <p className="mt-1 text-sm text-neutral-500">{selected.price}</p>
+                    <p className="mt-1 text-base text-neutral-500">
+                      {selected.price}
+                      {selected.color ? ` · ${selected.color}` : ''}
+                    </p>
                   </div>
                   <div className="flex gap-4 text-xs uppercase tracking-widest">
                     <button type="button" onClick={handleDuplicateSelected} className="text-neutral-400 hover:text-accent">
@@ -591,6 +799,15 @@ export function AdminPage() {
                     value={selected.category}
                     onChange={(e) => updateSelected({ category: e.target.value })}
                     className={inputClass}
+                  />
+                </Field>
+                <Field label="Farbe">
+                  <input
+                    type="text"
+                    value={selected.color ?? ''}
+                    onChange={(e) => updateSelected({ color: e.target.value })}
+                    className={inputClass}
+                    placeholder="z. B. Schwarz, Rot, Lila…"
                   />
                 </Field>
                 <Field label="Anzahl (Lagerbestand)">
@@ -666,6 +883,7 @@ export function AdminPage() {
         </div>
 
         <ShippingConfirmationSection />
+        <SortSection items={items} />
       </div>
     </Layout>
   )
