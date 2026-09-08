@@ -3,6 +3,7 @@ import { Layout } from '../components/Layout'
 import { WorkSlideshow } from '../components/WorkSlideshow'
 import { GlobeIcon } from '../components/icons'
 import SpecularButton from '../components/SpecularButton'
+import WarpText from '../components/WarpText'
 import { useLanguage } from '../context/LanguageContext'
 import { newestWork } from '../data/work'
 
@@ -25,8 +26,42 @@ export function HomePage() {
     >
       <section className="mx-auto flex min-h-[58svh] max-w-4xl flex-col items-center justify-center pb-5 text-center">
         <p className="text-xs uppercase tracking-widest text-accent">{t.home.eyebrow}</p>
-        <h1 className="mt-5 text-5xl font-black uppercase leading-[0.95] tracking-wide text-neutral-100 sm:text-7xl">OD COMPLAINTS</h1>
-        <p className="mt-5 text-base uppercase tracking-[0.3em] text-accent sm:text-lg">{t.home.tagline}</p>
+        <h1 className="mt-5 w-full text-5xl font-black uppercase leading-[0.95] tracking-wide text-neutral-100 sm:text-7xl">
+          <WarpText
+            text="OD COMPLAINTS"
+            color="#ff3939"
+            fontFamily="inherit"
+            fontWeight={900}
+            fontSize="inherit"
+            letterSpacing="inherit"
+            lineHeight={0.95}
+            warpStrength={1}
+            warpScale={1.4}
+            speed={0.4}
+            pointerInfluence={0.4}
+            pointerStrength={0.8}
+            refraction={0}
+            style={{ minHeight: '1.1em', display: 'block' }}
+          />
+        </h1>
+        <p className="mt-5 w-full max-w-md text-base uppercase tracking-[0.3em] text-accent sm:text-lg">
+          <WarpText
+            text={t.home.tagline}
+            color="#ff3939"
+            fontFamily="inherit"
+            fontWeight={600}
+            fontSize="inherit"
+            letterSpacing="inherit"
+            lineHeight={1.2}
+            warpStrength={1000}
+            warpScale={5.6}
+            speed={0.45}
+            pointerInfluence={0.4}
+            pointerStrength={1}
+            refraction={0}
+            style={{ minHeight: '2em', display: 'block' }}
+          />
+        </p>
         <p className="mt-6 max-w-xl text-sm leading-7 text-neutral-400">{t.home.description}</p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <SpecularButton

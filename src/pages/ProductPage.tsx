@@ -132,7 +132,7 @@ export function ProductPage() {
                       loading="lazy"
                       decoding="async"
                       sizes="(min-width: 768px) 33vw, 50vw"
-                      className="h-full w-full object-contain"
+                      className={`h-full w-full object-contain ${related.availability === 'sold-out' ? 'blur-[2px]' : ''}`}
                     />
                     {related.availability === 'sold-out' && (
                       <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">

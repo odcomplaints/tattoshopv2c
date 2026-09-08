@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link, NavLink, useLocation } from 'react-router-dom'
@@ -6,6 +6,7 @@ import logo from '../assets/logoshopbesser.png'
 import { useShop } from '../context/ShopContext'
 import { useLanguage } from '../context/LanguageContext'
 import { CartIcon, HeartIcon } from './icons'
+import DecryptedText from './DecryptedText'
 
 type LayoutProps = {
   children: ReactNode
@@ -24,6 +25,8 @@ const navigation = [
   { key: 'about', to: '/about' },
 ] as const
 
+const DECRYPT_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
 export function Layout({
   children,
   title = 'OD COMPLAINTS | GD',
@@ -31,12 +34,37 @@ export function Layout({
   headerExtra,
 }: LayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [menuRevealStep, setMenuRevealStep] = useState(0)
   const location = useLocation()
   const { cartCount, favoritesCount } = useShop()
   const { t } = useLanguage()
   const isShopSection = location.pathname.startsWith('/shop')
   const canonicalUrl = `${SITE_URL}${location.pathname}`
   const ogImage = `${SITE_URL}${logo}`
+  const mobileMenuItemCount = navigation.length + (isShopSection ? 2 : 0)
+
+  useEffect(() => {
+    if (!menuOpen) {
+      setMenuRevealStep(0)
+      return
+    }
+    setMenuRevealStep(0)
+    let step = 0
+    let interval: ReturnType<typeof setInterval> | undefined
+    const startTimeout = setTimeout(() => {
+      interval = setInterval(() => {
+        step += 1
+        setMenuRevealStep(step)
+        if (step >= mobileMenuItemCount) {
+          if (interval) clearInterval(interval)
+        }
+      }, 160)
+    }, 250)
+    return () => {
+      clearTimeout(startTimeout)
+      if (interval) clearInterval(interval)
+    }
+  }, [menuOpen, mobileMenuItemCount])
 
   return (
     <div className="relative z-10 flex min-h-screen flex-col text-neutral-200">
@@ -134,14 +162,27 @@ export function Layout({
             &times;
           </button>
           <ul className="flex flex-col items-center gap-y-8 px-5 py-6 text-3xl uppercase tracking-widest">
-            {navigation.map((item) => (
+            {navigation.map((item, index) => (
               <li key={item.to}>
                 <NavLink
                   to={item.to}
                   onClick={() => setMenuOpen(false)}
                   className="text-accent transition-colors hover:text-neutral-100"
                 >
-                  {t.nav[item.key]}
+                  {menuRevealStep > index ? (
+                    <DecryptedText
+                      text={t.nav[item.key]}
+                      animateOn="view"
+                      sequential
+                      revealDirection="start"
+                      speed={55}
+                      characters={DECRYPT_CHARACTERS}
+                      className="text-accent"
+                      encryptedClassName="text-neutral-500"
+                    />
+                  ) : (
+                    <span className="opacity-0">{t.nav[item.key]}</span>
+                  )}
                 </NavLink>
               </li>
             ))}
@@ -153,7 +194,20 @@ export function Layout({
                     onClick={() => setMenuOpen(false)}
                     className="text-accent transition-colors hover:text-neutral-100"
                   >
-                    {t.nav.favorites}
+                    {menuRevealStep > navigation.length ? (
+                      <DecryptedText
+                        text={t.nav.favorites}
+                        animateOn="view"
+                        sequential
+                        revealDirection="start"
+                        speed={55}
+                        characters={DECRYPT_CHARACTERS}
+                        className="text-accent"
+                        encryptedClassName="text-neutral-500"
+                      />
+                    ) : (
+                      <span className="opacity-0">{t.nav.favorites}</span>
+                    )}
                   </NavLink>
                 </li>
                 <li>
@@ -162,7 +216,20 @@ export function Layout({
                     onClick={() => setMenuOpen(false)}
                     className="text-accent transition-colors hover:text-neutral-100"
                   >
-                    {t.nav.cart}{cartCount > 0 ? ` (${cartCount})` : ''}
+                    {menuRevealStep > navigation.length + 1 ? (
+                      <DecryptedText
+                        text={`${t.nav.cart}${cartCount > 0 ? ` (${cartCount})` : ''}`}
+                        animateOn="view"
+                        sequential
+                        revealDirection="start"
+                        speed={55}
+                        characters={DECRYPT_CHARACTERS}
+                        className="text-accent"
+                        encryptedClassName="text-neutral-500"
+                      />
+                    ) : (
+                      <span className="opacity-0">{t.nav.cart}{cartCount > 0 ? ` (${cartCount})` : ''}</span>
+                    )}
                   </NavLink>
                 </li>
               </>
