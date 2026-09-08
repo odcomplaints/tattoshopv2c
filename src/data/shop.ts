@@ -38,7 +38,7 @@ export const shopItems: ShopItem[] = [
   {
     id: 'bape-shark-mickey',
     name: 'Bape Shark × Mickey Mouse',
-    price: '620 EUR',
+    price: '1400 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/bapesharkmickeymouse.png',
     availability: 'available',
@@ -50,7 +50,7 @@ export const shopItems: ShopItem[] = [
   {
     id: 'bape-shark-multicamo',
     name: 'Bape Shark Multi-Camo',
-    price: '470 EUR',
+    price: '460 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/bapesharkmulticamo.png',
     availability: 'available',
@@ -134,7 +134,7 @@ export const shopItems: ShopItem[] = [
   {
     id: 'cp-company',
     name: 'CP Company Jacke',
-    price: '250 EUR',
+    price: '210 EUR',
     category: 'Streetwear / Jacke',
     image: '/assets/shop/cpcompany.png',
     availability: 'available',
@@ -182,7 +182,7 @@ export const shopItems: ShopItem[] = [
   {
     id: 'spider-hoodie-pink',
     name: 'Spider Hoodie Pink',
-    price: '480 EUR',
+    price: '340 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/spiderhoodiepink.png',
     availability: 'available',
@@ -242,7 +242,7 @@ export const shopItems: ShopItem[] = [
   {
     id: 'arabic-shirt',
     name: 'Arabic Graphic Shirt',
-    price: '95 EUR',
+    price: '69 EUR',
     category: 'SKATE / BOXTEE',
     image: '/assets/shop/arabicshirt.png',
     availability: 'available',
@@ -266,7 +266,7 @@ export const shopItems: ShopItem[] = [
   {
     id: 'goat-tee',
     name: 'GOAT T-Shirt',
-    price: '100 EUR',
+    price: '69 EUR',
     category: 'SKATE / BOXTEE',
     image: '/assets/shop/GOATtee.png',
     availability: 'available',
