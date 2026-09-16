@@ -76,7 +76,7 @@ export const shopItems: ShopItem[] = [
     name: 'Bape Shark Hoodie Pink',
     price: '450 EUR',
     category: 'Streetwear / Hoodie',
-    image: '/assets/shop/bapesharkpink.png',
+    image: '/assets/shop/bapesharpink.png',
     availability: 'available',
     stock: 1,
     description:
@@ -90,7 +90,7 @@ export const shopItems: ShopItem[] = [
     name: 'Bape Shark Hoodie Rot',
     price: '420 EUR',
     category: 'Streetwear / Hoodie',
-    image: '/assets/shop/bapesharkrot.png',
+    image: '/assets/shop/roterbapeshark.png',
     availability: 'available',
     stock: 1,
     description:

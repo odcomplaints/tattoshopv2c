@@ -117,3 +117,19 @@
     display: none;
   }
 }
+
+@media (max-width: 640px) {
+  .action-button {
+    min-width: 44px;
+    height: 44px;
+    padding: 0 10px;
+  }
+
+  .action-button.active {
+    bottom: 2.4em;
+  }
+
+  .action-button-icon {
+    font-size: 15px;
+  }
+}

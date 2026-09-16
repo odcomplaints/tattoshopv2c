@@ -147,34 +147,74 @@ export function Layout({
             )}
           </div>
         </div>
-        <div
-          className={`fixed inset-0 z-40 bg-neutral-950/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${menuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-          aria-hidden="true"
-          onClick={() => setMenuOpen(false)}
-        />
-        <nav
-          aria-label="Main navigation"
-          className={`fixed inset-y-0 right-0 z-50 flex w-[65%] flex-col border-l border-neutral-800 bg-neutral-950 pt-20 transition-transform duration-300 ease-out lg:hidden ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      </header>
+      )}
+      {hideChrome && (
+        <button
+          type="button"
+          className="fixed right-5 top-5 z-50 flex h-9 w-9 flex-col items-center justify-center gap-1.5 lg:hidden"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
         >
-          <button
-            type="button"
-            className="absolute right-5 top-5 text-2xl leading-none text-accent transition-colors hover:text-neutral-100"
-            aria-label="Close menu"
-            onClick={() => setMenuOpen(false)}
-          >
-            &times;
-          </button>
-          <ul className="flex flex-col items-center gap-y-8 px-5 py-6 text-3xl uppercase tracking-widest">
-            {navigation.map((item, index) => (
-              <li key={item.to}>
+          <span className={`h-px w-6 bg-accent transition-transform ${menuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
+          <span className={`h-px w-6 bg-accent transition-opacity ${menuOpen ? 'opacity-0' : ''}`} />
+          <span className={`h-px w-6 bg-accent transition-transform ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
+        </button>
+      )}
+      <div
+        className={`fixed inset-0 z-40 bg-neutral-950/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${menuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        aria-hidden="true"
+        onClick={() => setMenuOpen(false)}
+      />
+      <nav
+        aria-label="Main navigation"
+        className={`fixed inset-y-0 right-0 z-50 flex w-[65%] flex-col border-l border-neutral-800 bg-neutral-950 pt-20 transition-transform duration-300 ease-out lg:hidden ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        <button
+          type="button"
+          className="absolute right-5 top-5 text-2xl leading-none text-accent transition-colors hover:text-neutral-100"
+          aria-label="Close menu"
+          onClick={() => setMenuOpen(false)}
+        >
+          &times;
+        </button>
+        <ul className="flex flex-col items-center gap-y-8 px-5 py-6 text-3xl uppercase tracking-widest">
+          {navigation.map((item, index) => (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                onClick={() => setMenuOpen(false)}
+                className="text-accent transition-colors hover:text-neutral-100"
+              >
+                {menuRevealStep > index ? (
+                  <DecryptedText
+                    text={t.nav[item.key]}
+                    animateOn="view"
+                    sequential
+                    revealDirection="start"
+                    speed={55}
+                    characters={DECRYPT_CHARACTERS}
+                    className="text-accent"
+                    encryptedClassName="text-neutral-500"
+                  />
+                ) : (
+                  <span className="opacity-0">{t.nav[item.key]}</span>
+                )}
+              </NavLink>
+            </li>
+          ))}
+          {isShopSection && (
+            <>
+              <li>
                 <NavLink
-                  to={item.to}
+                  to="/shop/favorites"
                   onClick={() => setMenuOpen(false)}
                   className="text-accent transition-colors hover:text-neutral-100"
                 >
-                  {menuRevealStep > index ? (
+                  {menuRevealStep > navigation.length ? (
                     <DecryptedText
-                      text={t.nav[item.key]}
+                      text={t.nav.favorites}
                       animateOn="view"
                       sequential
                       revealDirection="start"
@@ -184,63 +224,36 @@ export function Layout({
                       encryptedClassName="text-neutral-500"
                     />
                   ) : (
-                    <span className="opacity-0">{t.nav[item.key]}</span>
+                    <span className="opacity-0">{t.nav.favorites}</span>
                   )}
                 </NavLink>
               </li>
-            ))}
-            {isShopSection && (
-              <>
-                <li>
-                  <NavLink
-                    to="/shop/favorites"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-accent transition-colors hover:text-neutral-100"
-                  >
-                    {menuRevealStep > navigation.length ? (
-                      <DecryptedText
-                        text={t.nav.favorites}
-                        animateOn="view"
-                        sequential
-                        revealDirection="start"
-                        speed={55}
-                        characters={DECRYPT_CHARACTERS}
-                        className="text-accent"
-                        encryptedClassName="text-neutral-500"
-                      />
-                    ) : (
-                      <span className="opacity-0">{t.nav.favorites}</span>
-                    )}
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/shop/cart"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-accent transition-colors hover:text-neutral-100"
-                  >
-                    {menuRevealStep > navigation.length + 1 ? (
-                      <DecryptedText
-                        text={`${t.nav.cart}${cartCount > 0 ? ` (${cartCount})` : ''}`}
-                        animateOn="view"
-                        sequential
-                        revealDirection="start"
-                        speed={55}
-                        characters={DECRYPT_CHARACTERS}
-                        className="text-accent"
-                        encryptedClassName="text-neutral-500"
-                      />
-                    ) : (
-                      <span className="opacity-0">{t.nav.cart}{cartCount > 0 ? ` (${cartCount})` : ''}</span>
-                    )}
-                  </NavLink>
-                </li>
-              </>
-            )}
-          </ul>
-        </nav>
-      </header>
-      )}
+              <li>
+                <NavLink
+                  to="/shop/cart"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-accent transition-colors hover:text-neutral-100"
+                >
+                  {menuRevealStep > navigation.length + 1 ? (
+                    <DecryptedText
+                      text={`${t.nav.cart}${cartCount > 0 ? ` (${cartCount})` : ''}`}
+                      animateOn="view"
+                      sequential
+                      revealDirection="start"
+                      speed={55}
+                      characters={DECRYPT_CHARACTERS}
+                      className="text-accent"
+                      encryptedClassName="text-neutral-500"
+                    />
+                  ) : (
+                    <span className="opacity-0">{t.nav.cart}{cartCount > 0 ? ` (${cartCount})` : ''}</span>
+                  )}
+                </NavLink>
+              </li>
+            </>
+          )}
+        </ul>
+      </nav>
       <main className={hideChrome ? 'flex-1' : 'mx-auto w-full max-w-6xl flex-1 px-5 py-12 text-center sm:px-8 sm:py-20'}>{children}</main>
       {!hideChrome && (
       <footer className="border-t border-neutral-800 text-xs uppercase tracking-widest text-accent">
