@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useLocation } from 'react-router-dom'
 import EvilEye from './EvilEye'
 
 // Site-wide EvilEye WebGL background, fixed behind all content, plus a live
@@ -67,6 +68,10 @@ export default function SiteBackground() {
   const [config, setConfig] = useState<EyeConfig>(loadConfig)
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const location = useLocation()
+  // The eye clashes visually with the full-bleed style moodboard galleries —
+  // hide it entirely on those pages.
+  const hidden = location.pathname.startsWith('/styles')
 
   // Persist tuning across reloads.
   useEffect(() => {
@@ -131,6 +136,7 @@ export default function SiteBackground() {
   return (
     <>
       {/* Fixed WebGL background behind everything (Layout content is z-10). */}
+      {!hidden && (
       <div aria-hidden="true" style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
         <EvilEye
           eyeColor={config.eyeColor}
@@ -148,6 +154,7 @@ export default function SiteBackground() {
         {/* Dark scrim keeps content readable over the animation. */}
         <div style={{ position: 'absolute', inset: 0, background: '#0a0a0a', opacity: config.scrimOpacity }} />
       </div>
+      )}
 
       {open &&
         createPortal(

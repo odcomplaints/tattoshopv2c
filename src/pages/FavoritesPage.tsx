@@ -29,7 +29,7 @@ export function FavoritesPage() {
             <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 md:gap-y-14">
               {items.map((item) => (
                 <div key={item.id} className="group relative">
-                  <div className="relative aspect-[4/5] overflow-hidden bg-neutral-900">
+                  <div className="relative aspect-[4/5] overflow-hidden">
                     <img
                       src={item.image}
                       alt={`${item.name}, ${item.category}`}

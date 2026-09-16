@@ -13,6 +13,7 @@ type LayoutProps = {
   title?: string
   description?: string
   headerExtra?: ReactNode
+  hideChrome?: boolean
 }
 
 const SITE_URL = 'https://odcomplaints.com'
@@ -32,6 +33,7 @@ export function Layout({
   title = 'OD COMPLAINTS | GD',
   description = 'Blackwork, fineline and botanical tattoos by OD COMPLAINTS in GD.',
   headerExtra,
+  hideChrome = false,
 }: LayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuRevealStep, setMenuRevealStep] = useState(0)
@@ -83,6 +85,7 @@ export function Layout({
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={ogImage} />
       </Helmet>
+      {!hideChrome && (
       <header>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 pb-4 pt-10 lg:px-8 lg:pb-6 lg:pt-16">
           <div className="relative flex w-full items-center justify-between gap-6">
@@ -237,7 +240,9 @@ export function Layout({
           </ul>
         </nav>
       </header>
-      <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-12 text-center sm:px-8 sm:py-20">{children}</main>
+      )}
+      <main className={hideChrome ? 'flex-1' : 'mx-auto w-full max-w-6xl flex-1 px-5 py-12 text-center sm:px-8 sm:py-20'}>{children}</main>
+      {!hideChrome && (
       <footer className="border-t border-neutral-800 text-xs uppercase tracking-widest text-accent">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-4 px-5 py-6 text-center sm:px-8">
           <p>GD</p>
@@ -248,6 +253,7 @@ export function Layout({
           </div>
         </div>
       </footer>
+      )}
     </div>
   )
 }

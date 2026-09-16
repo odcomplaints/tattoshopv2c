@@ -10,6 +10,7 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { ProductPage } from './pages/ProductPage'
 import { ShopPage } from './pages/ShopPage'
+import { StylesPage } from './pages/StylesPage'
 import { SuccessPage } from './pages/SuccessPage'
 import { WorkPage } from './pages/WorkPage'
 import { ScrollToTop } from './components/ScrollToTop'
@@ -28,6 +29,7 @@ function App() {
         <Route path="/shop/:id" element={<ProductPage />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/styles" element={<StylesPage />} />
         <Route path="/imprint" element={<ImprintPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/admin" element={<AdminPage />} />

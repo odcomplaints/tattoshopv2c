@@ -8,10 +8,10 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
 
 export function WorkGrid({ items }: WorkGridProps) {
   return (
-    <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-12">
+    <div className="columns-2 gap-x-3 md:columns-3 md:gap-x-5 [&>article]:mb-8 md:[&>article]:mb-12">
       {items.map((item, index) => (
-        <article key={`${item.title}-${item.date.toISOString()}`}>
-          <div className="aspect-[4/5] overflow-hidden bg-neutral-900">
+        <article key={`${item.title}-${item.date.toISOString()}`} className="break-inside-avoid">
+          <div className="overflow-hidden bg-neutral-900">
             <img
               src={item.image}
               alt={`${item.title}, ${item.style} tattoo on the ${item.bodyPart}`}
@@ -20,7 +20,7 @@ export function WorkGrid({ items }: WorkGridProps) {
               loading={index > 1 ? 'lazy' : 'eager'}
               decoding="async"
               sizes="(min-width: 768px) 33vw, 50vw"
-              className="h-full w-full object-cover transition-opacity duration-200 hover:opacity-80"
+              className="h-auto w-full object-cover transition-opacity duration-200 hover:opacity-80"
             />
           </div>
           <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-xs uppercase tracking-widest">
