@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { HeartIcon } from '../components/icons'
 import { useShop } from '../context/ShopContext'
 import { shopItems } from '../data/shop'
+import { FEATURED_ORDER } from '../data/featuredOrder'
 
 const SORT_OPTIONS = [
   { value: 'default', label: 'Featured' },
@@ -19,97 +20,22 @@ function parsePrice(price: string): number {
   return parseFloat(match[0].replace(/\./g, '').replace(',', '.'))
 }
 
-// Manually curated display order (set via the admin panel's drag & drop
-// sorting tool). Items not listed here (e.g. newly added products) fall
-// back to appearing after all listed items, in their natural array order.
-const FEATURED_ORDER = [
-  'bape-shark-glow',
-  'bape-shark-lila',
-  'bape-shark-mickey',
-  'bape-shark-multicamo',
-  'bape-shark-pink',
-  'bape-shark-rot',
-  'bape-shark-dyed-colorwash',
-  'bape-shark-abc-xxxl',
-  'bape-shark-abc-halfzip',
-  'corteiz-hoodie',
-  'cp-company',
-  'dior-sorayama-hoodie',
-  'carlo-colucci-1',
-  'carlo-colucci-2',
-  'spider-hoodie-pink',
-  'ac-milan-trikot',
-  'real-madrid-trikot',
-  'manchester-dhl',
-  'olympique-marseille',
-  'redbull-jacket',
-  'goat-tee',
-  'supreme-hoodie-logo-orange',
-  'bape-tee-oversize',
-  'chief-keef-polo-newyork',
-  'xtc-sweater',
-  'supreme-boxlogo-weis',
-  'bleached-cropped-tee',
-  'supreme-boxlogo-hoodie',
-  'bape-tee-superman',
-  'chicago-bulls-boxtee',
-  'nike-hemd',
-  'supreme-box-tee-black',
-  'supreme-scarface-shirt',
-  'lamborghini-polo',
-  'dhl-trainingsjacke',
-  'polo-mit-reiter',
-  'arsenal-trikot',
-  'brasilien-jacket',
-  'newyork-longsleeve',
-  'lakers-shirt',
-  'vintage-printed-tee',
-  'billionaire-boys-club-hose',
-  'dior-umhaengetasche-blau',
-  'bape-miami-shirt',
-  'bape-tshirt-schwarz-rot',
-  'lakers-sweater',
-  'polo-mit-reiter-schwarz',
-  'supreme-tshirt',
-  'balenciaga-sweatjacke',
-  'palace-sweater',
-  'prada-pullover',
-  'supreme-boxlogo-hoodie-camo',
-  'supreme-bandana-hoodie',
-  'supreme-pufferjacket',
-  'bape-shirt-blau-rot',
-  'bape-tshirt-japan',
-  'casablanca-tshirt',
-  'supreme-sweatjacke',
-  'arabic-shirt',
-  'palace-pullover',
-  'winterpulli',
-  'support-the-movement-bag',
-  'iloveboobies-armband',
-  'cuban-link-12g',
-  'cuban-link-18g',
-  'cuban-link-23g',
-  'sterlingsilber-kette-14g',
-  'koenigkette-35g',
-  'koenigskette-77g',
-  'weisses-ash-tee',
-  'laarve-watch-goldlila',
-  'laarve-watch-schwarz',
-]
-
 const FEATURED_INDEX = new Map(FEATURED_ORDER.map((id, index) => [id, index]))
 
 function featuredPriority(id: string): number {
   return FEATURED_INDEX.get(id) ?? FEATURED_ORDER.length
 }
 
+const ITEMS_PER_PAGE = 15
+
 export function ShopPage() {
   const { isFavorite, toggleFavorite, isSoldOut } = useShop()
   const [filterOpen, setFilterOpen] = useState(false)
   const [sort, setSort] = useState<SortValue>('default')
   const filterRef = useRef<HTMLDivElement>(null)
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const visibleItems = useMemo(() => {
+  const sortedItems = useMemo(() => {
     const items = shopItems.filter((item) => item.listed !== false)
     if (sort === 'price-asc') items.sort((a, b) => parsePrice(a.price) - parsePrice(b.price))
     else if (sort === 'price-desc') items.sort((a, b) => parsePrice(b.price) - parsePrice(a.price))
@@ -118,6 +44,33 @@ export function ShopPage() {
     }
     return items
   }, [sort])
+
+  const totalPages = Math.max(1, Math.ceil(sortedItems.length / ITEMS_PER_PAGE))
+  const pageParam = Number(searchParams.get('page'))
+  const currentPage = Number.isFinite(pageParam) && pageParam >= 1 ? Math.min(Math.floor(pageParam), totalPages) : 1
+
+  const visibleItems = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE
+    return sortedItems.slice(start, start + ITEMS_PER_PAGE)
+  }, [sortedItems, currentPage])
+
+  function goToPage(page: number) {
+    const clamped = Math.min(Math.max(page, 1), totalPages)
+    setSearchParams((params) => {
+      const next = new URLSearchParams(params)
+      if (clamped <= 1) next.delete('page')
+      else next.set('page', String(clamped))
+      return next
+    })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    if (pageParam > totalPages) {
+      goToPage(totalPages)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalPages])
 
   useEffect(() => {
     if (!filterOpen) return
@@ -170,6 +123,7 @@ export function ShopPage() {
                         onClick={() => {
                           setSort(opt.value)
                           setFilterOpen(false)
+                          goToPage(1)
                         }}
                         className={`text-left text-[11px] uppercase tracking-wide transition-colors ${sort === opt.value ? 'text-accent' : 'text-neutral-400 hover:text-neutral-200'}`}
                       >
@@ -225,6 +179,44 @@ export function ShopPage() {
             )
           })}
         </div>
+
+        {totalPages > 1 && (
+          <nav aria-label="Seitennavigation" className="mt-12 flex items-center justify-center gap-2 sm:mt-16">
+            <button
+              type="button"
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage <= 1}
+              className="border border-neutral-800 px-3 py-2 text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:border-neutral-600 hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-30"
+              aria-label="Vorherige Seite"
+            >
+              &larr;
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                type="button"
+                onClick={() => goToPage(page)}
+                aria-current={page === currentPage ? 'page' : undefined}
+                className={`min-w-[2.5rem] border px-3 py-2 text-xs uppercase tracking-widest transition-colors ${
+                  page === currentPage
+                    ? 'border-accent text-accent'
+                    : 'border-neutral-800 text-neutral-300 hover:border-neutral-600 hover:text-neutral-100'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+              className="border border-neutral-800 px-3 py-2 text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:border-neutral-600 hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-30"
+              aria-label="Nächste Seite"
+            >
+              &rarr;
+            </button>
+          </nav>
+        )}
       </section>
     </Layout>
   )
