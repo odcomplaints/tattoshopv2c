@@ -1,0 +1,119 @@
+/* Adapted from react-bits (DavidHDev/react-bits, MIT + Commons Clause
+   license) for this project's TypeScript setup. */
+
+.infinite-menu-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#infinite-grid-menu-canvas {
+  cursor: grab;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+  display: block;
+}
+
+#infinite-grid-menu-canvas:active {
+  cursor: grabbing;
+}
+
+.face-title {
+  user-select: none;
+  position: absolute;
+  font-weight: 900;
+  font-size: 3rem;
+  left: 1.6em;
+  top: 50%;
+  color: #fff;
+  transform: translate(20%, -50%);
+}
+
+.face-title.active {
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.face-title.inactive {
+  pointer-events: none;
+  opacity: 0;
+  transition: 0.1s ease;
+}
+
+.face-description {
+  user-select: none;
+  position: absolute;
+  max-width: 22ch;
+  top: 50%;
+  font-size: 1rem;
+  right: 1%;
+  color: #d4d4d4;
+  transform: translate(-90%, -50%);
+}
+
+.face-description.active {
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.face-description.inactive {
+  pointer-events: none;
+  transform: translate(-60%, -50%);
+  opacity: 0;
+  transition: 0.1s ease;
+}
+
+.action-button {
+  position: absolute;
+  left: 50%;
+  z-index: 10;
+  min-width: 60px;
+  height: 60px;
+  padding: 0 14px;
+  display: grid;
+  place-items: center;
+  background: #d4c9a8;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  filter: invert(1) brightness(0.909);
+}
+
+.action-button.active {
+  bottom: 3.8em;
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.action-button.inactive {
+  bottom: -80px;
+  transform: translateX(-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.1s ease;
+}
+
+.action-button-icon {
+  user-select: none;
+  position: relative;
+  color: #000;
+  top: 2px;
+  font-size: 26px;
+  font-weight: 900;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 1500px) {
+  .face-title,
+  .face-description {
+    display: none;
+  }
+}

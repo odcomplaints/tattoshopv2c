@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { ExpressPay } from '../components/ExpressPay'
 import { GlobeIcon } from '../components/icons'
@@ -19,6 +20,17 @@ export function BookingPage() {
   const formRef = useRef<HTMLFormElement>(null)
   const [submitting, setSubmitting] = useState(false)
   const [missingFields, setMissingFields] = useState<Set<string>>(new Set())
+  const [searchParams] = useSearchParams()
+
+  // Pre-fill the motif field when arriving with a flash-design reference,
+  // e.g. from the /styles moodboard's "HMU!" button.
+  const referenceImage = searchParams.get('ref')
+  const referenceTitle = searchParams.get('title')
+  const referenceMotifText = useMemo(() => {
+    if (!referenceImage) return ''
+    const absoluteUrl = new URL(referenceImage, window.location.origin).href
+    return `Referenz-Design${referenceTitle ? ` "${referenceTitle}"` : ''}: ${absoluteUrl}\n\n`
+  }, [referenceImage, referenceTitle])
 
   // Fields that are always required, even for the Apple/Google Pay express
   // buttons: enough to reach the customer and know their preferred date.
@@ -182,6 +194,18 @@ export function BookingPage() {
               {/* Appointment details */}
               <section className="grid gap-6">
                 <h2 className={sectionTitle}>{b.appointmentDetails}</h2>
+                {referenceImage && (
+                  <div className="flex items-center gap-4 border border-neutral-800 p-3">
+                    <img
+                      src={referenceImage}
+                      alt={referenceTitle || 'Referenz-Design'}
+                      className="h-20 w-20 shrink-0 object-contain [filter:invert(1)_brightness(1.1)]"
+                    />
+                    <p className="text-xs uppercase tracking-widest text-neutral-400">
+                      Referenz-Design ausgewählt{referenceTitle ? `: ${referenceTitle}` : ''}
+                    </p>
+                  </div>
+                )}
                 <label className={labelClass}>
                   {b.name}
                   {missingFields.has('name') && <span className="ml-1 text-neutral-500">!</span>}
@@ -199,6 +223,7 @@ export function BookingPage() {
                     className={inputClassFor('motif')}
                     name="motif"
                     rows={4}
+                    defaultValue={referenceMotifText}
                     onInput={() => clearFieldHighlight('motif')}
                   />
                 </label>

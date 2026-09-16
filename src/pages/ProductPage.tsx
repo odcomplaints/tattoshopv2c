@@ -6,7 +6,7 @@ import { shopItems } from '../data/shop'
 
 export function ProductPage() {
   const { id } = useParams()
-  const item = shopItems.find((product) => product.id === id)
+  const item = shopItems.find((product) => product.id === id && product.listed !== false)
   const { addToCart, isFavorite, toggleFavorite, cart, isSoldOut } = useShop()
 
   if (!item) {

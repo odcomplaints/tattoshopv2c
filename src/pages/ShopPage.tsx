@@ -110,7 +110,7 @@ export function ShopPage() {
   const filterRef = useRef<HTMLDivElement>(null)
 
   const visibleItems = useMemo(() => {
-    const items = [...shopItems]
+    const items = shopItems.filter((item) => item.listed !== false)
     if (sort === 'price-asc') items.sort((a, b) => parsePrice(a.price) - parsePrice(b.price))
     else if (sort === 'price-desc') items.sort((a, b) => parsePrice(b.price) - parsePrice(a.price))
     else {

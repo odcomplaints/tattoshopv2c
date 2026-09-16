@@ -35,6 +35,7 @@ function emptyItem(): ShopItem {
     description: '',
     details: [],
     color: '',
+    listed: true,
   }
 }
 
@@ -62,6 +63,8 @@ function generateShopTs(items: ShopItem[]): string {
   lines.push(`  details: string[]`)
   lines.push(`  /** Optional color label for the item, editable in the admin panel. */`)
   lines.push(`  color?: string`)
+  lines.push(`  /** Whether the item is published/visible on the live shop. Defaults to true when omitted. */`)
+  lines.push(`  listed?: boolean`)
   lines.push(`}`)
   lines.push(``)
   lines.push(`export const shopItems: ShopItem[] = [`)
@@ -80,6 +83,7 @@ function generateShopTs(items: ShopItem[]): string {
     if (item.color) {
       lines.push(`    color: '${escapeSingle(item.color)}',`)
     }
+    lines.push(`    listed: ${item.listed !== false},`)
     lines.push(`  },`)
   }
   lines.push(`]`)
@@ -737,6 +741,13 @@ export function AdminPage() {
                     {item.availability === 'sold-out' && (
                       <span className="shrink-0 text-[10px] uppercase tracking-widest text-neutral-600">Sold out</span>
                     )}
+                    <span
+                      className={`shrink-0 h-2 w-2 rounded-full ${
+                        item.listed !== false ? 'bg-emerald-500' : 'bg-neutral-600'
+                      }`}
+                      title={item.listed !== false ? 'Online sichtbar' : 'Offline / ausgeblendet'}
+                      aria-hidden="true"
+                    />
                   </button>
                 </li>
               ))}
@@ -766,6 +777,15 @@ export function AdminPage() {
                     </p>
                   </div>
                   <div className="flex gap-4 text-xs uppercase tracking-widest">
+                    <label className="flex items-center gap-2 text-neutral-300">
+                      <input
+                        type="checkbox"
+                        checked={selected.listed !== false}
+                        onChange={(e) => updateSelected({ listed: e.target.checked })}
+                        className="h-4 w-4 accent-accent"
+                      />
+                      Inseriert / sichtbar
+                    </label>
                     <button type="button" onClick={handleDuplicateSelected} className="text-neutral-400 hover:text-accent">
                       Duplizieren
                     </button>

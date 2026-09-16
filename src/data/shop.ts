@@ -10,6 +10,8 @@ export type ShopItem = {
   details: string[]
   /** Optional color label for the item, editable in the admin panel. */
   color?: string
+  /** Whether the item is published/visible on the live shop. Defaults to true when omitted. */
+  listed?: boolean
 }
 
 export const shopItems: ShopItem[] = [
@@ -25,6 +27,7 @@ export const shopItems: ShopItem[] = [
       'Kultiger A Bathing Ape Shark Hoodie mit Glow-in-the-Dark-Print. Ikonisches Haifischmaul auf der Kapuze, schwerer Baumwollstoff.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Glow-in-the-Dark-Detail', 'Zustand: sehr gut', 'Größe:M'],
     color: 'grau/schwarz/weiß',
+    listed: true,
   },
   {
     id: 'bape-shark-lila',
@@ -38,11 +41,12 @@ export const shopItems: ShopItem[] = [
       'BAPE Shark Hoodie in sattem Lila. Full-Zip-Kapuze mit Haifischmaul-Grafik, Känguru-Tasche und typischem Ape-Camo-Futter.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Lila', 'Zustand: sehr gut', 'Größe: XL'],
     color: 'lila',
+    listed: true,
   },
   {
     id: 'bape-shark-mickey',
     name: 'Bape Shark × Mickey Mouse',
-    price: '1400 EUR',
+    price: '620 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/bapesharkmickeymouse.png',
     availability: 'available',
@@ -51,11 +55,12 @@ export const shopItems: ShopItem[] = [
       'Limitierte BAPE × Disney Kollaboration. Shark Hoodie mit Mickey-Mouse-Motiv auf der Kapuze – eine der gefragtesten Bape-Kollabs überhaupt.',
     details: ['Marke: BAPE × Disney', 'Material: 100 % Baumwolle', 'Limitierte Kollab-Edition', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'grün',
+    listed: true,
   },
   {
     id: 'bape-shark-multicamo',
     name: 'Bape Shark Multi-Camo',
-    price: '460 EUR',
+    price: '470 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/bapesharkmulticamo.png',
     availability: 'available',
@@ -64,32 +69,35 @@ export const shopItems: ShopItem[] = [
       'BAPE Shark Hoodie im klassischen Multi-Camo-Muster. Vollfarbiges ABC-Camo allover, Signature Shark-Kapuze, selten in diesem Zustand.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'ABC Camo Allover', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'pink/blau/schwarz',
+    listed: true,
   },
   {
     id: 'bape-shark-pink',
     name: 'Bape Shark Hoodie Pink',
     price: '450 EUR',
     category: 'Streetwear / Hoodie',
-    image: '/assets/shop/bapesharpink.png',
+    image: '/assets/shop/bapesharkpink.png',
     availability: 'available',
     stock: 1,
     description:
       'BAPE Shark Hoodie in auffälligem Pink. Statement-Piece für jeden Streetwear-Liebhaber – Full-Zip, Haifischmaul-Kapuze.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Pink', 'Zustand: gut', 'Größe: bitte M'],
     color: 'pink',
+    listed: true,
   },
   {
     id: 'bape-shark-rot',
     name: 'Bape Shark Hoodie Rot',
     price: '420 EUR',
     category: 'Streetwear / Hoodie',
-    image: '/assets/shop/roterbapeshark.png',
+    image: '/assets/shop/bapesharkrot.png',
     availability: 'available',
     stock: 1,
     description:
       'BAPE Shark Hoodie in kräftigem Rot. Klassisches Haifischmaul-Design, Full-Zip-Reißverschluss, schwere Qualität.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Rot', 'Zustand: gut', 'Größe:M'],
     color: 'rot',
+    listed: true,
   },
   {
     id: 'supreme-sweatjacke',
@@ -103,19 +111,21 @@ export const shopItems: ShopItem[] = [
       'Supreme Zip-Up Sweatjacke aus der regulären Line. Stickte Box-Logo-Brust, schwerer Fleece-Innenraum, zeitloser Schnitt.',
     details: ['Marke: Supreme', 'Material: Baumwoll-Fleece', 'Gesticktes Box Logo', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'weiß',
+    listed: true,
   },
   {
     id: 'supreme-tshirt',
     name: 'Supreme T-Shirt',
-    price: '70 EUR',
+    price: '110 EUR',
     category: 'Streetwear / T-Shirt',
     image: '/assets/shop/supremetshirt.png',
     availability: 'available',
-    stock: 1,
+    stock: 2,
     description:
       'Supreme T-Shirt aus einer vergangenen Season. Cleanes Grafik-Tee, 100 % Baumwolle, typischer Supreme-Oversized-Fit.',
     details: ['Marke: Supreme', 'Material: 100 % Baumwolle', 'Grafik-Print', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'balenciaga-sweatjacke',
@@ -129,6 +139,7 @@ export const shopItems: ShopItem[] = [
       'Balenciaga Sweatjacke mit typischem Oversized-Fit. Gedrucktes Logo, hochwertige Baumwollqualität – ein Statement-Piece des Hauses.',
     details: ['Marke: Balenciaga', 'Material: Baumwoll-Fleece', 'Oversized Fit', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'corteiz-hoodie',
@@ -142,19 +153,21 @@ export const shopItems: ShopItem[] = [
       'Corteiz (CRTZ) Hoodie – einer der gefragtesten Streetwear-Drops aus London. Schwere Qualität, eingestickte Alcatraz-Grafik.',
     details: ['Marke: Corteiz (CRTZ)', 'Material: Schweres Baumwoll-Fleece', 'Alcatraz-Grafik', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'cp-company',
     name: 'CP Company Jacke',
-    price: '210 EUR',
+    price: '420 EUR',
     category: 'Streetwear / Jacke',
     image: '/assets/shop/cpcompany.png',
     availability: 'available',
     stock: 1,
     description:
       'CP Company Jacke mit ikonischer Linsen-Brille in der Kapuze. Hohe Verarbeitungsqualität, technisches Material, zeitloses Design.',
-    details: ['Marke: C.P. Company', 'Material: Technisches Nylon', 'Linsen-Goggle-Kapuze', 'Zustand: sehr gut', 'Größe: M'],
+    details: ['Marke: C.P. Company', 'Material: Technisches Nylon', 'Linsen-Goggle-Kapuze', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'dior-sorayama-hoodie',
@@ -166,14 +179,15 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Dior Men × Hajime Sorayama Kollab-Hoodie. Roboter-Grafik des japanischen Futurismus-Meisters auf schwerem Dior-Baumwollstoff. Extrem begehrtes Collector-Piece.',
-    details: ['Marke: Dior Men × Hajime Sorayama', 'Material: 100 % Baumwolle', 'Limitierte Kollaboration', 'Zustand: sehr gut', 'Größe: M'],
+    details: ['Marke: Dior Men × Hajime Sorayama', 'Material: 100 % Baumwolle', 'Limitierte Kollaboration', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'carlo-colucci-1',
     name: 'Carlo Colucci Strickjacke I',
     price: '310 EUR',
-    category: 'Vintage / Strick',
+    category: 'Vintage / Strickjacke',
     image: '/assets/shop/carlocolucci_1.png',
     availability: 'available',
     stock: 1,
@@ -181,12 +195,13 @@ export const shopItems: ShopItem[] = [
       'Carlo Colucci Vintage-Strickjacke im typischen 90s-Muster. Kultmarke aus der Hochzeit des deutschen HipHop – seltenes Original.',
     details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'bunt',
+    listed: true,
   },
   {
     id: 'carlo-colucci-2',
     name: 'Carlo Colucci Strickjacke II',
     price: '310 EUR',
-    category: 'Vintage / Strick',
+    category: 'Vintage / Strickjacke',
     image: '/assets/shop/carlocolucci_2.png',
     availability: 'available',
     stock: 1,
@@ -194,11 +209,12 @@ export const shopItems: ShopItem[] = [
       'Zweites Carlo Colucci Vintage-Piece im Mustermix. Charakteristischer Farbblock, dickes Strickgewebe – 90s Streetwear-Nostalgie pur.',
     details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'bunt',
+    listed: true,
   },
   {
     id: 'spider-hoodie-pink',
     name: 'Spider Hoodie Pink',
-    price: '340 EUR',
+    price: '480 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/spiderhoodiepink.png',
     availability: 'available',
@@ -206,12 +222,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Sp5der Hoodie in Pink mit Web-Grafik allover. Einer der begehrtesten Drops von Young Thugs Brand – dicke Qualität, ikonisches Design.',
     details: ['Marke: Sp5der', 'Material: Schweres Baumwoll-Fleece', 'Web-Allover-Print', 'Zustand: sehr gut', 'Größe:L'],
-    color: 'pink',
+    color: 'schwarz',
+    listed: true,
   },
   {
     id: 'ac-milan-trikot',
     name: 'AC Milan Trikot',
-    price: '180 EUR',
+    price: '120 EUR',
     category: 'Vintage / Jersey',
     image: '/assets/shop/acmilantrikot.png',
     availability: 'available',
@@ -219,12 +236,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Vintage AC Milan Auswärtstrikot. Klassisches Rot-Schwarz-Design, Originalstickerei – perfekt als Streetwear-Statement.',
     details: ['Verein: AC Milan', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'rot',
+    color: 'rot/Schwarz',
+    listed: true,
   },
   {
     id: 'real-madrid-trikot',
     name: 'Real Madrid Trikot',
-    price: '70 EUR',
+    price: '110 EUR',
     category: 'Vintage / Jersey',
     image: '/assets/shop/realmadridtrikot.png',
     availability: 'available',
@@ -232,25 +250,27 @@ export const shopItems: ShopItem[] = [
     description:
       'Vintage Real Madrid Heimtrikot in Weiß. Ikonisches Wappen-Stickerei, klassisches Sponsor-Layout – ein zeitloser Fußballklassiker.',
     details: ['Verein: Real Madrid C.F.', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'weiß',
+    color: 'schwarz/gold',
+    listed: true,
   },
   {
     id: 'manchester-dhl',
     name: 'Manchester × DHL Trikot',
     price: '260 EUR',
-    category: 'Streetwear / Training',
+    category: 'Streetwear / Jersey',
     image: '/assets/shop/manchesterDHL.png',
     availability: 'available',
     stock: 1,
     description:
       'Das berühmte Manchester United × DHL-Trikot – ein Meme-Kultklassiker der Internetkultur. Äußerst selten im Original zu finden.',
     details: ['Marke: Umbro', 'Typ: Kultkollektion', 'DHL-Sponsor-Print', 'Zustand: sehr gut', 'Größe: M'],
-    color: 'schwarz',
+    color: 'schwarz/Rot',
+    listed: true,
   },
   {
     id: 'olympique-marseille',
     name: 'Olympique Marseille Trikot',
-    price: '180 EUR',
+    price: '110 EUR',
     category: 'Vintage / Jersey',
     image: '/assets/shop/olympicmarseille.png',
     availability: 'available',
@@ -259,12 +279,13 @@ export const shopItems: ShopItem[] = [
       'Vintage Olympique de Marseille Trikot. Charakteristisches Blau-Weiß-Design, Kultverein der Ligue 1 – sehr beliebt in der Streetwear-Szene.',
     details: ['Verein: Olympique de Marseille', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: M'],
     color: 'navyblue',
+    listed: true,
   },
   {
     id: 'arabic-shirt',
     name: 'Arabic Graphic Shirt',
     price: '69 EUR',
-    category: 'SKATE / BOXTEE',
+    category: 'Vintage / Hemd',
     image: '/assets/shop/arabicshirt.png',
     availability: 'available',
     stock: 1,
@@ -272,6 +293,7 @@ export const shopItems: ShopItem[] = [
       'Vintage-Hemd mit arabischer Kalligrafie-Grafik. Einzigartiges Stück mit kultureller Tiefe – selten in diesem Zustand.',
     details: ['Typ: Vintage-Hemd', 'Material: Baumwolle', 'Arabischer Grafik-Print', 'Zustand: gut', 'Größe:M'],
     color: 'camo',
+    listed: true,
   },
   {
     id: 'redbull-jacket',
@@ -285,6 +307,7 @@ export const shopItems: ShopItem[] = [
       'Offizielle Red Bull Racing Teamjacke. Leichtes technisches Material, vollständig bestickte Logos, Collector-Item für Motorsportfans.',
     details: ['Marke: Red Bull Racing', 'Material: Technisches Gewebe', 'Offizielle Teamjacke', 'Zustand: sehr gut', 'Größe: M'],
     color: 'schwarz/rot',
+    listed: true,
   },
   {
     id: 'goat-tee',
@@ -297,12 +320,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz',
+    color: 'schwarz/orange',
+    listed: true,
   },
   {
     id: 'lamborghini-polo',
     name: 'Lamborghini Polo',
-    price: '80 EUR',
+    price: '79 EUR',
     category: 'Streetwear / Polo',
     image: '/assets/shop/Lamborghinipolo.png',
     availability: 'available',
@@ -310,7 +334,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz',
+    color: 'rot',
+    listed: true,
   },
   {
     id: 'supreme-hoodie-logo-orange',
@@ -323,7 +348,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'orange',
+    color: 'schwarz/orange',
+    listed: true,
   },
   {
     id: 'bape-tee-oversize',
@@ -337,6 +363,7 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'chief-keef-polo-newyork',
@@ -349,7 +376,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'weiß',
+    color: 'schwarz',
+    listed: true,
   },
   {
     id: 'supreme-boxlogo-weis',
@@ -363,6 +391,7 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
+    listed: true,
   },
   {
     id: 'winterpulli',
@@ -375,12 +404,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'braun',
+    color: 'bunt',
+    listed: true,
   },
   {
     id: 'xtc-sweater',
     name: 'XTC Sweater',
-    price: '130 EUR',
+    price: '80 EUR',
     category: 'Streetwear / Pullover',
     image: '/assets/shop/xtcsweater.png',
     availability: 'available',
@@ -388,12 +418,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'grau',
+    color: 'schwarz',
+    listed: true,
   },
   {
     id: 'bleached-cropped-tee',
-    name: 'Bleached Cropped Tee',
-    price: '79 EUR',
+    name: 'Bleached oversize Tee',
+    price: '59 EUR',
     category: 'Streetwear / T-Shirt',
     image: '/assets/shop/bleachedcroppedtee.png',
     availability: 'available',
@@ -401,7 +432,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'weiß',
+    color: 'schwarz',
+    listed: true,
   },
   {
     id: 'supreme-boxlogo-hoodie',
@@ -414,7 +446,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'grau',
+    color: 'schwarz',
+    listed: true,
   },
   {
     id: 'arsenal-trikot',
@@ -427,7 +460,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'rot',
+    color: 'gelb',
+    listed: true,
   },
   {
     id: 'bape-tee-superman',
@@ -440,12 +474,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'blau',
+    color: 'schwarz',
+    listed: true,
   },
   {
     id: 'brasilien-jacket',
     name: 'Brasilien Jacke',
-    price: '130 EUR',
+    price: '85 EUR',
     category: 'Vintage / Jacke',
     image: '/assets/shop/brasilienjacket.png',
     availability: 'available',
@@ -453,7 +488,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'gelb/grün',
+    color: 'gelb',
+    listed: true,
   },
   {
     id: 'chicago-bulls-boxtee',
@@ -466,7 +502,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'rot/schwarz',
+    color: 'schwarz/rot',
+    listed: true,
   },
   {
     id: 'dhl-trainingsjacke',
@@ -479,12 +516,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'gelb',
+    color: 'rot',
+    listed: true,
   },
   {
     id: 'lakers-shirt',
     name: 'Lakers Shirt',
-    price: '69 EUR',
+    price: '50 EUR',
     category: 'Vintage / Jersey',
     image: '/assets/shop/lakersshirt.png',
     availability: 'available',
@@ -492,7 +530,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'lila/gold',
+    color: 'lila',
+    listed: true,
   },
   {
     id: 'newyork-longsleeve',
@@ -505,7 +544,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz',
+    color: 'blau/weiß',
+    listed: true,
   },
   {
     id: 'nike-hemd',
@@ -519,6 +559,7 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'polo-mit-reiter',
@@ -531,7 +572,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'weiß',
+    color: 'rot',
+    listed: true,
   },
   {
     id: 'supreme-bandana-hoodie',
@@ -544,7 +586,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'rot',
+    color: 'grau',
+    listed: true,
   },
   {
     id: 'supreme-boxlogo-hoodie-camo',
@@ -557,7 +600,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'camo',
+    color: 'grau/Camo',
+    listed: true,
   },
   {
     id: 'supreme-scarface-shirt',
@@ -570,12 +614,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz',
+    color: 'schwarz/rot',
+    listed: true,
   },
   {
     id: 'vintage-printed-tee',
     name: 'Vintage Printed Tee',
-    price: '50 EUR',
+    price: '49 EUR',
     category: 'Vintage / T-Shirt',
     image: '/assets/shop/vintageprintedtee.png',
     availability: 'available',
@@ -583,12 +628,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'weiß',
+    color: 'navyblue',
+    listed: true,
   },
   {
     id: 'supreme-box-tee-black',
     name: 'Box Tee Schwarz',
-    price: '69 EUR',
+    price: '49 EUR',
     category: 'Streetwear / T-Shirt',
     image: '/assets/shop/supremeboxteeblack.png',
     availability: 'available',
@@ -597,11 +643,12 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'lakers-sweater',
     name: 'Lakers Sweater',
-    price: '89 EUR',
+    price: '59 EUR',
     category: 'Streetwear / Pullover',
     image: '/assets/shop/lakerssweater.png',
     availability: 'available',
@@ -609,7 +656,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'lila/gold',
+    color: 'schwarz/Lila',
+    listed: true,
   },
   {
     id: 'billionaire-boys-club-hose',
@@ -622,7 +670,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz',
+    color: 'blau',
+    listed: true,
   },
   {
     id: 'dior-umhaengetasche-blau',
@@ -636,6 +685,7 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut'],
     color: 'blau',
+    listed: true,
   },
   {
     id: 'bape-miami-shirt',
@@ -648,7 +698,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'bunt',
+    color: 'schwrarz/Pink',
+    listed: true,
   },
   {
     id: 'bape-shirt-blau-rot',
@@ -661,7 +712,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'blau/rot',
+    color: 'weiß',
+    listed: true,
   },
   {
     id: 'bape-tshirt-japan',
@@ -675,6 +727,7 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
+    listed: true,
   },
   {
     id: 'bape-tshirt-schwarz-rot',
@@ -687,7 +740,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz/rot',
+    color: 'schwarz',
+    listed: true,
   },
   {
     id: 'casablanca-tshirt',
@@ -701,11 +755,12 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
+    listed: true,
   },
   {
     id: 'cuban-link-12g',
     name: 'Cuban Link Kette 12g',
-    price: '250 EUR',
+    price: '100 EUR',
     category: 'Schmuck / Kette',
     image: '/assets/shop/12gcubanlink.png',
     availability: 'available',
@@ -713,12 +768,12 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Gewicht: 12g'],
-    color: 'silber',
+    listed: true,
   },
   {
     id: 'cuban-link-18g',
     name: 'Cuban Link Kette 18g',
-    price: '350 EUR',
+    price: '120 EUR',
     category: 'Schmuck / Kette',
     image: '/assets/shop/18gcubanlink.png',
     availability: 'available',
@@ -726,12 +781,12 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Gewicht: 18g'],
-    color: 'silber',
+    listed: true,
   },
   {
     id: 'cuban-link-23g',
     name: 'Cuban Link Kette 23g',
-    price: '450 EUR',
+    price: '178 EUR',
     category: 'Schmuck / Kette',
     image: '/assets/shop/23gcubanlink.png',
     availability: 'available',
@@ -739,12 +794,12 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Gewicht: 23g'],
-    color: 'silber',
+    listed: true,
   },
   {
     id: 'sterlingsilber-kette-14g',
     name: '925 Sterling Silber Kette 14g',
-    price: '180 EUR',
+    price: '130 EUR',
     category: 'Schmuck / Kette',
     image: '/assets/shop/14g925sterlingsilber.png',
     availability: 'available',
@@ -752,12 +807,12 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Material: 925 Sterling Silber', 'Gewicht: 14g', 'Zustand: gut'],
-    color: 'silber',
+    listed: true,
   },
   {
     id: 'koenigkette-35g',
     name: 'Königskette 35g',
-    price: '550 EUR',
+    price: '139 EUR',
     category: 'Schmuck / Kette',
     image: '/assets/shop/35gkoenigkette.png',
     availability: 'available',
@@ -765,12 +820,12 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Gewicht: 35g'],
-    color: 'silber',
+    listed: true,
   },
   {
     id: 'koenigskette-77g',
     name: 'Königskette 77g',
-    price: '950 EUR',
+    price: '199 EUR',
     category: 'Schmuck / Kette',
     image: '/assets/shop/77gkoenigskette.png',
     availability: 'available',
@@ -778,7 +833,7 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Gewicht: 77g'],
-    color: 'silber',
+    listed: true,
   },
   {
     id: 'bape-shark-abc-xxxl',
@@ -791,12 +846,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Zustand: gut', 'Größe: XXXL'],
-    color: 'camo',
+    color: 'grün',
+    listed: true,
   },
   {
     id: 'bape-shark-abc-halfzip',
     name: 'Bape Shark ABC Camo Half-Zip',
-    price: '420 EUR',
+    price: '320 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/bapesharkabchalfzip.png',
     availability: 'available',
@@ -804,12 +860,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Half-Zip', 'Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'camo',
+    color: 'grau/Camo',
+    listed: true,
   },
   {
     id: 'palace-pullover',
     name: 'Palace Pullover',
-    price: '150 EUR',
+    price: '250 EUR',
     category: 'Streetwear / Pullover',
     image: '/assets/shop/palacepullover.png',
     availability: 'available',
@@ -817,12 +874,13 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'grau',
+    color: 'grün',
+    listed: true,
   },
   {
     id: 'palace-sweater',
     name: 'Palace Sweater',
-    price: '150 EUR',
+    price: '230 EUR',
     category: 'Streetwear / Pullover',
     image: '/assets/shop/palacesweater.png',
     availability: 'available',
@@ -830,7 +888,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'grau',
+    color: 'schwarz',
+    listed: true,
   },
   {
     id: 'polo-mit-reiter-schwarz',
@@ -844,6 +903,7 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Farbe: Schwarz', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
+    listed: true,
   },
   {
     id: 'prada-pullover',
@@ -856,7 +916,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Marke: Prada', 'Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz',
+    color: 'grau',
+    listed: true,
   },
   {
     id: 'supreme-pufferjacket',
@@ -869,7 +930,8 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Marke: Supreme', 'Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz',
+    color: 'sandfarben',
+    listed: true,
   },
   {
     id: 'iloveboobies-armband',
@@ -882,7 +944,7 @@ export const shopItems: ShopItem[] = [
     description:
       '10 € pro verkauftem Armband gehen als Spende an die Brustkrebsforschung. Zeig deine Unterstützung und trag etwas Gutes.',
     details: ['10 € Spende an Brustkrebsforschung pro Stück', 'Einheitsgröße', 'Zustand: neu'],
-    color: 'pink',
+    listed: false,
   },
   {
     id: 'support-the-movement-bag',
@@ -895,7 +957,7 @@ export const shopItems: ShopItem[] = [
     description:
       'Kompletter Ertrag dieser Tasche wird wohltätig gespendet. Support the Movement – mit jedem Kauf unterstützt du direkt den guten Zweck.',
     details: ['Kompletter Ertrag wird gespendet', 'Zustand: neu'],
-    color: 'schwarz',
+    listed: false,
   },
   {
     id: 'bape-shark-dyed-colorwash',
@@ -908,12 +970,12 @@ export const shopItems: ShopItem[] = [
     description:
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Dyed Color Wash', 'Zustand: gut', 'Größe: bitte anfragen'],
-    color: 'schwarz/weiß',
+    listed: true,
   },
   {
     id: 'weisses-ash-tee',
     name: 'Weißes Ash Tee',
-    price: '79 EUR',
+    price: '49 EUR',
     category: 'Streetwear / T-Shirt',
     image: '/assets/shop/weißesashtee.png',
     availability: 'available',
@@ -922,11 +984,12 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
+    listed: true,
   },
   {
     id: 'laarve-watch-goldlila',
     name: 'Laarve Watch Gold/Lila',
-    price: '250 EUR',
+    price: '1400 EUR',
     category: 'Schmuck / Uhr',
     image: '/assets/shop/laarvewatchgoldlila.png',
     availability: 'available',
@@ -935,11 +998,12 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut'],
     color: 'gold/lila',
+    listed: true,
   },
   {
     id: 'laarve-watch-schwarz',
     name: 'Laarve Watch Schwarz',
-    price: '250 EUR',
+    price: '1100 EUR',
     category: 'Schmuck / Uhr',
     image: '/assets/shop/laarvewatchschwarz.png',
     availability: 'available',
@@ -948,5 +1012,6 @@ export const shopItems: ShopItem[] = [
       'Platzhaltertext – bitte im Admin-Panel anpassen.',
     details: ['Zustand: gut'],
     color: 'schwarz',
+    listed: true,
   },
 ]
