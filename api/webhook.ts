@@ -15,8 +15,8 @@
 
 export const config = { runtime: 'edge' }
 
-import { getCatalogEntry } from '../src/data/catalog'
-import { recordPurchases } from './_soldout'
+import { getCatalogEntry } from '../src/data/catalog.js'
+import { recordPurchases } from './_soldout.js'
 
 const STRIPE_API_BASE = 'https://api.stripe.com'
 const STRIPE_API_VERSION = '2026-07-29.dahlia'

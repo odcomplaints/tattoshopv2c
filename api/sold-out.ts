@@ -6,7 +6,7 @@
 // (stock: 1) disappears/greys out as "sold out" right after it's bought,
 // without needing a manual admin-panel edit + redeploy.
 
-import { getSoldOutIds } from './_soldout'
+import { getSoldOutIds } from './_soldout.js'
 
 export const config = { runtime: 'edge' }
 

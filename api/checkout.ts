@@ -4,9 +4,9 @@
 // hosted Checkout URL to redirect to. Prices are looked up server-side from the
 // catalog — the amounts the client sends are ignored on purpose.
 
-import { getCatalogEntry } from '../src/data/catalog'
-import { stripeRequest, StripeError, randomSuffix } from './_stripe'
-import { getSoldOutIds } from './_soldout'
+import { getCatalogEntry } from '../src/data/catalog.js'
+import { stripeRequest, StripeError, randomSuffix } from './_stripe.js'
+import { getSoldOutIds } from './_soldout.js'
 
 export const config = { runtime: 'edge' }
 
@@ -81,7 +81,7 @@ export default async function handler(request: Request): Promise<Response> {
       // NOTE: never set `payment_method_types` — omitting it enables dynamic
       // payment methods (cards, Apple Pay, Google Pay, …) configured in the
       // Stripe Dashboard for maximum conversion.
-      line_items: lineItems as unknown as import('./_stripe').FormValue[],
+      line_items: lineItems as unknown as import('./_stripe.js').FormValue[],
       success_url: `${origin}/shop/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/shop/cart?canceled=1`,
       billing_address_collection: 'auto',

@@ -3,7 +3,7 @@
 // Lets the success page confirm the real payment status of a Checkout Session
 // instead of trusting the client. Returns a small, safe subset of the session.
 
-import { stripeGet, StripeError } from './_stripe'
+import { stripeGet, StripeError } from './_stripe.js'
 
 export const config = { runtime: 'edge' }
 
