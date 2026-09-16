@@ -3,6 +3,7 @@ import type { DragEvent, FormEvent, ReactNode } from 'react'
 import { Layout } from '../components/Layout'
 import { shopItems as initialShopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
+import { FEATURED_ORDER } from '../data/featuredOrder'
 
 // ─────────────────────────────────────────────────────────────────────────
 // Local-only admin tool.
@@ -320,11 +321,23 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 const inputClass =
   'border border-neutral-800 bg-neutral-950 px-4 py-3 text-base normal-case tracking-normal text-neutral-100 outline-none transition-colors focus:border-accent'
 
+// Sorts items to match the live FEATURED_ORDER (src/data/featuredOrder.ts)
+// so the Sortierung tool always starts from what's actually live, instead of
+// the natural (unsorted) order items happen to appear in shop.ts.
+function sortByFeaturedOrder(items: ShopItem[]): ShopItem[] {
+  const featuredIndex = new Map(FEATURED_ORDER.map((id, index) => [id, index]))
+  return [...items].sort((a, b) => {
+    const aIndex = featuredIndex.get(a.id) ?? FEATURED_ORDER.length
+    const bIndex = featuredIndex.get(b.id) ?? FEATURED_ORDER.length
+    return aIndex - bIndex
+  })
+}
+
 // Lets you drag & drop the full item list into a custom order, then copy
 // that order (as a plain list of ids/names) so it can be handed over as
 // instructions — this section doesn't change shop.ts/catalog.ts itself.
 function SortSection({ items }: { items: ShopItem[] }) {
-  const [order, setOrder] = useState<ShopItem[]>(items)
+  const [order, setOrder] = useState<ShopItem[]>(() => sortByFeaturedOrder(items))
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied'>('idle')
   const [positionDrafts, setPositionDrafts] = useState<Record<string, string>>({})

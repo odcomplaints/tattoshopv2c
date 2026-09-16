@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { HeartIcon } from '../components/icons'
@@ -8,6 +9,11 @@ export function ProductPage() {
   const { id } = useParams()
   const item = shopItems.find((product) => product.id === id && product.listed !== false)
   const { addToCart, isFavorite, toggleFavorite, cart, isSoldOut } = useShop()
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
+
+  useEffect(() => {
+    setActiveImageIndex(0)
+  }, [id])
 
   if (!item) {
     return (
@@ -32,39 +38,113 @@ export function ProductPage() {
   const others = shopItems.filter((product) => product.id !== item.id && product.category !== item.category)
   const relatedItems = [...sameCategory, ...others].slice(0, 3)
 
+  const galleryImages = [item.image, ...(item.moodImages ?? [])]
+  const currentImage = galleryImages[Math.min(activeImageIndex, galleryImages.length - 1)]
+
+  function goToImage(index: number) {
+    const clamped = (index + galleryImages.length) % galleryImages.length
+    setActiveImageIndex(clamped)
+  }
+
   return (
     <Layout
       title={`${item.name} | OD COMPLAINTS`}
       description={`${item.name} – ${item.category} by OD COMPLAINTS, GD.`}
     >
-      <Link to="/shop" className="block text-left text-xs uppercase tracking-widest text-neutral-400 hover:text-accent">
+      <Link to="/shop" className="-mt-6 block text-left text-xs uppercase tracking-widest text-neutral-400 hover:text-accent sm:-mt-12">
         &larr; Shop
       </Link>
 
       <div className="mt-8 grid gap-10 text-left lg:grid-cols-2 lg:gap-16">
-        <div className="relative aspect-[4/5] overflow-hidden">
-          <img
-            src={item.image}
-            alt={`${item.name}, ${item.category}`}
-            width="800"
-            height="1000"
-            decoding="async"
-            className="h-full w-full object-contain"
-          />
-          {!available && (
-            <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">
-              Sold out
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={() => toggleFavorite(item.id)}
-            aria-pressed={favorite}
-            aria-label={favorite ? `Remove ${item.name} from favorites` : `Add ${item.name} to favorites`}
-            className={`favorite-toggle absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center transition-colors ${favorite ? 'text-accent drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]' : ''}`}
+        <div>
+          <div
+            className="relative aspect-[4/5] overflow-hidden touch-pan-y"
+            onTouchStart={(e) => {
+              ;(e.currentTarget as HTMLDivElement & { dataset: { touchStartX?: string } }).dataset.touchStartX = String(
+                e.touches[0].clientX,
+              )
+            }}
+            onTouchEnd={(e) => {
+              const startX = Number((e.currentTarget as HTMLDivElement).dataset.touchStartX ?? 0)
+              const endX = e.changedTouches[0].clientX
+              const delta = endX - startX
+              if (Math.abs(delta) > 40) {
+                goToImage(activeImageIndex + (delta < 0 ? 1 : -1))
+              }
+            }}
           >
-            <HeartIcon filled={favorite} />
-          </button>
+            <img
+              key={currentImage}
+              src={currentImage}
+              alt={`${item.name}, ${item.category}`}
+              width="800"
+              height="1000"
+              decoding="async"
+              className="h-full w-full animate-[fade-in_0.25s_ease] object-contain"
+            />
+            {!available && (
+              <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">
+                Sold out
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => toggleFavorite(item.id)}
+              aria-pressed={favorite}
+              aria-label={favorite ? `Remove ${item.name} from favorites` : `Add ${item.name} to favorites`}
+              className={`favorite-toggle absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center transition-colors ${favorite ? 'text-accent drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]' : ''}`}
+            >
+              <HeartIcon filled={favorite} />
+            </button>
+
+            {galleryImages.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => goToImage(activeImageIndex - 1)}
+                  aria-label="Vorheriges Bild"
+                  className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center text-2xl text-neutral-100 transition-colors hover:text-accent"
+                >
+                  &lsaquo;
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToImage(activeImageIndex + 1)}
+                  aria-label="Nächstes Bild"
+                  className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center text-2xl text-neutral-100 transition-colors hover:text-accent"
+                >
+                  &rsaquo;
+                </button>
+              </>
+            )}
+          </div>
+
+          {galleryImages.length > 1 && (
+            <div className="mt-3 flex justify-center gap-2">
+              {galleryImages.map((src, index) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => goToImage(index)}
+                  aria-label={`Bild ${index + 1} anzeigen`}
+                  aria-current={index === activeImageIndex}
+                  className={`relative h-12 w-12 shrink-0 overflow-hidden border transition-colors sm:h-14 sm:w-14 ${
+                    index === activeImageIndex ? 'border-accent' : 'border-transparent'
+                  }`}
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    width="160"
+                    height="160"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-6">

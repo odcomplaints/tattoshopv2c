@@ -12,6 +12,8 @@ export type ShopItem = {
   color?: string
   /** Whether the item is published/visible on the live shop. Defaults to true when omitted. */
   listed?: boolean
+  /** Additional mood/model/close-up shots shown as a swipeable gallery on the product page, alongside the main image. */
+  moodImages?: string[]
 }
 
 export const shopItems: ShopItem[] = [
@@ -28,6 +30,7 @@ export const shopItems: ShopItem[] = [
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Glow-in-the-Dark-Detail', 'Zustand: sehr gut', 'Größe:M'],
     color: 'grau/schwarz/weiß',
     listed: true,
+    moodImages: ['/assets/shop/moodpics/bapesharkhoodieglowinthedarkmoodpic.png'],
   },
   {
     id: 'bape-shark-lila',
@@ -56,6 +59,7 @@ export const shopItems: ShopItem[] = [
     details: ['Marke: BAPE × Disney', 'Material: 100 % Baumwolle', 'Limitierte Kollab-Edition', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'grün',
     listed: true,
+    moodImages: ['/assets/shop/moodpics/mickeymousebapesharkmoodpic.png'],
   },
   {
     id: 'bape-shark-multicamo',
@@ -70,6 +74,7 @@ export const shopItems: ShopItem[] = [
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'ABC Camo Allover', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'pink/blau/schwarz',
     listed: true,
+    moodImages: ['/assets/shop/moodpics/bapesharkmulticolormoodpic.png'],
   },
   {
     id: 'bape-shark-pink',
@@ -98,6 +103,7 @@ export const shopItems: ShopItem[] = [
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Rot', 'Zustand: gut', 'Größe:M'],
     color: 'rot',
     listed: true,
+    moodImages: ['/assets/shop/moodpics/bapesharkrotmoodpic.png'],
   },
   {
     id: 'supreme-sweatjacke',
@@ -490,6 +496,7 @@ export const shopItems: ShopItem[] = [
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'gelb',
     listed: true,
+    moodImages: ['/assets/shop/moodpics/brasilienjacketmoodpic.png'],
   },
   {
     id: 'chicago-bulls-boxtee',
@@ -862,6 +869,7 @@ export const shopItems: ShopItem[] = [
     details: ['Marke: A Bathing Ape (BAPE)', 'Half-Zip', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau/Camo',
     listed: true,
+    moodImages: ['/assets/shop/moodpics/bapesharkhalfzipmoodpic.png'],
   },
   {
     id: 'palace-pullover',
@@ -890,6 +898,7 @@ export const shopItems: ShopItem[] = [
     details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
+    moodImages: ['/assets/shop/moodpics/palacesweatermoodpic.png'],
   },
   {
     id: 'polo-mit-reiter-schwarz',
