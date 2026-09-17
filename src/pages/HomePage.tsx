@@ -1,10 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Layout } from '../components/Layout'
-import { WorkSlideshow } from '../components/WorkSlideshow'
+import AccordionGallery from '../components/AccordionGallery'
 import { GlobeIcon } from '../components/icons'
 import SpecularButton from '../components/SpecularButton'
 import { useLanguage } from '../context/LanguageContext'
-import { newestWork } from '../data/work'
+import { sliderImages } from '../data/slider'
+
+const accordionItems = sliderImages.map((item) => ({
+  image: item.image,
+  label: item.title,
+  alt: `${item.title} – ${item.style}, ${item.bodyPart}`,
+}))
 
 export function HomePage() {
   const { language, toggleLanguage, t } = useLanguage()
@@ -61,7 +67,22 @@ export function HomePage() {
           <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-100">Latest work</h2>
           <Link className="text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:text-accent" to="/work">View all work</Link>
         </div>
-        <WorkSlideshow items={newestWork.slice(0, 6)} />
+        <div className="mx-auto max-w-5xl px-4">
+          <AccordionGallery
+            items={accordionItems}
+            defaultIndex={Math.floor(accordionItems.length / 2)}
+            accentColor="#ff3939"
+            overlayColor="#060010"
+            textColor="#ffffff"
+            height={420}
+            gap={10}
+            radius={28}
+            expandRatio={0.55}
+            trigger="click"
+            showLabels={false}
+            grayscale
+          />
+        </div>
       </section>
       <section className="mt-5 py-5 text-center sm:mt-8 sm:py-8">
         <div className="mx-auto grid max-w-2xl gap-6">

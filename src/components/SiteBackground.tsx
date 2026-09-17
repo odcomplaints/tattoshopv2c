@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useLocation } from 'react-router-dom'
 import EvilEye from './EvilEye'
@@ -94,6 +94,38 @@ export default function SiteBackground() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  // Scroll-driven zoom on the eye: grows steadily from top to bottom of the
+  // page, reaching a large, clearly visible size near the very bottom. Reads
+  // scroll progress (0 -> 1) and nudges a multiplier that EvilEye applies to
+  // its base scale every frame (no re-render, no WebGL context recreation).
+  const scaleMultiplierRef = useRef(1)
+  useEffect(() => {
+    const minMultiplier = 1 // size at top of page
+    const maxMultiplier = 1.7 // size at bottom of page - big, obvious zoom
+    let current = 1
+    let raf = 0
+
+    function onScroll() {
+      const doc = document.documentElement
+      const maxScroll = Math.max(doc.scrollHeight - doc.clientHeight, 1)
+      const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1)
+      const target = minMultiplier + progress * (maxMultiplier - minMultiplier)
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(function ease() {
+        current += (target - current) * 0.08
+        scaleMultiplierRef.current = current
+        if (Math.abs(target - current) > 0.0005) raf = requestAnimationFrame(ease)
+      })
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+
   const setNum = useCallback((key: keyof EyeConfig, value: number) => {
     setConfig((c) => ({ ...c, [key]: value }))
   }, [])
@@ -150,6 +182,7 @@ export default function SiteBackground() {
           noiseScale={config.noiseScale}
           pupilFollow={config.pupilFollow}
           flameSpeed={config.flameSpeed}
+          scaleMultiplierRef={scaleMultiplierRef}
         />
         {/* Dark scrim keeps content readable over the animation. */}
         <div style={{ position: 'absolute', inset: 0, background: '#0a0a0a', opacity: config.scrimOpacity }} />

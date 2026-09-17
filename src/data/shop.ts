@@ -415,7 +415,7 @@ export const shopItems: ShopItem[] = [
   },
   {
     id: 'xtc-sweater',
-    name: 'XTC Sweater',
+    name: 'Tekkno Sweater',
     price: '80 EUR',
     category: 'Streetwear / Pullover',
     image: '/assets/shop/xtcsweater.png',
@@ -880,7 +880,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      '  ',
     details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grün',
     listed: true,

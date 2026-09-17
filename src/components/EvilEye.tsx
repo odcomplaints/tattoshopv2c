@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import type { MutableRefObject } from 'react'
 import { Renderer, Program, Mesh, Triangle, Texture } from 'ogl'
 
 // Ported from React Bits (EvilEye, JS-CSS). WebGL fire-eye effect driven by ogl.
@@ -16,6 +17,10 @@ export type EvilEyeProps = {
   flameSpeed?: number
   pupilColor?: string
   backgroundColor?: string
+  // Optional live scale multiplier (e.g. driven by scroll position), read
+  // every frame without tearing down/recreating the WebGL context. 1 = no
+  // change from the base `scale` prop.
+  scaleMultiplierRef?: MutableRefObject<number>
 }
 
 function hexToVec3(hex: string): [number, number, number] {
@@ -186,6 +191,7 @@ export default function EvilEye({
   flameSpeed = 1.0,
   pupilColor = '#ffffff',
   backgroundColor = '#000000',
+  scaleMultiplierRef,
 }: EvilEyeProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -321,6 +327,8 @@ export default function EvilEye({
       mouse.y += (mouse.ty - mouse.y) * ease
       program.uniforms.uMouse.value = [mouse.x, mouse.y]
       program.uniforms.uTime.value = time * 0.001
+      const multiplier = scaleMultiplierRef?.current ?? 1
+      program.uniforms.uScale.value = scale * multiplier
       renderer.render({ scene: mesh })
     }
     animationFrameId = requestAnimationFrame(update)
