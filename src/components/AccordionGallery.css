@@ -123,17 +123,11 @@
 
 @media (max-width: 520px) {
   .accordion-gallery {
-    flex-direction: column;
     perspective: none;
-    height: auto !important;
   }
   .ag-panel {
-    min-height: 84px;
+    min-width: 36px;
     transform: none !important;
-  }
-  .accordion-gallery .ag-panel__media {
-    width: 100%;
-    height: var(--ag-media-size);
   }
 }
 

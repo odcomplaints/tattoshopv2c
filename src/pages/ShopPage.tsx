@@ -90,7 +90,14 @@ export function ShopPage() {
         <p className="text-xs uppercase tracking-widest text-neutral-200">Editions / Objects</p>
         <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <h1 className="text-3xl font-medium uppercase tracking-widest text-neutral-100">Shop</h1>
-          <p className="max-w-md text-sm leading-7 text-neutral-400">Small editions, studies and prints. Shipping within Germany; other destinations on request.</p>
+          <details className="group max-w-md text-left sm:text-right">
+            <summary className="cursor-pointer list-none text-[10px] uppercase tracking-widest text-neutral-500 transition-colors hover:text-neutral-300">
+              Shipping info
+            </summary>
+            <p className="mt-2 text-xs leading-6 text-neutral-500">
+              Small editions, studies and prints. Shipping within Germany; other destinations on request.
+            </p>
+          </details>
         </div>
       </section>
 
