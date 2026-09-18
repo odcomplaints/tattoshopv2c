@@ -23,7 +23,7 @@ export type CatalogEntry = {
 }
 
 export const catalog: Record<string, CatalogEntry> = {
-  'bape-shark-glow': { id: 'bape-shark-glow', name: 'Bape Shark Glow in the Dark', priceCents: 39000, currency: 'eur', available: true, stock: 1 },
+  'bape-shark-glow': { id: 'bape-shark-glow', name: 'Bape Shark Glow in the Dark', priceCents: 44000, currency: 'eur', available: true, stock: 1 },
   'bape-shark-lila': { id: 'bape-shark-lila', name: 'Bape Shark Hoodie Lila', priceCents: 45000, currency: 'eur', available: true, stock: 1 },
   'bape-shark-mickey': { id: 'bape-shark-mickey', name: 'Bape Shark × Mickey Mouse', priceCents: 62000, currency: 'eur', available: true, stock: 1 },
   'bape-shark-multicamo': { id: 'bape-shark-multicamo', name: 'Bape Shark Multi-Camo', priceCents: 47000, currency: 'eur', available: true, stock: 1 },
@@ -45,7 +45,7 @@ export const catalog: Record<string, CatalogEntry> = {
   'arabic-shirt': { id: 'arabic-shirt', name: 'Arabic Graphic Shirt', priceCents: 9500, currency: 'eur', available: true, stock: 1 },
   'redbull-jacket': { id: 'redbull-jacket', name: 'Red Bull Racing Jacke', priceCents: 18000, currency: 'eur', available: true, stock: 1 },
   'goat-tee': { id: 'goat-tee', name: 'GOAT T-Shirt', priceCents: 6900, currency: 'eur', available: true, stock: 1 },
-  'lamborghini-polo': { id: 'lamborghini-polo', name: 'Lamborghini Polo', priceCents: 8000, currency: 'eur', available: true, stock: 1 },
+  'lamborghini-polo': { id: 'lamborghini-polo', name: 'Ferrari Polo', priceCents: 8000, currency: 'eur', available: true, stock: 1 },
   'supreme-hoodie-logo-orange': { id: 'supreme-hoodie-logo-orange', name: 'Supreme Hoodie Logo Orange', priceCents: 29000, currency: 'eur', available: true, stock: 1 },
   'bape-tee-oversize': { id: 'bape-tee-oversize', name: 'Bape T-Shirt Oversize', priceCents: 14000, currency: 'eur', available: true, stock: 1 },
   'chief-keef-polo-newyork': { id: 'chief-keef-polo-newyork', name: 'Chief Keef Polo New York', priceCents: 7900, currency: 'eur', available: true, stock: 1 },

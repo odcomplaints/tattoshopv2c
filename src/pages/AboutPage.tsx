@@ -43,14 +43,14 @@ export function AboutPage() {
 
         <div className="mt-10 grid gap-8 sm:grid-cols-2">
           <div>
-            <span className="text-xs uppercase tracking-widest text-accent">Obsessed</span>
+            <span className="text-xs uppercase tracking-widest text-accent">Obsession</span>
             <h3 className="mt-3 text-sm font-medium uppercase tracking-widest text-neutral-100">The possession. The inward pull.</h3>
-            <p className="mt-4 text-sm leading-7 text-neutral-400">Consuming fixation, visceral longing, devotion without an exit strategy. It's what you wake up thinking about and what lingers when the lights go out — you no longer just possess a passion, you are possessed by it.</p>
+            <p className="mt-4 text-sm leading-7 text-neutral-400">The raw sensation of being completely occupied by a passion, an idea, or a person. It is what stays in your head when the world quietens down, lingering in the dark and refusing to be ignored. You don't just experience a feeling—you live inside it.</p>
           </div>
           <div>
-            <span className="text-xs uppercase tracking-widest text-accent">Delusional</span>
+            <span className="text-xs uppercase tracking-widest text-accent">Delusion</span>
             <h3 className="mt-3 text-sm font-medium uppercase tracking-widest text-neutral-100">The denial of "no". The persistence of wanting.</h3>
-            <p className="mt-4 text-sm leading-7 text-neutral-400">The mind's total refusal to accept the status quo: "I don't have it yet, but I refuse to comprehend a reality where I never will." To the outside world it looks like madness — to you, it's the only truth that matters.</p>
+            <p className="mt-4 text-sm leading-7 text-neutral-400">A conscious denial of current limitations. The refusal to accept present reality in favor of a future you haven't built yet. To those on the outside, it feels delusional; to you, it is the only path forward.</p>
           </div>
         </div>
 

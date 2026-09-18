@@ -77,7 +77,7 @@ export function HomePage() {
             height={420}
             gap={10}
             radius={28}
-            expandRatio={0.55}
+            expandRatio={0.75}
             trigger="click"
             showLabels={false}
             grayscale
@@ -111,7 +111,7 @@ export function HomePage() {
           <div><p className="text-xs uppercase tracking-widest text-accent">Guide</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">Time &amp; budget</h2><p className="mx-auto mt-5 max-w-md text-sm leading-7 text-neutral-400">Every project is quoted individually. These ranges offer a first orientation and do not replace a personal quote.</p></div>
           <dl className="text-sm">
             <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Small motifs</dt><dd className="text-neutral-300">from 180 EUR</dd></div>
-            <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Medium projects</dt><dd className="text-neutral-300">3-4 hours</dd></div>
+            <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Medium projects</dt><dd className="text-neutral-300">400-600 EUR</dd></div>
             <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Large work</dt><dd className="text-neutral-300">on request</dd></div>
             <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Day session</dt><dd className="text-neutral-300">by arrangement</dd></div>
           </dl>
@@ -133,7 +133,26 @@ export function HomePage() {
             ['Do you work with flash?', 'Occasional flash designs are available. The focus is on individual projects.'],
             ['Can I bring references?', 'Yes. They help establish direction, visual language and atmosphere.'],
             ['When will I see the design?', 'For custom work we align on the direction before your appointment; the final drawing is shaped for the placement.'],
-          ].map(([question, answer]) => <details key={question} className="py-4"><summary className="cursor-pointer text-xs uppercase tracking-widest text-neutral-200 transition-all duration-200 hover:scale-110 hover:text-accent">{question}</summary><p className="mt-3 text-sm leading-7 text-neutral-300">{answer}</p></details>)}
+          ].map(([question, answer]) => (
+            <details key={question} className="py-4">
+              <summary className="cursor-pointer text-xs uppercase tracking-widest text-neutral-200 transition-all duration-200 hover:scale-110 hover:text-accent">
+                {question}
+              </summary>
+              <p className="mt-3 text-sm leading-7 text-neutral-300">
+                {question === 'Do you work with flash?' ? (
+                  <>
+                    Occasional flash designs are{' '}
+                    <Link to="/styles" className="text-accent underline underline-offset-4 transition-colors hover:text-neutral-100">
+                      available
+                    </Link>
+                    . The focus is on individual projects.
+                  </>
+                ) : (
+                  answer
+                )}
+              </p>
+            </details>
+          ))}
         </div>
       </section>
       <section className="pt-5 text-center sm:pt-8">

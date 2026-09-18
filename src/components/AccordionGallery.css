@@ -124,6 +124,7 @@
 @media (max-width: 520px) {
   .accordion-gallery {
     perspective: none;
+    height: 300px !important;
   }
   .ag-panel {
     min-width: 36px;

@@ -64,6 +64,7 @@ precision highp float;
 uniform sampler2D uTex;
 uniform int uItemCount;
 uniform int uAtlasSize;
+uniform int uActiveInstanceId;
 
 out vec4 outColor;
 
@@ -92,7 +93,27 @@ void main() {
 
     st = st * cellSize + cellOffset;
 
-    outColor = texture(uTex, st);
+    vec2 cellMin = cellOffset;
+    vec2 cellMax = cellOffset + cellSize;
+
+    if (vInstanceId == uActiveInstanceId) {
+        outColor = texture(uTex, st);
+    } else {
+        vec2 texel = 1.0 / vec2(texSize);
+        float blurRadius = 2.2;
+        vec4 sum = vec4(0.0);
+        float weightSum = 0.0;
+        for (int y = -2; y <= 2; ++y) {
+            for (int x = -2; x <= 2; ++x) {
+                vec2 offset = vec2(float(x), float(y)) * texel * blurRadius;
+                vec2 sampleSt = clamp(st + offset, cellMin, cellMax);
+                float weight = exp(-float(x * x + y * y) * 0.22);
+                sum += texture(uTex, sampleSt) * weight;
+                weightSum += weight;
+            }
+        }
+        outColor = sum / weightSum;
+    }
     outColor.a *= vAlpha;
 }
 `
@@ -526,6 +547,7 @@ class InfiniteGridMenu {
   subdivisions = 1
   discScale = 0.25
   movementActive = false
+  activeVertexIndex = -1
 
   canvas: HTMLCanvasElement
   items: InfiniteMenuItem[]
@@ -624,6 +646,7 @@ class InfiniteGridMenu {
       uFrames: gl.getUniformLocation(this.discProgram, 'uFrames'),
       uItemCount: gl.getUniformLocation(this.discProgram, 'uItemCount'),
       uAtlasSize: gl.getUniformLocation(this.discProgram, 'uAtlasSize'),
+      uActiveInstanceId: gl.getUniformLocation(this.discProgram, 'uActiveInstanceId'),
     }
 
     this.discGeo = new DiscGeometry(56, 1)
@@ -661,7 +684,7 @@ class InfiniteGridMenu {
 
   #initTexture() {
     const gl = this.gl
-    this.tex = createAndSetupTexture(gl, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE)
+    this.tex = createAndSetupTexture(gl, gl.LINEAR_MIPMAP_LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE)
 
     const itemCount = Math.max(1, this.items.length)
     this.atlasSize = Math.ceil(Math.sqrt(itemCount))
@@ -728,9 +751,11 @@ class InfiniteGridMenu {
     const positions = this.instancePositions.map((p) => vec3.transformQuat(vec3.create(), p, this.control.orientation))
     const scale = this.discScale
     const SCALE_INTENSITY = 0.6
+    const ACTIVE_BOOST = 2.4
     positions.forEach((p, ndx) => {
       const s = (Math.abs(p[2]) / this.SPHERE_RADIUS) * SCALE_INTENSITY + (1 - SCALE_INTENSITY)
-      const finalScale = s * scale
+      const boost = !this.movementActive && ndx === this.activeVertexIndex ? ACTIVE_BOOST : 1
+      const finalScale = s * scale * boost
       const matrix = mat4.create()
       mat4.multiply(matrix, matrix, mat4.fromTranslation(mat4.create(), vec3.negate(vec3.create(), p)))
       mat4.multiply(matrix, matrix, mat4.targetTo(mat4.create(), [0, 0, 0], p, [0, 1, 0]))
@@ -780,6 +805,10 @@ class InfiniteGridMenu {
 
     gl.uniform1i(this.discLocations.uItemCount as WebGLUniformLocation, this.items.length)
     gl.uniform1i(this.discLocations.uAtlasSize as WebGLUniformLocation, this.atlasSize)
+    gl.uniform1i(
+      this.discLocations.uActiveInstanceId as WebGLUniformLocation,
+      this.movementActive ? -1 : this.activeVertexIndex,
+    )
 
     gl.uniform1f(this.discLocations.uFrames as WebGLUniformLocation, this.#frames)
     gl.uniform1f(this.discLocations.uScaleFactor as WebGLUniformLocation, this.scaleFactor)
@@ -824,6 +853,7 @@ class InfiniteGridMenu {
 
     if (!this.control.isPointerDown) {
       const nearestVertexIndex = this.#findNearestVertexIndex()
+      this.activeVertexIndex = nearestVertexIndex
       const itemIndex = nearestVertexIndex % Math.max(1, this.items.length)
       this.onActiveItemChange(itemIndex)
       const snapDirection = vec3.normalize(vec3.create(), this.#getVertexWorldPosition(nearestVertexIndex))
@@ -954,9 +984,9 @@ export default function InfiniteMenu({
             <div
               onClick={handleButtonClick}
               className={`action-button ${isMoving ? 'inactive' : 'active'}`}
-              style={actionButtonColor ? { background: actionButtonColor } : undefined}
+              style={actionButtonColor ? { borderColor: actionButtonColor } : undefined}
             >
-              <p className="action-button-icon" style={actionButtonColor ? { color: '#fff' } : undefined}>
+              <p className="action-button-icon" style={actionButtonColor ? { color: actionButtonColor } : undefined}>
                 {actionLabel ?? '\u2197'}
               </p>
             </div>

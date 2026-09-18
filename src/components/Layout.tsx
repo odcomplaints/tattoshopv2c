@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import logo from '../assets/logoshopbesser.png'
+import logo from '../assets/logo2.png'
+import logoEyes from '../assets/logo2-eyes.svg'
 import { useShop } from '../context/ShopContext'
 import { useLanguage } from '../context/LanguageContext'
 import { CartIcon, HeartIcon } from './icons'
@@ -89,8 +90,20 @@ export function Layout({
       <header>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 pb-4 pt-10 lg:px-8 lg:pb-6 lg:pt-16">
           <div className="relative flex w-full items-center justify-between gap-6">
-            <Link to="/" aria-label="OD COMPLAINTS — home" className="inline-block transition-opacity hover:opacity-80">
-              <img src={logo} alt="OD COMPLAINTS" className="h-14 w-auto sm:h-16 lg:h-20" />
+            <Link to="/" aria-label="OD COMPLAINTS — home" className="group relative inline-block">
+              <img src={logo} alt="OD COMPLAINTS" className="h-16 w-auto sm:h-20 lg:h-24" />
+              <img
+                src={logoEyes}
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none absolute opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100"
+                style={{
+                  top: '34.4%',
+                  left: '13.4%',
+                  width: '70.7%',
+                  height: '15.1%',
+                }}
+              />
             </Link>
             <div className="flex items-center gap-5">
             {isShopSection && (

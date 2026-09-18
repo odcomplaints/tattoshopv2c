@@ -20,7 +20,7 @@ export const shopItems: ShopItem[] = [
   {
     id: 'bape-shark-glow',
     name: 'Bape Shark Glow in the Dark',
-    price: '390 EUR',
+    price: '440 EUR',
     category: 'Streetwear / Hoodie',
     image: '/assets/shop/bapesharkglowinthedark.png',
     availability: 'available',
@@ -331,7 +331,7 @@ export const shopItems: ShopItem[] = [
   },
   {
     id: 'lamborghini-polo',
-    name: 'Lamborghini Polo',
+    name: 'Ferrari Polo',
     price: '79 EUR',
     category: 'Streetwear / Polo',
     image: '/assets/shop/Lamborghinipolo.png',

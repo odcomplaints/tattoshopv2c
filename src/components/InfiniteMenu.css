@@ -72,13 +72,13 @@
   position: absolute;
   left: 50%;
   z-index: 10;
-  min-width: 60px;
-  height: 60px;
-  padding: 0 14px;
+  min-width: 100px;
+  height: 46px;
+  padding: 0 20px;
   display: grid;
   place-items: center;
-  background: #d4c9a8;
-  border: none;
+  background: transparent;
+  border: 1.5px solid #fff;
   border-radius: 999px;
   cursor: pointer;
   filter: invert(1) brightness(0.909);
@@ -103,12 +103,13 @@
 .action-button-icon {
   user-select: none;
   position: relative;
-  color: #000;
-  top: 2px;
-  font-size: 26px;
+  color: #fff;
+  top: 0;
+  font-size: 13px;
   font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   white-space: nowrap;
-  letter-spacing: 0.02em;
 }
 
 @media (max-width: 1500px) {

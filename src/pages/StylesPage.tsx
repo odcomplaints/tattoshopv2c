@@ -1,14 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import InfiniteMenu from '../components/InfiniteMenu'
 import type { InfiniteMenuItem } from '../components/InfiniteMenu'
 import { moodboardImages } from '../data/tattooStyles'
 
-const INTRO_TEXT = 'Eine laufend wachsende Sammlung aus Designs, Flashes und Referenzen.'
-const INTRO_SESSION_KEY = 'moodboard-intro-seen'
+const INTRO_TEXT = 'A growing collection of designs, flashes and references.'
 const TYPE_SPEED_MS = 35
-const HOLD_MS = 1400
+const HOLD_MS = 2400
 const STUDIO_EMAIL = 'od.complaints@gmail.com'
 
 export function StylesPage() {
@@ -16,8 +15,8 @@ export function StylesPage() {
   const [introText, setIntroText] = useState('')
   const [introVisible, setIntroVisible] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
+  const [menuVisible, setMenuVisible] = useState(false)
   const [selectedItem, setSelectedItem] = useState<InfiniteMenuItem | null>(null)
-  const hasRunRef = useRef(false)
 
   const menuItems: InfiniteMenuItem[] = useMemo(
     () => moodboardImages.map((img) => ({ image: img.src, title: img.alt ?? '' })),
@@ -25,20 +24,10 @@ export function StylesPage() {
   )
 
   useEffect(() => {
-    if (hasRunRef.current) return
-    hasRunRef.current = true
-
-    let alreadySeen = false
-    try {
-      alreadySeen = sessionStorage.getItem(INTRO_SESSION_KEY) === '1'
-    } catch {
-      alreadySeen = false
-    }
-
-    if (alreadySeen) return
-
     setShowIntro(true)
     setIntroVisible(true)
+    setMenuVisible(false)
+    setIntroText('')
 
     let i = 0
     const typeInterval = setInterval(() => {
@@ -46,23 +35,31 @@ export function StylesPage() {
       setIntroText(INTRO_TEXT.slice(0, i))
       if (i >= INTRO_TEXT.length) {
         clearInterval(typeInterval)
-        const holdTimeout = setTimeout(() => {
-          setIntroVisible(false)
-          const removeTimeout = setTimeout(() => setShowIntro(false), 600)
-          return () => clearTimeout(removeTimeout)
-        }, HOLD_MS)
-        return () => clearTimeout(holdTimeout)
       }
     }, TYPE_SPEED_MS)
 
-    try {
-      sessionStorage.setItem(INTRO_SESSION_KEY, '1')
-    } catch {
-      // ignore storage errors (e.g. private browsing)
-    }
-
     return () => clearInterval(typeInterval)
   }, [])
+
+  useEffect(() => {
+    if (introText !== INTRO_TEXT) return
+
+    const revealTimeout = setTimeout(() => setMenuVisible(true), 300)
+    const holdTimeout = setTimeout(() => {
+      setIntroVisible(false)
+    }, HOLD_MS)
+
+    return () => {
+      clearTimeout(revealTimeout)
+      clearTimeout(holdTimeout)
+    }
+  }, [introText])
+
+  useEffect(() => {
+    if (introVisible || !showIntro) return
+    const removeTimeout = setTimeout(() => setShowIntro(false), 600)
+    return () => clearTimeout(removeTimeout)
+  }, [introVisible, showIntro])
 
   return (
     <Layout
@@ -71,7 +68,9 @@ export function StylesPage() {
       hideChrome
     >
       <div className="relative h-[100dvh] w-screen overflow-hidden bg-neutral-950">
-        <div className="h-full w-full [filter:invert(1)_brightness(1.1)]">
+        <div
+          className={`h-full w-full [filter:invert(1)_brightness(1.1)] transition-opacity duration-[1400ms] ease-out ${menuVisible ? 'opacity-100' : 'opacity-0'}`}
+        >
           <InfiniteMenu
             items={menuItems}
             backgroundColor="#ffffff"
@@ -79,7 +78,6 @@ export function StylesPage() {
             scale={1.2}
             showLabels={false}
             actionLabel="HMU!"
-            actionButtonColor="#8B0000"
             onItemOpen={(item) => setSelectedItem(item)}
           />
         </div>
