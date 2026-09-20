@@ -153,9 +153,11 @@ export const translations: Record<Language, TranslationShape> = {
       faqTitle: 'FAQ',
       faqs: [
         ['How does an inquiry work?', 'After receiving your inquiry, I review the motif, placement and timeframe. If the project is a fit, I will reply with possible dates.'],
-        ['How much is the deposit?', 'The deposit is 50 EUR and secures your appointment. It is credited towards the final price of your tattoo.'],
+        ['Do I need to pay a deposit?', 'Yes, 50€ at booking. It is fully credited toward your final price, so it is not an extra fee.'],
+        ['What if I need to cancel?', 'Cancel at least 48h before your appointment and the deposit moves to your new date. Less than 48h before, or a no-show, and the deposit is forfeited.'],
         ['How should I prepare?', 'Arrive rested, eat beforehand and avoid alcohol the day before. References help, but a finished design is not required.'],
         ['Do you provide aftercare advice?', 'You will receive written aftercare instructions after your appointment. Depending on the placement, sun, swimming and exercise should be avoided during the first weeks.'],
+        ['Who is this not for?', 'If you need control, previews or constant changes, this is not your studio.'],
       ],
     },
     legal: {
@@ -164,7 +166,7 @@ export const translations: Record<Language, TranslationShape> = {
     imprint: {
       title: 'Legal notice',
       sections: [
-        { heading: 'Contact', body: 'Email: od.complaints@gmail.com<br />Phone: +49 176 81072268' },
+        { heading: 'Contact', body: 'Email: od.complaints@gmail.com' },
         { heading: 'VAT identification number', body: 'VAT ID pursuant to Section 27a of the German VAT Act (UStG): DE464396864.' },
         { heading: 'Dispute resolution', body: 'We are not willing and not obliged to participate in dispute resolution proceedings before a consumer arbitration board (Verbraucherschlichtungsstelle) pursuant to the German Consumer Dispute Resolution Act (VSBG).' },
         { heading: 'Liability for content', body: 'As a service provider, we are responsible for our own content on these pages under general law pursuant to Section 7(1) TMG/DDG. We are not obliged to monitor transmitted or stored third-party information or to investigate circumstances indicating unlawful activity. Obligations to remove or block the use of information under general law remain unaffected.' },
@@ -172,6 +174,7 @@ export const translations: Record<Language, TranslationShape> = {
         { heading: 'Copyright', body: 'Content and works on these pages created by the site operator are subject to German copyright law. Reproduction, editing, distribution and any kind of use beyond the scope of copyright law require the written consent of the respective author or creator.' },
         { heading: 'Information pursuant to Section 5 TMG', body: 'Jonas Geiger<br />Unterer Weiler 5<br />73527 Schwäbisch Gmünd<br />Germany' },
         { heading: 'Responsible for content', body: 'Pursuant to Section 18(2) MStV: Jonas Geiger, Unterer Weiler 5, 73527 Schwäbisch Gmünd.' },
+        { heading: 'Phone', body: '+49 176 81072268' },
       ],
       closing: 'This legal notice was last reviewed in September 2026.',
     },
@@ -269,9 +272,11 @@ export const translations: Record<Language, TranslationShape> = {
       faqTitle: 'FAQ',
       faqs: [
         ['Wie läuft eine Anfrage ab?', 'Nach Erhalt deiner Anfrage prüfe ich Motiv, Platzierung und Zeitrahmen. Wenn das Projekt passt, melde ich mich mit möglichen Terminen zurück.'],
-        ['Wie hoch ist die Anzahlung?', 'Die Anzahlung beträgt 50 EUR und sichert deinen Termin. Sie wird auf den Endpreis deines Tattoos angerechnet.'],
+        ['Muss ich eine Anzahlung leisten?', 'Ja, 50€ bei der Buchung. Sie wird vollständig auf deinen Endpreis angerechnet und ist somit keine zusätzliche Gebühr.'],
+        ['Was, wenn ich absagen muss?', 'Sage mindestens 48h vor deinem Termin ab, dann wird die Anzahlung auf deinen neuen Termin übertragen. Bei weniger als 48h vorher oder Nichterscheinen verfällt die Anzahlung.'],
         ['Wie sollte ich mich vorbereiten?', 'Komm ausgeruht, iss vorher etwas und verzichte am Vortag auf Alkohol. Referenzen helfen, ein fertiges Design ist aber nicht erforderlich.'],
         ['Gibt es Nachsorge-Hinweise?', 'Du erhältst nach deinem Termin schriftliche Nachsorgehinweise. Je nach Platzierung solltest du in den ersten Wochen Sonne, Schwimmen und Sport vermeiden.'],
+        ['Für wen ist das Studio nicht geeignet?', 'Wenn du Kontrolle, Vorschauen oder ständige Änderungen brauchst, ist das nicht dein Studio.'],
       ],
     },
     legal: {
@@ -280,7 +285,7 @@ export const translations: Record<Language, TranslationShape> = {
     imprint: {
       title: 'Impressum',
       sections: [
-        { heading: 'Kontakt', body: 'E-Mail: od.complaints@gmail.com<br />Telefon: +49 176 81072268' },
+        { heading: 'Kontakt', body: 'E-Mail: od.complaints@gmail.com' },
         { heading: 'Umsatzsteuer-Identifikationsnummer', body: 'USt-IdNr. gemäß § 27a Umsatzsteuergesetz: DE464396864.' },
         { heading: 'Streitschlichtung', body: 'Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle gemäß dem Verbraucherstreitbeilegungsgesetz (VSBG) teilzunehmen.' },
         { heading: 'Haftung für Inhalte', body: 'Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG/DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Wir sind jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt.' },
@@ -288,6 +293,7 @@ export const translations: Record<Language, TranslationShape> = {
         { heading: 'Urheberrecht', body: 'Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.' },
         { heading: 'Angaben gemäß § 5 TMG', body: 'Jonas Geiger<br />Unterer Weiler 5<br />73527 Schwäbisch Gmünd<br />Deutschland' },
         { heading: 'Verantwortlich für den Inhalt', body: 'Gemäß § 18 Abs. 2 MStV: Jonas Geiger, Unterer Weiler 5, 73527 Schwäbisch Gmünd.' },
+        { heading: 'Telefon', body: '+49 176 81072268' },
       ],
       closing: 'Dieses Impressum wurde zuletzt im September 2026 überprüft.',
     },

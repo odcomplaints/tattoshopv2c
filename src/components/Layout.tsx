@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logo from '../assets/logo2.png'
-import logoEyes from '../assets/logo2-eyes.svg'
+import logoRedEyes from '../assets/logo2-redeyes.png'
 import { useShop } from '../context/ShopContext'
 import { useLanguage } from '../context/LanguageContext'
 import { CartIcon, HeartIcon } from './icons'
@@ -93,16 +93,10 @@ export function Layout({
             <Link to="/" aria-label="OD COMPLAINTS — home" className="group relative inline-block">
               <img src={logo} alt="OD COMPLAINTS" className="h-16 w-auto sm:h-20 lg:h-24" />
               <img
-                src={logoEyes}
+                src={logoRedEyes}
                 alt=""
                 aria-hidden="true"
-                className="pointer-events-none absolute opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100"
-                style={{
-                  top: '34.4%',
-                  left: '13.4%',
-                  width: '70.7%',
-                  height: '15.1%',
-                }}
+                className="pointer-events-none absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100"
               />
             </Link>
             <div className="flex items-center gap-5">

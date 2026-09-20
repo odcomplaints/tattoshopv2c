@@ -25,14 +25,3 @@ export const sliderImages: SliderItem[] = [
   { title: 'Still Life', date: new Date('2026-03-07'), style: 'Blackwork', bodyPart: 'Thigh', image: '/assets/slider/still-life.png' },
   { title: 'Relic', date: new Date('2026-09-07'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/slider/relic.png', zoom: 1.5 },
 ].map((entry) => sliderItemSchema.parse(entry))
-
-/**
- * Items shaped for the AccordionGallery component from @react-bits.
- * Each item needs at least: image, label, optional alt and link.
- */
-export const accordionItems = [
-  { image: '/assets/slider/night-bloom.png', label: 'Night Bloom', alt: 'Night Bloom tattoo by OD COMPLAINTS', link: '/work' },
-  { image: '/assets/slider/low-tide.png', label: 'Low Tide', alt: 'Low Tide tattoo by OD COMPLAINTS', link: '/work' },
-  { image: '/assets/slider/still-life.png', label: 'Still Life', alt: 'Still Life tattoo by OD COMPLAINTS', link: '/work' },
-  { image: '/assets/slider/relic.png', label: 'Relic', alt: 'Relic tattoo by OD COMPLAINTS', link: '/work' }
-]
