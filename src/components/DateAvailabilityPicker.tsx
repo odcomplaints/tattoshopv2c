@@ -200,7 +200,7 @@ export function DateAvailabilityPicker({
                   {isBusy && (
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 flex items-center justify-center text-base font-bold text-red-500/80"
+                      className="pointer-events-none absolute inset-0 flex items-center justify-center text-2xl font-black text-white"
                     >
                       ✕
                     </span>
