@@ -187,14 +187,24 @@ export function DateAvailabilityPicker({
                   }}
                   title={isBusy ? labels.unavailable : undefined}
                   className={[
-                    'flex h-9 w-full items-center justify-center text-xs transition-colors',
-                    disabled
-                      ? 'cursor-not-allowed text-neutral-700 line-through decoration-neutral-700'
-                      : 'text-neutral-300 hover:border hover:border-neutral-600',
+                    'relative flex h-9 w-full items-center justify-center text-xs transition-colors',
+                    isBusy
+                      ? 'cursor-not-allowed text-neutral-600'
+                      : isPast
+                        ? 'cursor-not-allowed text-neutral-700'
+                        : 'text-neutral-300 hover:border hover:border-neutral-600',
                     isSelected ? 'border border-accent text-accent' : '',
                   ].join(' ')}
                 >
                   {cell.day}
+                  {isBusy && (
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 flex items-center justify-center text-base font-bold text-red-500/80"
+                    >
+                      ✕
+                    </span>
+                  )}
                 </button>
               )
             })}
