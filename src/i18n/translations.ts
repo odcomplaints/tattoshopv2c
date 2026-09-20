@@ -43,6 +43,17 @@ type TranslationShape = {
     size: string
     sizePlaceholder: string
     preferredDate: string
+    calendar: {
+      prevMonth: string
+      nextMonth: string
+      unavailable: string
+      loading: string
+      monthNames: string[]
+      weekdayNames: string[]
+      placeholder: string
+      selectDate: string
+      done: string
+    }
     billingAddress: string
     address: string
     zip: string
@@ -132,6 +143,20 @@ export const translations: Record<Language, TranslationShape> = {
       size: 'Size in cm',
       sizePlaceholder: 'e.g. 12',
       preferredDate: 'Preferred date',
+      calendar: {
+        prevMonth: 'Previous month',
+        nextMonth: 'Next month',
+        unavailable: 'Unavailable — already blocked in the studio calendar',
+        loading: 'Checking availability…',
+        monthNames: [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December',
+        ],
+        weekdayNames: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+        placeholder: 'Select a date',
+        selectDate: 'Choose your date',
+        done: 'Done',
+      },
       billingAddress: 'Billing Address',
       address: 'Address',
       zip: 'ZIP code',
@@ -251,6 +276,20 @@ export const translations: Record<Language, TranslationShape> = {
       size: 'Größe in cm',
       sizePlaceholder: 'z. B. 12',
       preferredDate: 'Wunschtermin',
+      calendar: {
+        prevMonth: 'Vorheriger Monat',
+        nextMonth: 'Nächster Monat',
+        unavailable: 'Nicht verfügbar — im Studio-Kalender bereits belegt',
+        loading: 'Verfügbarkeit wird geprüft…',
+        monthNames: [
+          'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+          'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember',
+        ],
+        weekdayNames: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
+        placeholder: 'Datum auswählen',
+        selectDate: 'Wähle deinen Termin',
+        done: 'Fertig',
+      },
       billingAddress: 'Rechnungsadresse',
       address: 'Adresse',
       zip: 'Postleitzahl',

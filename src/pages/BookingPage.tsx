@@ -1,9 +1,10 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { ExpressPay } from '../components/ExpressPay'
 import { GlobeIcon } from '../components/icons'
+import { DateAvailabilityPicker } from '../components/DateAvailabilityPicker'
 import { useLanguage } from '../context/LanguageContext'
 
 const DEPOSIT = '50,00 EUR'
@@ -21,6 +22,30 @@ export function BookingPage() {
   const [submitting, setSubmitting] = useState(false)
   const [missingFields, setMissingFields] = useState<Set<string>>(new Set())
   const [searchParams] = useSearchParams()
+  const [busyDates, setBusyDates] = useState<Set<string>>(new Set())
+  const [busyDatesLoading, setBusyDatesLoading] = useState(true)
+
+  // Load days already blocked in the studio's university/lecture calendar
+  // (see api/uni-calendar-busy.ts) so the date picker can grey them out —
+  // fails open (no blocked days) if the feed isn't configured or errors out.
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/uni-calendar-busy')
+      .then((res) => res.json())
+      .then((data: { busyDates?: string[] }) => {
+        if (cancelled) return
+        setBusyDates(new Set(data.busyDates ?? []))
+      })
+      .catch(() => {
+        if (!cancelled) setBusyDates(new Set())
+      })
+      .finally(() => {
+        if (!cancelled) setBusyDatesLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   // Pre-fill the motif field when arriving with a flash-design reference,
   // e.g. from the /styles moodboard's "HMU!" button.
@@ -252,13 +277,27 @@ export function BookingPage() {
                 <label className={labelClass}>
                   {b.preferredDate}
                   {missingFields.has('date') && <span className="ml-1 text-neutral-500">!</span>}
-                  <input
-                    className={inputClassFor('date')}
-                    name="date"
-                    type="date"
-                    onInput={() => clearFieldHighlight('date')}
-                  />
                 </label>
+                <DateAvailabilityPicker
+                  name="date"
+                  busyDates={busyDates}
+                  loading={busyDatesLoading}
+                  invalid={missingFields.has('date')}
+                  monthNames={b.calendar.monthNames}
+                  weekdayNames={b.calendar.weekdayNames}
+                  labels={{
+                    prevMonth: b.calendar.prevMonth,
+                    nextMonth: b.calendar.nextMonth,
+                    unavailable: b.calendar.unavailable,
+                    loading: b.calendar.loading,
+                    placeholder: b.calendar.placeholder,
+                    selectDate: b.calendar.selectDate,
+                    done: b.calendar.done,
+                  }}
+                  onChange={(value) => {
+                    if (value) clearFieldHighlight('date')
+                  }}
+                />
               </section>
 
               <button
