@@ -19,6 +19,9 @@ export const moodboardImages: MoodboardImage[] = [
   { src: '/flashes/tribal__10.png', alt: 'Flash 10' },
   { src: '/flashes/tribal__11.png', alt: 'Flash 11' },
   { src: '/flashes/tribal__12.png', alt: 'Flash 12' },
+  { src: '/flashes/flash-13.png', alt: 'Flash 13' },
+  { src: '/flashes/flash-14.png', alt: 'Flash 14' },
+  { src: '/flashes/flash-15.png', alt: 'Flash 15' },
 ]
 
 

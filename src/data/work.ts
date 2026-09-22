@@ -21,6 +21,9 @@ export const work: Work[] = [
   { title: 'Marrow', date: new Date('2026-09-11'), style: 'Abstract', bodyPart: 'Ribs', image: '/assets/work/img-7979.png', zoom: 1.5 },
   { title: 'Undercurrent', date: new Date('2026-09-08'), style: 'Botanical', bodyPart: 'Upper arm', image: '/assets/work/img-7983.png', zoom: 1.5 },
   { title: 'Relic', date: new Date('2026-09-07'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-7984.png', zoom: 1.5 },
+  { title: 'Aftermath', date: new Date('2026-09-22'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-8229.png', zoom: 1.5 },
+  { title: 'Wanderer', date: new Date('2026-09-21'), style: 'Fineline', bodyPart: 'Upper arm', image: '/assets/work/img-8230.png', zoom: 1.5 },
+  { title: 'Threshold', date: new Date('2026-09-20'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-8231.png', zoom: 1.5 },
 ].map((entry) => workSchema.parse(entry))
 
 export const newestWork = [...work].sort((first, second) => second.date.getTime() - first.date.getTime())
