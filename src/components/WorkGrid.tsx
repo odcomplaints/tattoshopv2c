@@ -23,13 +23,13 @@ export function WorkGrid({ items }: WorkGridProps) {
             <div className="aspect-[4/5] overflow-hidden bg-neutral-900">
               <img
                 src={item.image}
-                alt={`${item.title}, ${item.style} tattoo on the ${item.bodyPart}`}
+                alt={`${item.title}, ${item.style} tattoo`}
                 width="800"
                 height="1000"
                 loading={index > 1 ? 'lazy' : 'eager'}
                 decoding="async"
                 sizes="(min-width: 768px) 33vw, 50vw"
-                className="h-full w-full object-cover transition-opacity duration-200 hover:opacity-80"
+                className={`h-full w-full object-cover transition-opacity duration-200 hover:opacity-80 ${item.title === 'Relic' ? 'grayscale' : ''}`}
                 style={item.zoom ? { transform: `scale(${item.zoom})` } : undefined}
               />
             </div>
@@ -38,7 +38,7 @@ export function WorkGrid({ items }: WorkGridProps) {
             <h2 className="font-medium text-neutral-100">{item.title}</h2>
             <time className="text-neutral-300" dateTime={item.date.toISOString().slice(0, 10)}>{dateFormatter.format(item.date)}</time>
           </div>
-          <p className="mt-1 text-xs text-neutral-300">{item.style} / {item.bodyPart}</p>
+          <p className="mt-1 text-xs text-neutral-300">{item.style}</p>
         </article>
       ))}
 
@@ -53,14 +53,14 @@ export function WorkGrid({ items }: WorkGridProps) {
           >
             <img
               src={selected.image}
-              alt={`${selected.title}, ${selected.style} tattoo on the ${selected.bodyPart}`}
-              className="max-h-[75vh] w-auto max-w-full object-contain"
+              alt={`${selected.title}, ${selected.style} tattoo`}
+              className={`max-h-[75vh] w-auto max-w-full object-contain ${selected.title === 'Relic' ? 'grayscale' : ''}`}
             />
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-xs uppercase tracking-widest">
               <h2 className="font-medium text-neutral-100">{selected.title}</h2>
               <time className="text-neutral-300" dateTime={selected.date.toISOString().slice(0, 10)}>{dateFormatter.format(selected.date)}</time>
             </div>
-            <p className="text-xs text-neutral-300">{selected.style} / {selected.bodyPart}</p>
+            <p className="text-xs text-neutral-300">{selected.style}</p>
             <button
               type="button"
               onClick={() => setSelected(null)}
