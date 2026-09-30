@@ -7,6 +7,8 @@ type WorkGridProps = {
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' })
 
+const GRAYSCALE_TITLES = new Set(['Relic', 'Ashes', 'Reverie', 'Silhouette', 'Nocturne', 'Fracture'])
+
 export function WorkGrid({ items }: WorkGridProps) {
   const [selected, setSelected] = useState<Work | null>(null)
 
@@ -29,7 +31,7 @@ export function WorkGrid({ items }: WorkGridProps) {
                 loading={index > 1 ? 'lazy' : 'eager'}
                 decoding="async"
                 sizes="(min-width: 768px) 33vw, 50vw"
-                className={`h-full w-full object-cover transition-opacity duration-200 hover:opacity-80 ${item.title === 'Relic' ? 'grayscale' : ''}`}
+                className={`h-full w-full object-cover transition-opacity duration-200 hover:opacity-80 ${GRAYSCALE_TITLES.has(item.title) ? 'grayscale' : ''}`}
                 style={item.zoom ? { transform: `scale(${item.zoom})` } : undefined}
               />
             </div>
@@ -54,7 +56,7 @@ export function WorkGrid({ items }: WorkGridProps) {
             <img
               src={selected.image}
               alt={`${selected.title}, ${selected.style} tattoo`}
-              className={`max-h-[75vh] w-auto max-w-full object-contain ${selected.title === 'Relic' ? 'grayscale' : ''}`}
+              className={`max-h-[75vh] w-auto max-w-full object-contain ${GRAYSCALE_TITLES.has(selected.title) ? 'grayscale' : ''}`}
             />
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-xs uppercase tracking-widest">
               <h2 className="font-medium text-neutral-100">{selected.title}</h2>

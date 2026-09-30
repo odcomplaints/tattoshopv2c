@@ -33,7 +33,7 @@ export const catalog: Record<string, CatalogEntry> = {
   'supreme-tshirt': { id: 'supreme-tshirt', name: 'Supreme T-Shirt', priceCents: 11000, currency: 'eur', available: true, stock: 1 },
   'balenciaga-sweatjacke': { id: 'balenciaga-sweatjacke', name: 'Balenciaga Sweatjacke', priceCents: 59000, currency: 'eur', available: false, stock: 1 },
   'corteiz-hoodie': { id: 'corteiz-hoodie', name: 'Corteiz Hoodie', priceCents: 14000, currency: 'eur', available: true, stock: 1 },
-  'cp-company': { id: 'cp-company', name: 'CP Company Jacke', priceCents: 42000, currency: 'eur', available: true, stock: 1 },
+  'cp-company': { id: 'cp-company', name: 'CP Company Jacke', priceCents: 21000, currency: 'eur', available: true, stock: 1 },
   'dior-sorayama-hoodie': { id: 'dior-sorayama-hoodie', name: 'Dior × Sorayama Hoodie', priceCents: 180000, currency: 'eur', available: true, stock: 1 },
   'carlo-colucci-1': { id: 'carlo-colucci-1', name: 'Carlo Colucci Strickjacke I', priceCents: 31000, currency: 'eur', available: true, stock: 1 },
   'carlo-colucci-2': { id: 'carlo-colucci-2', name: 'Carlo Colucci Strickjacke II', priceCents: 31000, currency: 'eur', available: true, stock: 1 },

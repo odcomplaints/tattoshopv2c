@@ -32,7 +32,11 @@ export function ShopPage() {
   const { isFavorite, toggleFavorite, isSoldOut } = useShop()
   const [filterOpen, setFilterOpen] = useState(false)
   const [sort, setSort] = useState<SortValue>('default')
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [query, setQuery] = useState('')
   const filterRef = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLDivElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
 
   const sortedItems = useMemo(() => {
@@ -45,14 +49,22 @@ export function ShopPage() {
     return items
   }, [sort])
 
-  const totalPages = Math.max(1, Math.ceil(sortedItems.length / ITEMS_PER_PAGE))
+  const searchedItems = useMemo(() => {
+    const term = query.trim().toLowerCase()
+    if (!term) return sortedItems
+    return sortedItems.filter((item) =>
+      `${item.name} ${item.category}`.toLowerCase().includes(term),
+    )
+  }, [sortedItems, query])
+
+  const totalPages = Math.max(1, Math.ceil(searchedItems.length / ITEMS_PER_PAGE))
   const pageParam = Number(searchParams.get('page'))
   const currentPage = Number.isFinite(pageParam) && pageParam >= 1 ? Math.min(Math.floor(pageParam), totalPages) : 1
 
   const visibleItems = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE
-    return sortedItems.slice(start, start + ITEMS_PER_PAGE)
-  }, [sortedItems, currentPage])
+    return searchedItems.slice(start, start + ITEMS_PER_PAGE)
+  }, [searchedItems, currentPage])
 
   function goToPage(page: number) {
     const clamped = Math.min(Math.max(page, 1), totalPages)
@@ -73,6 +85,11 @@ export function ShopPage() {
   }, [totalPages])
 
   useEffect(() => {
+    goToPage(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query])
+
+  useEffect(() => {
     if (!filterOpen) return
     function handleClick(event: MouseEvent) {
       if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
@@ -82,6 +99,18 @@ export function ShopPage() {
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [filterOpen])
+
+  useEffect(() => {
+    if (!searchOpen) return
+    searchInputRef.current?.focus()
+    function handleClick(event: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        if (!query.trim()) setSearchOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [searchOpen, query])
 
 
   return (
@@ -102,7 +131,49 @@ export function ShopPage() {
       </section>
 
       <section className="pt-10 text-left sm:pt-14" aria-label="Products">
-        <div className="mb-1.5 flex justify-end sm:mb-2">
+        <div className="mb-1.5 flex items-center justify-end gap-2 sm:mb-2">
+          <div ref={searchRef} className="relative flex items-center">
+            {searchOpen ? (
+              <div className="flex items-center gap-1.5 border border-neutral-800 px-2.5 py-1.5 transition-colors focus-within:border-neutral-600">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" className="shrink-0 text-neutral-500">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M21 21l-4.3-4.3" strokeLinecap="round" />
+                </svg>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Artikel suchen…"
+                  aria-label="Artikel suchen"
+                  className="w-28 bg-transparent text-[11px] uppercase tracking-widest text-neutral-200 placeholder:text-neutral-600 focus:outline-none sm:w-40"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery('')}
+                    aria-label="Suche löschen"
+                    className="text-neutral-500 transition-colors hover:text-neutral-200"
+                  >
+                    &times;
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                aria-label="Artikel suchen"
+                className="flex items-center gap-1.5 border border-neutral-800 px-3 py-1.5 text-[10px] uppercase tracking-widest text-neutral-400 transition-colors hover:border-neutral-600 hover:text-neutral-200"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M21 21l-4.3-4.3" strokeLinecap="round" />
+                </svg>
+                Suche
+              </button>
+            )}
+          </div>
           <div ref={filterRef} className="relative">
             <button
               type="button"
@@ -144,6 +215,11 @@ export function ShopPage() {
           </div>
         </div>
 
+        {visibleItems.length === 0 ? (
+          <p className="py-16 text-center text-xs uppercase tracking-widest text-neutral-500">
+            Keine Artikel gefunden{query ? ` für „${query}“` : ''}.
+          </p>
+        ) : (
         <div className="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 md:gap-x-5 md:gap-y-14">
           {visibleItems.map((item) => {
             const favorite = isFavorite(item.id)
@@ -186,6 +262,7 @@ export function ShopPage() {
             )
           })}
         </div>
+        )}
 
         {totalPages > 1 && (
           <nav aria-label="Seitennavigation" className="mt-12 flex items-center justify-center gap-2 sm:mt-16">

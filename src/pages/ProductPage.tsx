@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { HeartIcon } from '../components/icons'
+import { ZoomImage } from '../components/ZoomImage'
 import { useShop } from '../context/ShopContext'
 import { shopItems } from '../data/shop'
 
@@ -73,14 +74,13 @@ export function ProductPage() {
               }
             }}
           >
-            <img
+            <ZoomImage
               key={currentImage}
               src={currentImage}
               alt={`${item.name}, ${item.category}`}
-              width="800"
-              height="1000"
-              decoding="async"
-              className="h-full w-full animate-[fade-in_0.25s_ease] object-contain"
+              className="h-full w-full animate-[fade-in_0.25s_ease]"
+              imgClassName="h-full w-full object-contain"
+              zoom={2.5}
             />
             {!available && (
               <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">

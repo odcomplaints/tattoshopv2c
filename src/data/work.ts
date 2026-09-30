@@ -17,6 +17,12 @@ export const work: Work[] = [
   { title: 'Still Life', date: new Date('2026-03-07'), style: 'Blackwork', bodyPart: 'Thigh', image: '/assets/work/4.png' },
   { title: 'Relic', date: new Date('2026-09-07'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-7984.png', zoom: 1.5 },
   { title: 'Aftermath', date: new Date('2026-09-22'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-8229.png', zoom: 1.5 },
+  // Temporarily hidden — emblem images removed, no longer wanted in the Work section.
+  // { title: 'Ashes', date: new Date('2026-09-30'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-8367.png', zoom: 1.5 },
+  // { title: 'Reverie', date: new Date('2026-09-30'), style: 'Fineline', bodyPart: 'Upper arm', image: '/assets/work/img-8368.png', zoom: 1.5 },
+  // { title: 'Silhouette', date: new Date('2026-09-30'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-8369.png', zoom: 1.5 },
+  // { title: 'Nocturne', date: new Date('2026-09-30'), style: 'Abstract', bodyPart: 'Ribs', image: '/assets/work/img-8370.png', zoom: 1.5 },
+  // { title: 'Fracture', date: new Date('2026-09-30'), style: 'Blackwork', bodyPart: 'Upper arm', image: '/assets/work/img-8371.png', zoom: 1.5 },
   // Temporarily hidden — only the slider images + Relic + Aftermath should show in the Work section.
   // { title: 'Undertow', date: new Date('2026-09-14'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-7976.png', zoom: 1.9 },
   // { title: 'Static', date: new Date('2026-09-13'), style: 'Fineline', bodyPart: 'Upper arm', image: '/assets/work/img-7977.png', zoom: 1.5 },

@@ -164,7 +164,7 @@ export const shopItems: ShopItem[] = [
   {
     id: 'cp-company',
     name: 'CP Company Jacke',
-    price: '420 EUR',
+    price: '210 EUR',
     category: 'Streetwear / Jacke',
     image: '/assets/shop/cpcompany.png',
     availability: 'available',

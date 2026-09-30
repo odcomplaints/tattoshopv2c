@@ -8,6 +8,7 @@ import { moodboardImages } from '../data/tattooStyles'
 const INTRO_TEXT = 'A growing collection of designs, flashes and references.'
 const TYPE_SPEED_MS = 35
 const HOLD_MS = 2400
+const FADE_OUT_MS = 600
 const STUDIO_EMAIL = 'od.complaints@gmail.com'
 
 export function StylesPage() {
@@ -16,6 +17,7 @@ export function StylesPage() {
   const [introVisible, setIntroVisible] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
   const [menuVisible, setMenuVisible] = useState(false)
+  const [viewMode, setViewMode] = useState<'spin' | 'grid'>('spin')
   const [selectedItem, setSelectedItem] = useState<InfiniteMenuItem | null>(null)
 
   const menuItems: InfiniteMenuItem[] = useMemo(
@@ -44,21 +46,23 @@ export function StylesPage() {
   useEffect(() => {
     if (introText !== INTRO_TEXT) return
 
-    const revealTimeout = setTimeout(() => setMenuVisible(true), 300)
     const holdTimeout = setTimeout(() => {
       setIntroVisible(false)
     }, HOLD_MS)
 
     return () => {
-      clearTimeout(revealTimeout)
       clearTimeout(holdTimeout)
     }
   }, [introText])
 
   useEffect(() => {
     if (introVisible || !showIntro) return
-    const removeTimeout = setTimeout(() => setShowIntro(false), 600)
-    return () => clearTimeout(removeTimeout)
+    const revealTimeout = setTimeout(() => setMenuVisible(true), FADE_OUT_MS)
+    const removeTimeout = setTimeout(() => setShowIntro(false), FADE_OUT_MS)
+    return () => {
+      clearTimeout(revealTimeout)
+      clearTimeout(removeTimeout)
+    }
   }, [introVisible, showIntro])
 
   return (
@@ -68,19 +72,44 @@ export function StylesPage() {
       hideChrome
     >
       <div className="relative h-[100dvh] w-screen overflow-hidden bg-neutral-950">
-        <div
-          className={`h-full w-full [filter:invert(1)_brightness(1.1)] transition-opacity duration-[1400ms] ease-out ${menuVisible ? 'opacity-100' : 'opacity-0'}`}
-        >
-          <InfiniteMenu
-            items={menuItems}
-            backgroundColor="#ffffff"
-            subdivisions={2}
-            scale={1.2}
-            showLabels={false}
-            actionLabel="HMU!"
-            onItemOpen={(item) => setSelectedItem(item)}
-          />
-        </div>
+        {viewMode === 'spin' && (
+          <div
+            className={`h-full w-full [filter:invert(1)_brightness(1.1)] transition-opacity duration-[1400ms] ease-out ${menuVisible ? 'opacity-100' : 'opacity-0'}`}
+          >
+            <InfiniteMenu
+              items={menuItems}
+              backgroundColor="#ffffff"
+              subdivisions={2}
+              scale={1.2}
+              showLabels={false}
+              actionLabel="HMU!"
+              onItemOpen={(item) => setSelectedItem(item)}
+            />
+          </div>
+        )}
+
+        {viewMode === 'grid' && (
+          <div className="h-full w-full overflow-y-auto bg-neutral-950 px-4 pb-10 pt-24 sm:px-8">
+            <div className="mx-auto grid max-w-5xl grid-cols-3 gap-2 sm:gap-4">
+              {menuItems.map((menuItem, index) => (
+                <button
+                  key={`${menuItem.image}-${index}`}
+                  type="button"
+                  onClick={() => setSelectedItem(menuItem)}
+                  className="group relative aspect-square overflow-hidden bg-neutral-950"
+                >
+                  <img
+                    src={menuItem.image}
+                    alt={menuItem.title ?? ''}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover [filter:invert(1)_brightness(1.1)] transition-transform duration-200 group-hover:scale-105"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <button
           type="button"
@@ -96,6 +125,16 @@ export function StylesPage() {
         >
           <span aria-hidden="true">&larr;</span> Zurück
         </button>
+
+        {menuVisible && (
+          <button
+            type="button"
+            onClick={() => setViewMode((mode) => (mode === 'grid' ? 'spin' : 'grid'))}
+            className="absolute right-5 top-5 z-30 animate-[fade-in_0.6s_ease] border border-neutral-700 px-3 py-1.5 text-xs uppercase tracking-widest text-neutral-100 transition-colors hover:border-accent hover:text-accent sm:right-8 sm:top-8"
+          >
+            {viewMode === 'grid' ? 'Spin' : 'Grid'}
+          </button>
+        )}
 
         {showIntro && (
           <div

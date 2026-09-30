@@ -110,7 +110,7 @@ export const translations: Record<Language, TranslationShape> = {
       instagram: 'Instagram',
     },
     home: {
-      eyebrow: 'Tattoo Artist / GD',
+      eyebrow: 'Tattoo & Apparel',
       tagline: 'Get your next Regret',
       description:
         'Blackwork, fineline and botanical motifs. Individual tattoos, considered carefully and executed with precision.',
@@ -243,8 +243,8 @@ export const translations: Record<Language, TranslationShape> = {
       instagram: 'Instagram',
     },
     home: {
-      eyebrow: 'Tätowierer / GD',
-      tagline: 'Hol dir dein nächstes Bedauern',
+      eyebrow: 'Tattoo & Apparel',
+      tagline: 'Get your next Regret',
       description:
         'Blackwork, Fineline und botanische Motive. Individuelle Tattoos, sorgf\u00e4ltig durchdacht und pr\u00e4zise umgesetzt.',
       bookSession: 'Termin buchen',
