@@ -130,7 +130,7 @@ export function StylesPage() {
           <button
             type="button"
             onClick={() => setViewMode((mode) => (mode === 'grid' ? 'spin' : 'grid'))}
-            className="absolute right-5 top-5 z-30 animate-[fade-in_0.6s_ease] border border-neutral-700 px-3 py-1.5 text-xs uppercase tracking-widest text-neutral-100 transition-colors hover:border-accent hover:text-accent sm:right-8 sm:top-8"
+            className="absolute left-1/2 top-5 z-30 -translate-x-1/2 animate-[fade-in_0.6s_ease] border border-neutral-700 px-3 py-1.5 text-xs uppercase tracking-widest text-neutral-100 transition-colors hover:border-accent hover:text-accent sm:top-8 lg:left-auto lg:right-8 lg:translate-x-0"
           >
             {viewMode === 'grid' ? 'Spin' : 'Grid'}
           </button>
