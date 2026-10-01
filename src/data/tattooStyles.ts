@@ -22,14 +22,6 @@ export const moodboardImages: MoodboardImage[] = [
   { src: '/flashes/flash-13.png', alt: 'Flash 13' },
   { src: '/flashes/flash-14.png', alt: 'Flash 14' },
   { src: '/flashes/flash-15.png', alt: 'Flash 15' },
-  { src: '/flashes/flash-16.png', alt: 'Flash 16' },
-  { src: '/flashes/flash-17.png', alt: 'Flash 17' },
-  { src: '/flashes/flash-18.png', alt: 'Flash 18' },
-  { src: '/flashes/flash-19.png', alt: 'Flash 19' },
-  { src: '/flashes/flash-20.png', alt: 'Flash 20' },
-  { src: '/flashes/flash-21.png', alt: 'Flash 21' },
-  { src: '/flashes/flash-22.png', alt: 'Flash 22' },
-  { src: '/flashes/flash-23.png', alt: 'Flash 23' },
 ]
 
 

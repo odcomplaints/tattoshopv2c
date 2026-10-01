@@ -698,15 +698,31 @@ class InfiniteGridMenu {
     Promise.all(
       this.items.map(
         (item) =>
-          new Promise<HTMLImageElement>((resolve) => {
+          new Promise<HTMLImageElement | null>((resolve) => {
             const img = new Image()
             img.crossOrigin = 'anonymous'
-            img.onload = () => resolve(img)
+            let settled = false
+            const finish = (result: HTMLImageElement | null) => {
+              if (settled) return
+              settled = true
+              clearTimeout(timeoutId)
+              resolve(result)
+            }
+            const timeoutId = setTimeout(() => {
+              console.error(`[InfiniteMenu] Timed out loading image: ${item.image}`)
+              finish(null)
+            }, 8000)
+            img.onload = () => finish(img)
+            img.onerror = () => {
+              console.error(`[InfiniteMenu] Failed to load image: ${item.image}`)
+              finish(null)
+            }
             img.src = item.image
           }),
       ),
     ).then((images) => {
       images.forEach((img, i) => {
+        if (!img) return
         const x = (i % this.atlasSize) * cellSize
         const y = Math.floor(i / this.atlasSize) * cellSize
         ctx.drawImage(img, x, y, cellSize, cellSize)
