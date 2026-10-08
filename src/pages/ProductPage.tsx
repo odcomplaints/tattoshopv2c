@@ -59,7 +59,7 @@ export function ProductPage() {
       <div className="mt-8 grid gap-10 text-left lg:grid-cols-2 lg:gap-16">
         <div>
           <div
-            className="relative aspect-[4/5] overflow-hidden touch-pan-y"
+            className="relative aspect-[4/5] overflow-hidden [touch-action:pan-y_pinch-zoom]"
             onTouchStart={(e) => {
               ;(e.currentTarget as HTMLDivElement & { dataset: { touchStartX?: string } }).dataset.touchStartX = String(
                 e.touches[0].clientX,

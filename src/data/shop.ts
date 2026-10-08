@@ -324,7 +324,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'GOAT T-Shirt im Skate-Boxtee-Schnitt. Lockerer Fit, griffiger Baumwollstoff und auffälliger Grafik-Print – ein unkompliziertes Statement-Piece für den Alltag.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/orange',
     listed: true,
@@ -338,7 +338,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Ferrari Polo in kräftigem Rot. Klassischer Poloshirt-Schnitt mit Kragen und Knopfleiste, dezent besticktes Markenlogo – sportlich-eleganter Streetwear-Look.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'rot',
     listed: true,
@@ -352,7 +352,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Supreme Hoodie mit orangefarbenem Logo-Print auf der Brust. Schwere Fleece-Qualität, Kängurutasche und der typische Oversized-Fit der Marke.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/orange',
     listed: true,
@@ -366,7 +366,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'BAPE T-Shirt im Oversize-Schnitt. 100 % Baumwolle, großzügiger Fit und charakteristischer Ape-Print – vielseitig kombinierbar im Streetwear-Stil.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -380,7 +380,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Chief Keef Polo mit New-York-Grafik. Hip-Hop-inspiriertes Design, bequemer Baumwollstoff – ein echtes Nischen-Piece für Sammler der Szene.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -394,7 +394,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Supreme Box Logo Hoodie in Weiß – eines der begehrtesten Streetwear-Statements überhaupt. Schwere Fleece-Qualität mit dem ikonischen gestickten Box-Logo auf der Brust.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -408,7 +408,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Kuscheliger Winterpulli mit buntem Strickmuster im Vintage-Stil. Wärmend und vielseitig kombinierbar – ein echtes Unikat für die kalte Jahreszeit.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'bunt',
     listed: true,
@@ -422,7 +422,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Tekkno Sweater mit Rave-inspirierter Grafik. Lockerer Fit und dicker Stoff – perfekt für den unverwechselbaren Techno/Streetwear-Crossover-Look.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -436,7 +436,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Bleached Oversize Tee mit individuellem Waschungs-Effekt – jedes Stück ist durch den Bleach-Prozess ein Unikat. Lässiger, weiter Schnitt.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -450,7 +450,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Supreme Box Logo Hoodie in Schwarz. Der Klassiker schlechthin – schwere Fleece-Qualität, gesticktes Box-Logo und der ikonische Oversized-Fit.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -464,7 +464,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Vintage Arsenal Trikot in Gelb. Auswärts-Jersey mit klassischem Wappen und Original-Stickerei – ein Muss für Gunners-Fans und Fußball-Nostalgiker.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'gelb',
     listed: true,
@@ -478,7 +478,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'BAPE T-Shirt mit Superman-Kollab-Grafik. Verspieltes Crossover-Design, 100 % Baumwolle – ein echter Blickfang für Comic- und Streetwear-Fans.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -492,7 +492,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Vintage Brasilien Jacke in Gelb. Nationalmannschafts-Design mit Wappen-Stickerei – ein farbenfrohes Fußball-Piece mit viel Charakter.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'gelb',
     listed: true,
@@ -507,7 +507,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Chicago Bulls Box Tee im klassischen Team-Design. Schwarz-rote Farbkombination mit Vintage-Logo – ein NBA-Basic mit Kultstatus.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/rot',
     listed: true,
@@ -521,7 +521,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'DHL Trainingsjacke im kultigen Meme-Design. Leichtes, sportliches Material mit auffälligem DHL-Branding – ein echter Hingucker in der Streetwear-Szene.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'rot',
     listed: true,
@@ -535,7 +535,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Lakers Shirt in Lila. Klassisches NBA-Team-Design, bequemer Baumwollstoff – ideal für Basketball-Fans und den lässigen Alltagslook.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'lila',
     listed: true,
@@ -549,7 +549,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'New York Longsleeve in Blau/Weiß. Entspannter Streetwear-Schnitt mit NY-Grafik – vielseitig für Layering oder als eigenständiges Statement.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'blau/weiß',
     listed: true,
@@ -563,7 +563,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Vintage Nike Hemd in Schwarz. Klassisches Swoosh-Branding, leichter Stoff – ein zeitloses Basic mit sportlichem Vintage-Charakter.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -577,7 +577,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Polo mit Reiter-Emblem in Rot. Hochwertiger Baumwollstoff, klassischer Polo-Kragen – ein elegant-sportliches Basic für jeden Anlass.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'rot',
     listed: true,
@@ -591,7 +591,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Supreme Bandana Hoodie in Grau. Allover-Paisley-Print im Bandana-Stil, schwere Fleece-Qualität und der typische Supreme-Fit.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau',
     listed: true,
@@ -605,7 +605,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Supreme Box Logo Hoodie im Camo-Muster. Seltene Camouflage-Variante des Kult-Hoodies, schwere Fleece-Qualität mit gesticktem Box-Logo.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau/Camo',
     listed: true,
@@ -619,7 +619,7 @@ export const shopItems: ShopItem[] = [
     availability: 'sold-out',
     stock: 0,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Supreme × Scarface Kollab-Shirt. Ikonisches Filmmotiv kombiniert mit dem Supreme-Branding – ein gesuchtes Collector-Piece, bereits ausverkauft.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/rot',
     listed: true,
@@ -633,7 +633,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Vintage Printed Tee in Navyblau. Einzigartiger Retro-Print, weicher Baumwollstoff – ein charaktervolles Unikat für den entspannten Look.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'navyblue',
     listed: true,
@@ -647,7 +647,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Box Tee in Schwarz – schlichtes, zeitloses Basic mit cleanem Box-Logo-Print. 100 % Baumwolle in solider Verarbeitung.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -661,7 +661,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Lakers Sweater in Schwarz/Lila. Dicker, warmer Pullover mit Team-Branding – die perfekte Wahl für Basketball-Fans in der kalten Jahreszeit.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/Lila',
     listed: true,
@@ -675,7 +675,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Billionaire Boys Club Hose in Blau. Hochwertige Verarbeitung mit dezentem BBC-Branding – luxuriöse Streetwear für den gehobenen Anspruch.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'blau',
     listed: true,
@@ -689,7 +689,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Dior Umhängetasche in Blau. Elegantes Design mit charakteristischem Dior-Branding, hochwertige Verarbeitung – ein vielseitiges Luxus-Accessoire.',
     details: ['Zustand: gut'],
     color: 'blau',
     listed: true,
@@ -703,7 +703,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'BAPE Miami Shirt in Schwarz/Pink. Sommerliches Design mit Miami-inspirierter Grafik – ein auffälliges Piece für den urbanen Vacation-Look.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwrarz/Pink',
     listed: true,
@@ -717,7 +717,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'BAPE Shirt in Blau/Rot. Farbenfrohes Camo-Design mit markentypischem Ape-Print – ein echter Eyecatcher aus dem BAPE-Universum.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -731,7 +731,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'BAPE T-Shirt mit Japan-Grafik. Kulturelles Design trifft auf den ikonischen BAPE-Stil – ein besonderes Piece für Fans der japanischen Streetwear.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -745,7 +745,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'BAPE T-Shirt in Schwarz/Rot. Starker Farbkontrast mit klassischem Ape-Grafik-Print – ein zeitloses Piece für jede Streetwear-Rotation.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -759,7 +759,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Casablanca T-Shirt in Weiß. Luxuriöser Seiden-Touch und künstlerisches Print-Design – die französische Marke steht für gehobene Streetwear-Eleganz.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -773,9 +773,9 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Cuban Link Kette mit 12g Gewicht. Massive Gliederkette im klassischen Cuban-Link-Stil – ein echter Blickfang für jeden Streetwear-Look.',
     details: ['Zustand: gut', 'Gewicht: 12g'],
-    listed: true,
+    listed: false,
   },
   {
     id: 'cuban-link-18g',
@@ -786,9 +786,9 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Cuban Link Kette mit 18g Gewicht. Etwas schwerer und präsenter als die 12g-Variante – massiver Auftritt für jedes Outfit.',
     details: ['Zustand: gut', 'Gewicht: 18g'],
-    listed: true,
+    listed: false,
   },
   {
     id: 'cuban-link-23g',
@@ -799,9 +799,9 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Cuban Link Kette mit 23g Gewicht. Die massivste Variante der Serie – maximale Präsenz und Gewicht für den ultimativen Statement-Look.',
     details: ['Zustand: gut', 'Gewicht: 23g'],
-    listed: true,
+    listed: false,
   },
   {
     id: 'sterlingsilber-kette-14g',
@@ -812,9 +812,9 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      '925 Sterling Silber Kette mit 14g Gewicht. Hochwertiges Echtsilber mit elegantem Glanz – zeitloser Schmuck für den täglichen Einsatz.',
     details: ['Material: 925 Sterling Silber', 'Gewicht: 14g', 'Zustand: gut'],
-    listed: true,
+    listed: false,
   },
   {
     id: 'koenigkette-35g',
@@ -825,9 +825,9 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Königskette mit 35g Gewicht. Klassisches Panzerkettenglied-Design mit solidem Gewicht – ein echter Klassiker unter den Statement-Ketten.',
     details: ['Zustand: gut', 'Gewicht: 35g'],
-    listed: true,
+    listed: false,
   },
   {
     id: 'koenigskette-77g',
@@ -838,9 +838,9 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Königskette mit 77g Gewicht. Besonders massive Ausführung mit beeindruckendem Volumen – für alle, die auf maximale Präsenz setzen.',
     details: ['Zustand: gut', 'Gewicht: 77g'],
-    listed: true,
+    listed: false,
   },
   {
     id: 'bape-shark-abc-xxxl',
@@ -851,7 +851,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Bape Shark ABC Camo Hoodie in XXXL. Großzügiger Schnitt mit vollflächigem ABC-Camo-Muster und der ikonischen Haifischmaul-Kapuze.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Zustand: gut', 'Größe: XXXL'],
     color: 'grün',
     listed: true,
@@ -865,7 +865,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Bape Shark ABC Camo Half-Zip. Sportlicher Half-Zip-Schnitt im ABC-Camo-Muster – eine praktische Alternative zum klassischen Full-Zip-Shark-Hoodie.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Half-Zip', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau/Camo',
     listed: true,
@@ -880,7 +880,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      '  ',
+      'Palace Pullover in Grün. Minimalistisches Design mit dezentem Dreieck-Logo, hochwertige Baumwollqualität – ein Skate-Streetwear-Klassiker aus London.',
     details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grün',
     listed: true,
@@ -894,7 +894,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Palace Sweater in Schwarz. Hochwertiger Baumwollpullover mit dezentem Dreieck-Logo – der minimalistische Skate-Style der Londoner Kultmarke.',
     details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -909,7 +909,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Polo mit Reiter-Emblem in Schwarz. Zeitloser Polo-Schnitt mit Knopfleiste und Kragen – ein vielseitiges Basic für einen smarten Casual-Look.',
     details: ['Farbe: Schwarz', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -923,7 +923,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Prada Pullover in Grau. Luxuriöse Materialqualität mit dezentem Branding – zeitlose Eleganz trifft auf italienisches Design.',
     details: ['Marke: Prada', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau',
     listed: true,
@@ -937,7 +937,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Supreme Puffer Jacket in Sandfarben. Wärmende Steppjacke mit cleanem Design und dezentem Supreme-Logo – perfekt für die Übergangszeit.',
     details: ['Marke: Supreme', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'sandfarben',
     listed: true,
@@ -977,7 +977,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Bape Shark Hoodie im Dyed Color Wash. Individueller Waschungs-Effekt sorgt für ein einzigartiges Farbverlaufs-Muster auf jedem Shark-Hoodie.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Dyed Color Wash', 'Zustand: gut', 'Größe: bitte anfragen'],
     listed: true,
   },
@@ -990,7 +990,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Weißes Ash Tee mit subtilem Vintage-Finish. Schlichtes Design in heller Asch-Optik – ein unkompliziertes Basic für jeden Kleiderschrank.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -1004,7 +1004,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Laarve Watch in Gold/Lila. Auffällige Uhr mit ikonischem Design und kontrastreicher Farbkombination – ein echtes Statement-Accessoire.',
     details: ['Zustand: gut'],
     color: 'gold/lila',
     listed: true,
@@ -1018,7 +1018,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Platzhaltertext – bitte im Admin-Panel anpassen.',
+      'Laarve Watch in Schwarz. Clean gehaltenes Zifferblatt-Design im markentypischen Stil – zeitlos und vielseitig kombinierbar.',
     details: ['Zustand: gut'],
     color: 'schwarz',
     listed: true,

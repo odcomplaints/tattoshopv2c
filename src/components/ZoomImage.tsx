@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import type { MouseEvent, TouchEvent } from 'react'
+import type { MouseEvent } from 'react'
 
 type ZoomImageProps = {
   src: string
@@ -11,11 +11,11 @@ type ZoomImageProps = {
 }
 
 /**
- * Wraps an <img> with a hover/touch magnifying-glass effect.
- * - Desktop: a square lens follows the mouse cursor, showing a magnified crop of the image
- *   at the exact point underneath the cursor (like a real magnifying glass).
- * - Mobile/touch: dragging a finger over the image shows the same magnified crop as a
- *   full-image overlay, since a small lens would be hidden under the finger.
+ * Wraps an <img> with a hover magnifying-glass effect on desktop (a square
+ * lens follows the mouse cursor, showing a magnified crop of the image at
+ * the exact point underneath the cursor). On touch devices there is no
+ * drag-to-zoom lens — instead the browser's native pinch-to-zoom gesture is
+ * left enabled so users can zoom in with two fingers like on any other page.
  *
  * The image is assumed to be displayed with `object-fit: contain`, so the visible
  * image box inside the container may be letterboxed (not filling the container on
@@ -33,7 +33,6 @@ export function ZoomImage({
   const containerRef = useRef<HTMLDivElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
   const [hovering, setHovering] = useState(false)
-  const [touching, setTouching] = useState(false)
   const [lensPos, setLensPos] = useState({ x: 0, y: 0 })
   const [imageBox, setImageBox] = useState({ left: 0, top: 0, width: 0, height: 0 })
   const [percent, setPercent] = useState({ x: 50, y: 50 })
@@ -81,12 +80,6 @@ export function ZoomImage({
     updateFromPoint(event.clientX, event.clientY)
   }
 
-  function handleTouchMove(event: TouchEvent<HTMLDivElement>) {
-    const touch = event.touches[0]
-    if (!touch) return
-    updateFromPoint(touch.clientX, touch.clientY)
-  }
-
   // Background is sized to the actual rendered image dimensions (not the container,
   // which may be letterboxed) multiplied by the zoom factor, and positioned in
   // pixels so the point under the cursor stays centered in the lens.
@@ -101,13 +94,6 @@ export function ZoomImage({
       onMouseEnter={() => setHovering(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setHovering(false)}
-      onTouchStart={(event) => {
-        setTouching(true)
-        handleTouchMove(event)
-      }}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={() => setTouching(false)}
-      onTouchCancel={() => setTouching(false)}
     >
       <img ref={imgRef} src={src} alt={alt} draggable={false} className={imgClassName} />
 
@@ -126,23 +112,7 @@ export function ZoomImage({
           }}
         />
       )}
-
-      {touching && (
-        <div
-          className="pointer-events-none absolute inset-0 z-30"
-          style={{
-            backgroundColor: '#0a0a0a',
-            backgroundImage: `url(${src})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: bgSize,
-            backgroundPosition: `${-(percent.x / 100) * imageBox.width * zoom + imageBox.width / 2}px ${
-              -(percent.y / 100) * imageBox.height * zoom + imageBox.height / 2
-            }px`,
-          }}
-        />
-      )}
     </div>
   )
 }
-
 
