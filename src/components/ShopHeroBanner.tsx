@@ -11,7 +11,6 @@ const SWIPE_THRESHOLD = 50
 
 export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId: string }) {
   const [active, setActive] = useState(0)
-  const [scrollY, setScrollY] = useState(0)
   const [debug, setDebug] = useState(false)
   const [positions, setPositions] = useState<Record<string, Pos>>(() => {
     try {
@@ -42,20 +41,6 @@ export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  useEffect(() => {
-    let ticking = false
-    function onScroll() {
-      if (ticking) return
-      ticking = true
-      window.requestAnimationFrame(() => {
-        setScrollY(window.scrollY)
-        ticking = false
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   function posOf(slide: Slide): Pos {
     return positions[slide.src] ?? { x: slide.x ?? 50, y: slide.y ?? 50, zoom: slide.zoom ?? 100 }
   }
@@ -83,7 +68,7 @@ export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId
 
   return (
     <section
-      className="relative left-1/2 mb-8 h-[42.5vh] min-h-[500px] w-screen -translate-x-1/2 touch-pan-y overflow-hidden bg-black max-[968px]:h-[70vh] max-[640px]:h-[60vh] max-[640px]:min-h-[400px] sm:mb-12"
+      className="relative left-1/2 mb-8 h-[42.5vh] min-h-[500px] w-screen -translate-x-1/2 touch-pan-y overflow-hidden bg-black max-[968px]:h-[40vh] max-[968px]:min-h-[320px] max-[640px]:h-[28vh] max-[640px]:min-h-[200px] sm:mb-12"
       aria-roledescription="carousel"
       aria-label="Hero"
       onTouchStart={(event) => {
@@ -113,7 +98,7 @@ export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId
         drag.current = null
       }}
     >
-      <div className="absolute inset-0 will-change-transform" style={{ transform: `translateY(${scrollY * 0.5}px)` }}>
+      <div className="absolute inset-0">
         {slides.map((slide, index) => (
           <div
             key={slide.src}
