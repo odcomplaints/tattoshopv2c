@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
 import { Renderer, Program, Mesh, Triangle, Color } from 'ogl'
 import './SpecularButton.css'
@@ -7,6 +7,7 @@ import './SpecularButton.css'
 // that sweeps around the button's rounded edge, steering toward the cursor.
 
 const PAD = 20
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+'
 
 const VERT = `#version 300 es
 in vec2 position;
@@ -94,6 +95,7 @@ export type SpecularButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>
   className?: string
   type?: 'button' | 'submit' | 'reset'
+  scramble?: boolean
 }
 
 type LiveProps = {
@@ -132,6 +134,7 @@ const SpecularButton = ({
   onClick,
   className = '',
   type = 'button',
+  scramble = false,
 }: SpecularButtonProps) => {
   const btnRef = useRef<HTMLButtonElement | null>(null)
   const fxRef = useRef<HTMLSpanElement | null>(null)
@@ -278,12 +281,41 @@ const SpecularButton = ({
     }
   }, [])
 
+  const [scrambled, setScrambled] = useState<string | null>(null)
+  const scrambleTimer = useRef(0)
+
+  useEffect(() => () => window.clearInterval(scrambleTimer.current), [])
+
+  function startScramble() {
+    if (!scramble || typeof children !== 'string') return
+    const text = children
+    let iteration = 0
+    window.clearInterval(scrambleTimer.current)
+    scrambleTimer.current = window.setInterval(() => {
+      if (iteration >= text.length) {
+        window.clearInterval(scrambleTimer.current)
+        setScrambled(null)
+        return
+      }
+      setScrambled(
+        text
+          .split('')
+          .map((letter, index) =>
+            letter === ' ' || index < iteration ? letter : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)],
+          )
+          .join(''),
+      )
+      iteration += 1 / 3
+    }, 30)
+  }
+
   return (
     <button
       ref={btnRef}
       type={type}
       disabled={disabled}
       onClick={onClick}
+      onMouseEnter={startScramble}
       className={`specular-button specular-button--${size}${className ? ` ${className}` : ''}`}
       style={
         {
@@ -296,7 +328,7 @@ const SpecularButton = ({
       }
     >
       <span ref={fxRef} className="specular-button__fx" aria-hidden="true" />
-      <span className="specular-button__label">{children}</span>
+      <span className="specular-button__label">{scrambled ?? children}</span>
     </button>
   )
 }

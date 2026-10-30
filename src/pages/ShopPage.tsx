@@ -2,9 +2,50 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { HeartIcon } from '../components/icons'
+import { ShopHeroBanner } from '../components/ShopHeroBanner'
+import { ProductAccordion } from '../components/ProductAccordion'
+import { FlowingMenu } from '../components/FlowingMenu'
+import type { FlowingMenuItemData } from '../components/FlowingMenu'
 import { useShop } from '../context/ShopContext'
 import { shopItems } from '../data/shop'
+import type { ShopItem } from '../data/shop'
 import { FEATURED_ORDER } from '../data/featuredOrder'
+
+const SHOP_HEROES = [
+  { file: 'hero 1.png' },
+  { file: 'brasilienjacketmoodpic 1.png', y: 90 },
+  { file: 'IMG_5667 1.png', y: 83 },
+  { file: 'IMG_6918 1.png' },
+  { file: 'IMG_7336 1.png', y: 11 },
+  { file: 'IMG_9536 1.png', y: 15 },
+].map(({ file, ...position }) => ({ src: `/hero/${encodeURIComponent(file)}`, alt: 'OD COMPLAINTS Shop', ...position }))
+
+const HIGH_FASHION = /luxury|dior|prada|balenciaga|casablanca/i
+
+const CATEGORIES: { id: string; label: string; match: (item: ShopItem) => boolean }[] = [
+  { id: 'all', label: 'All items', match: () => true },
+  { id: 'tops', label: 'All tops', match: (i) => /t-shirt|hemd|polo|longsleeve|jersey/i.test(i.category) },
+  { id: 'knit', label: 'Hoodies & knit', match: (i) => /hoodie|pullover|strick/i.test(i.category) },
+  { id: 'jackets', label: 'Jackets', match: (i) => /jacke/i.test(i.category) },
+  { id: 'bottoms', label: 'All bottoms', match: (i) => /hose/i.test(i.category) },
+  { id: 'jerseys', label: 'Jerseys', match: (i) => /jersey/i.test(i.category) },
+  { id: 'high-fashion', label: 'High fashion', match: (i) => HIGH_FASHION.test(`${i.category} ${i.name}`) },
+  { id: 'vintage', label: 'Vintage', match: (i) => /vintage/i.test(i.category) },
+  { id: 'jewelry', label: 'Jewelry', match: (i) => /schmuck/i.test(i.category) },
+  { id: 'accessories', label: 'Accessoires', match: (i) => /accessoire/i.test(i.category) },
+]
+
+// One entry per big hover-menu row; one item represents the category
+const MENU_CATEGORIES: FlowingMenuItemData[] = ['knit', 'jackets', 'tops', 'bottoms', 'accessories', 'high-fashion']
+  .map((id) => {
+    const category = CATEGORIES.find((c) => c.id === id)!
+    const images = shopItems
+      .filter((item) => item.listed !== false && category.match(item))
+      .slice(0, 1)
+      .map((item) => item.image)
+    return images.length ? { id, text: category.label, images } : null
+  })
+  .filter((entry): entry is FlowingMenuItemData => entry !== null)
 
 const SORT_OPTIONS = [
   { value: 'default', label: 'Featured' },
@@ -38,16 +79,27 @@ export function ShopPage() {
   const searchRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
+  const activeCategory = CATEGORIES.find((c) => c.id === searchParams.get('category')) ?? CATEGORIES[0]
+
+  function selectCategory(id: string) {
+    setSearchParams((params) => {
+      const next = new URLSearchParams(params)
+      if (id === 'all') next.delete('category')
+      else next.set('category', id)
+      next.delete('page')
+      return next
+    })
+  }
 
   const sortedItems = useMemo(() => {
-    const items = shopItems.filter((item) => item.listed !== false)
+    const items = shopItems.filter((item) => item.listed !== false && activeCategory.match(item))
     if (sort === 'price-asc') items.sort((a, b) => parsePrice(a.price) - parsePrice(b.price))
     else if (sort === 'price-desc') items.sort((a, b) => parsePrice(b.price) - parsePrice(a.price))
     else {
       items.sort((a, b) => featuredPriority(a.id) - featuredPriority(b.id))
     }
     return items
-  }, [sort])
+  }, [sort, activeCategory])
 
   const searchedItems = useMemo(() => {
     const term = query.trim().toLowerCase()
@@ -115,10 +167,11 @@ export function ShopPage() {
 
   return (
     <Layout title="Shop | OD COMPLAINTS" description="Limited prints and objects by OD COMPLAINTS, GD.">
-      <section className="border-b border-neutral-800 pb-10 text-left sm:pb-14">
-        <p className="text-xs uppercase tracking-widest text-neutral-200">Editions / Objects</p>
-        <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <h1 className="text-3xl font-medium uppercase tracking-widest text-neutral-100">Shop</h1>
+      <ShopHeroBanner slides={SHOP_HEROES} targetId="products" />
+
+      <section className="border-b border-neutral-800 pb-6 text-left sm:pb-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <h1 className="text-3xl font-medium uppercase tracking-widest text-neutral-100">All items</h1>
           <details className="group max-w-md text-left sm:text-right">
             <summary className="cursor-pointer list-none text-[10px] uppercase tracking-widest text-neutral-500 transition-colors hover:text-neutral-300">
               Shipping info
@@ -128,9 +181,28 @@ export function ShopPage() {
             </p>
           </details>
         </div>
+        <nav aria-label="Kategorien" className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+          {CATEGORIES.map((category) => {
+            const selected = category.id === activeCategory.id
+            return (
+              <button
+                key={category.id}
+                type="button"
+                onClick={() => selectCategory(category.id)}
+                aria-pressed={selected}
+                className={`category-link text-[11px] uppercase tracking-widest transition-colors ${selected ? 'underline underline-offset-4' : ''}`}
+              >
+                {category.label}
+              </button>
+            )
+          })}
+        </nav>
+        <p className="mt-4 text-[10px] uppercase tracking-widest text-neutral-500" aria-live="polite">
+          {searchedItems.length} {searchedItems.length === 1 ? 'product' : 'products'}
+        </p>
       </section>
 
-      <section className="pt-10 text-left sm:pt-14" aria-label="Products">
+      <section id="products" className="scroll-mt-4 pt-6 text-left sm:pt-8" aria-label="Products">
         <div className="mb-1.5 flex items-center justify-end gap-2 sm:mb-2">
           <div ref={searchRef} className="relative flex items-center">
             {searchOpen ? (
@@ -302,6 +374,20 @@ export function ShopPage() {
           </nav>
         )}
       </section>
+
+      <h2 className="mt-12 hidden text-center text-2xl tracking-widest sm:text-4xl md:block">Shop by category</h2>
+
+      <section className="relative left-1/2 my-8 hidden h-[420px] w-screen -translate-x-1/2 border-y border-white/10 md:block" aria-label="Kategorien">
+        <FlowingMenu
+          items={MENU_CATEGORIES}
+          onSelect={(id) => {
+            selectCategory(id)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
+        />
+      </section>
+
+      <ProductAccordion />
     </Layout>
   )
 }

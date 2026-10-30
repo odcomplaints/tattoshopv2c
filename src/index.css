@@ -120,6 +120,15 @@ body::before {
     color: var(--color-accent) !important;
   }
 
+  /* Shop category filter: white, active one underlined. */
+  #root button.category-link {
+    color: #ffffff !important;
+  }
+
+  #root button.category-link:hover {
+    color: var(--color-neutral-400) !important;
+  }
+
   /* Language toggle button: grey by default, red on hover. */
   #root button.lang-toggle {
     color: var(--color-neutral-300) !important;
