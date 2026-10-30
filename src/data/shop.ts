@@ -26,7 +26,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Kultiger A Bathing Ape Shark Hoodie mit Glow-in-the-Dark-Print. Ikonisches Haifischmaul auf der Kapuze, schwerer Baumwollstoff.',
+      'A Bathing Ape Shark hoodie with a glow-in-the-dark print. Shark-mouth zip on the hood, heavyweight cotton.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Glow-in-the-Dark-Detail', 'Zustand: sehr gut', 'Größe:M'],
     color: 'grau/schwarz/weiß',
     listed: true,
@@ -41,7 +41,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE Shark Hoodie in sattem Lila. Full-Zip-Kapuze mit Haifischmaul-Grafik, Känguru-Tasche und typischem Ape-Camo-Futter.',
+      'BAPE Shark hoodie in purple. Full-zip hood with shark-mouth graphic, kangaroo pocket, camo lining.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Lila', 'Zustand: sehr gut', 'Größe: XL'],
     color: 'lila',
     listed: true,
@@ -55,7 +55,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Limitierte BAPE × Disney Kollaboration. Shark Hoodie mit Mickey-Mouse-Motiv auf der Kapuze – eine der gefragtesten Bape-Kollabs überhaupt.',
+      'BAPE × Disney collaboration. Shark hoodie with a Mickey Mouse graphic on the hood.',
     details: ['Marke: BAPE × Disney', 'Material: 100 % Baumwolle', 'Limitierte Kollab-Edition', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'grün',
     listed: true,
@@ -70,7 +70,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE Shark Hoodie im klassischen Multi-Camo-Muster. Vollfarbiges ABC-Camo allover, Signature Shark-Kapuze, selten in diesem Zustand.',
+      'BAPE Shark hoodie in the classic multi-camo pattern. Full ABC camo, shark-mouth hood.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'ABC Camo Allover', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'pink/blau/schwarz',
     listed: true,
@@ -85,7 +85,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE Shark Hoodie in auffälligem Pink. Statement-Piece für jeden Streetwear-Liebhaber – Full-Zip, Haifischmaul-Kapuze.',
+      'BAPE Shark hoodie in pink. Full-zip, shark-mouth hood.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Pink', 'Zustand: gut', 'Größe: bitte M'],
     color: 'pink',
     listed: true,
@@ -99,7 +99,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE Shark Hoodie in kräftigem Rot. Klassisches Haifischmaul-Design, Full-Zip-Reißverschluss, schwere Qualität.',
+      'BAPE Shark hoodie in red. Classic shark-mouth design, full-zip, heavyweight build.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Rot', 'Zustand: gut', 'Größe:M'],
     color: 'rot',
     listed: true,
@@ -114,7 +114,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Supreme Zip-Up Sweatjacke aus der regulären Line. Stickte Box-Logo-Brust, schwerer Fleece-Innenraum, zeitloser Schnitt.',
+      'Supreme zip-up from the regular line. Embroidered box logo on the chest, heavyweight fleece lining.',
     details: ['Marke: Supreme', 'Material: Baumwoll-Fleece', 'Gesticktes Box Logo', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -128,7 +128,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 2,
     description:
-      'Supreme T-Shirt aus einer vergangenen Season. Cleanes Grafik-Tee, 100 % Baumwolle, typischer Supreme-Oversized-Fit.',
+      'Supreme tee from a past season. Graphic print, 100% cotton, regular Supreme fit.',
     details: ['Marke: Supreme', 'Material: 100 % Baumwolle', 'Grafik-Print', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -142,7 +142,7 @@ export const shopItems: ShopItem[] = [
     availability: 'sold-out',
     stock: 1,
     description:
-      'Balenciaga Sweatjacke mit typischem Oversized-Fit. Gedrucktes Logo, hochwertige Baumwollqualität – ein Statement-Piece des Hauses.',
+      'Balenciaga zip-up with the brand\'s oversized fit. Printed logo, cotton fleece.',
     details: ['Marke: Balenciaga', 'Material: Baumwoll-Fleece', 'Oversized Fit', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -156,7 +156,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Corteiz (CRTZ) Hoodie – einer der gefragtesten Streetwear-Drops aus London. Schwere Qualität, eingestickte Alcatraz-Grafik.',
+      'Corteiz (CRTZ) hoodie. Heavyweight fleece with an embroidered Alcatraz graphic.',
     details: ['Marke: Corteiz (CRTZ)', 'Material: Schweres Baumwoll-Fleece', 'Alcatraz-Grafik', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -170,7 +170,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'CP Company Jacke mit ikonischer Linsen-Brille in der Kapuze. Hohe Verarbeitungsqualität, technisches Material, zeitloses Design.',
+      'C.P. Company jacket with the signature goggle hood. Technical nylon, solid construction.',
     details: ['Marke: C.P. Company', 'Material: Technisches Nylon', 'Linsen-Goggle-Kapuze', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -184,7 +184,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Dior Men × Hajime Sorayama Kollab-Hoodie. Roboter-Grafik des japanischen Futurismus-Meisters auf schwerem Dior-Baumwollstoff. Extrem begehrtes Collector-Piece.',
+      'Dior Men × Hajime Sorayama hoodie. Robot graphic on heavyweight Dior cotton.',
     details: ['Marke: Dior Men × Hajime Sorayama', 'Material: 100 % Baumwolle', 'Limitierte Kollaboration', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -198,7 +198,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Carlo Colucci Vintage-Strickjacke im typischen 90s-Muster. Kultmarke aus der Hochzeit des deutschen HipHop – seltenes Original.',
+      'Carlo Colucci vintage knit cardigan, 90s pattern. Wool/acrylic blend.',
     details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'bunt',
     listed: true,
@@ -212,7 +212,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Zweites Carlo Colucci Vintage-Piece im Mustermix. Charakteristischer Farbblock, dickes Strickgewebe – 90s Streetwear-Nostalgie pur.',
+      'Second Carlo Colucci vintage piece, mixed pattern. Thick knit, wool/acrylic blend.',
     details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'bunt',
     listed: true,
@@ -226,7 +226,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Sp5der Hoodie in Pink mit Web-Grafik allover. Einer der begehrtesten Drops von Young Thugs Brand – dicke Qualität, ikonisches Design.',
+      'Sp5der hoodie in pink with an allover web graphic. Heavyweight fleece.',
     details: ['Marke: Sp5der', 'Material: Schweres Baumwoll-Fleece', 'Web-Allover-Print', 'Zustand: sehr gut', 'Größe:L'],
     color: 'schwarz',
     listed: true,
@@ -240,7 +240,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Vintage AC Milan Auswärtstrikot. Klassisches Rot-Schwarz-Design, Originalstickerei – perfekt als Streetwear-Statement.',
+      'Vintage AC Milan away kit. Red and black design, original embroidery.',
     details: ['Verein: AC Milan', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'rot/Schwarz',
     listed: true,
@@ -254,7 +254,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Vintage Real Madrid Heimtrikot in Weiß. Ikonisches Wappen-Stickerei, klassisches Sponsor-Layout – ein zeitloser Fußballklassiker.',
+      'Vintage Real Madrid home kit in white. Crest embroidery, original sponsor layout.',
     details: ['Verein: Real Madrid C.F.', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/gold',
     listed: true,
@@ -268,7 +268,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Das berühmte Manchester United × DHL-Trikot – ein Meme-Kultklassiker der Internetkultur. Äußerst selten im Original zu finden.',
+      'Manchester United × DHL kit. A well-known piece of internet culture, hard to find in original condition.',
     details: ['Marke: Umbro', 'Typ: Kultkollektion', 'DHL-Sponsor-Print', 'Zustand: sehr gut', 'Größe: M'],
     color: 'schwarz/Rot',
     listed: true,
@@ -282,7 +282,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Vintage Olympique de Marseille Trikot. Charakteristisches Blau-Weiß-Design, Kultverein der Ligue 1 – sehr beliebt in der Streetwear-Szene.',
+      'Vintage Olympique de Marseille kit. Blue and white design, original embroidery.',
     details: ['Verein: Olympique de Marseille', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: M'],
     color: 'navyblue',
     listed: true,
@@ -296,7 +296,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Vintage-Hemd mit arabischer Kalligrafie-Grafik. Einzigartiges Stück mit kultureller Tiefe – selten in diesem Zustand.',
+      'Vintage shirt with an Arabic calligraphy graphic. Cotton.',
     details: ['Typ: Vintage-Hemd', 'Material: Baumwolle', 'Arabischer Grafik-Print', 'Zustand: gut', 'Größe:M'],
     color: 'camo',
     listed: true,
@@ -310,7 +310,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Offizielle Red Bull Racing Teamjacke. Leichtes technisches Material, vollständig bestickte Logos, Collector-Item für Motorsportfans.',
+      'Official Red Bull Racing team jacket. Lightweight technical fabric, embroidered sponsor logos.',
     details: ['Marke: Red Bull Racing', 'Material: Technisches Gewebe', 'Offizielle Teamjacke', 'Zustand: sehr gut', 'Größe: M'],
     color: 'schwarz/rot',
     listed: true,
@@ -324,7 +324,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'GOAT T-Shirt im Skate-Boxtee-Schnitt. Lockerer Fit, griffiger Baumwollstoff und auffälliger Grafik-Print – ein unkompliziertes Statement-Piece für den Alltag.',
+      'GOAT tee in a skate box-tee cut. Loose fit, cotton, graphic print.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/orange',
     listed: true,
@@ -338,7 +338,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Ferrari Polo in kräftigem Rot. Klassischer Poloshirt-Schnitt mit Kragen und Knopfleiste, dezent besticktes Markenlogo – sportlich-eleganter Streetwear-Look.',
+      'Ferrari polo in red. Classic polo cut with collar and button placket, embroidered logo.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'rot',
     listed: true,
@@ -352,7 +352,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Supreme Hoodie mit orangefarbenem Logo-Print auf der Brust. Schwere Fleece-Qualität, Kängurutasche und der typische Oversized-Fit der Marke.',
+      'Supreme hoodie with an orange logo print on the chest. Heavyweight fleece, kangaroo pocket.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/orange',
     listed: true,
@@ -366,7 +366,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE T-Shirt im Oversize-Schnitt. 100 % Baumwolle, großzügiger Fit und charakteristischer Ape-Print – vielseitig kombinierbar im Streetwear-Stil.',
+      'BAPE tee in an oversized cut. 100% cotton with the brand\'s ape print.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -380,7 +380,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Chief Keef Polo mit New-York-Grafik. Hip-Hop-inspiriertes Design, bequemer Baumwollstoff – ein echtes Nischen-Piece für Sammler der Szene.',
+      'Chief Keef polo with a New York graphic. Cotton.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -394,7 +394,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Supreme Box Logo Hoodie in Weiß – eines der begehrtesten Streetwear-Statements überhaupt. Schwere Fleece-Qualität mit dem ikonischen gestickten Box-Logo auf der Brust.',
+      'Supreme box logo hoodie in white. Heavyweight fleece, embroidered box logo on the chest.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -408,7 +408,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Kuscheliger Winterpulli mit buntem Strickmuster im Vintage-Stil. Wärmend und vielseitig kombinierbar – ein echtes Unikat für die kalte Jahreszeit.',
+      'Winter sweater with a multicolour knit pattern, vintage style.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'bunt',
     listed: true,
@@ -422,7 +422,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Tekkno Sweater mit Rave-inspirierter Grafik. Lockerer Fit und dicker Stoff – perfekt für den unverwechselbaren Techno/Streetwear-Crossover-Look.',
+      'Sweater with a rave-inspired graphic. Loose fit, thick fabric.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -436,7 +436,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Bleached Oversize Tee mit individuellem Waschungs-Effekt – jedes Stück ist durch den Bleach-Prozess ein Unikat. Lässiger, weiter Schnitt.',
+      'Bleached oversize tee. Individual bleach-wash effect, each piece unique. Loose cut.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -450,7 +450,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Supreme Box Logo Hoodie in Schwarz. Der Klassiker schlechthin – schwere Fleece-Qualität, gesticktes Box-Logo und der ikonische Oversized-Fit.',
+      'Supreme box logo hoodie in black. Heavyweight fleece, embroidered box logo.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -464,7 +464,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Vintage Arsenal Trikot in Gelb. Auswärts-Jersey mit klassischem Wappen und Original-Stickerei – ein Muss für Gunners-Fans und Fußball-Nostalgiker.',
+      'Vintage Arsenal away kit in yellow. Crest and original embroidery.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'gelb',
     listed: true,
@@ -478,7 +478,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE T-Shirt mit Superman-Kollab-Grafik. Verspieltes Crossover-Design, 100 % Baumwolle – ein echter Blickfang für Comic- und Streetwear-Fans.',
+      'BAPE tee with a Superman crossover graphic. 100% cotton.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -492,7 +492,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Vintage Brasilien Jacke in Gelb. Nationalmannschafts-Design mit Wappen-Stickerei – ein farbenfrohes Fußball-Piece mit viel Charakter.',
+      'Vintage Brazil national team jacket in yellow. Crest embroidery.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'gelb',
     listed: true,
@@ -507,7 +507,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Chicago Bulls Box Tee im klassischen Team-Design. Schwarz-rote Farbkombination mit Vintage-Logo – ein NBA-Basic mit Kultstatus.',
+      'Chicago Bulls box tee. Black and red, vintage team logo.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/rot',
     listed: true,
@@ -521,7 +521,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'DHL Trainingsjacke im kultigen Meme-Design. Leichtes, sportliches Material mit auffälligem DHL-Branding – ein echter Hingucker in der Streetwear-Szene.',
+      'DHL training jacket. Lightweight sportswear fabric with DHL branding.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'rot',
     listed: true,
@@ -535,7 +535,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Lakers Shirt in Lila. Klassisches NBA-Team-Design, bequemer Baumwollstoff – ideal für Basketball-Fans und den lässigen Alltagslook.',
+      'Lakers shirt in purple. Classic NBA team design, cotton.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'lila',
     listed: true,
@@ -549,7 +549,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'New York Longsleeve in Blau/Weiß. Entspannter Streetwear-Schnitt mit NY-Grafik – vielseitig für Layering oder als eigenständiges Statement.',
+      'New York longsleeve in blue/white. Relaxed streetwear cut with NY graphic.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'blau/weiß',
     listed: true,
@@ -563,7 +563,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Vintage Nike Hemd in Schwarz. Klassisches Swoosh-Branding, leichter Stoff – ein zeitloses Basic mit sportlichem Vintage-Charakter.',
+      'Vintage Nike shirt in black. Swoosh branding, lightweight fabric.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -577,7 +577,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Polo mit Reiter-Emblem in Rot. Hochwertiger Baumwollstoff, klassischer Polo-Kragen – ein elegant-sportliches Basic für jeden Anlass.',
+      'Polo with a horse-rider emblem in red. Cotton, classic polo collar.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'rot',
     listed: true,
@@ -591,7 +591,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Supreme Bandana Hoodie in Grau. Allover-Paisley-Print im Bandana-Stil, schwere Fleece-Qualität und der typische Supreme-Fit.',
+      'Supreme bandana hoodie in grey. Allover paisley print, heavyweight fleece.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau',
     listed: true,
@@ -605,7 +605,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Supreme Box Logo Hoodie im Camo-Muster. Seltene Camouflage-Variante des Kult-Hoodies, schwere Fleece-Qualität mit gesticktem Box-Logo.',
+      'Supreme box logo hoodie in a camo pattern. Heavyweight fleece, embroidered box logo.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau/Camo',
     listed: true,
@@ -619,7 +619,7 @@ export const shopItems: ShopItem[] = [
     availability: 'sold-out',
     stock: 0,
     description:
-      'Supreme × Scarface Kollab-Shirt. Ikonisches Filmmotiv kombiniert mit dem Supreme-Branding – ein gesuchtes Collector-Piece, bereits ausverkauft.',
+      'Supreme × Scarface shirt. Film graphic with Supreme branding. Sold out.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/rot',
     listed: true,
@@ -633,7 +633,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Vintage Printed Tee in Navyblau. Einzigartiger Retro-Print, weicher Baumwollstoff – ein charaktervolles Unikat für den entspannten Look.',
+      'Vintage printed tee in navy. Retro print, soft cotton.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'navyblue',
     listed: true,
@@ -647,7 +647,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Box Tee in Schwarz – schlichtes, zeitloses Basic mit cleanem Box-Logo-Print. 100 % Baumwolle in solider Verarbeitung.',
+      'Box tee in black. Plain cut with a clean box logo print, 100% cotton.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -661,7 +661,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Lakers Sweater in Schwarz/Lila. Dicker, warmer Pullover mit Team-Branding – die perfekte Wahl für Basketball-Fans in der kalten Jahreszeit.',
+      'Lakers sweater in black/purple. Thick, warm pullover with team branding.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz/Lila',
     listed: true,
@@ -675,7 +675,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Billionaire Boys Club Hose in Blau. Hochwertige Verarbeitung mit dezentem BBC-Branding – luxuriöse Streetwear für den gehobenen Anspruch.',
+      'Billionaire Boys Club trousers in blue. Solid build, subtle BBC branding.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'blau',
     listed: true,
@@ -689,7 +689,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Dior Umhängetasche in Blau. Elegantes Design mit charakteristischem Dior-Branding, hochwertige Verarbeitung – ein vielseitiges Luxus-Accessoire.',
+      'Dior shoulder bag in blue. Dior branding, solid construction.',
     details: ['Zustand: gut'],
     color: 'blau',
     listed: true,
@@ -703,7 +703,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE Miami Shirt in Schwarz/Pink. Sommerliches Design mit Miami-inspirierter Grafik – ein auffälliges Piece für den urbanen Vacation-Look.',
+      'BAPE Miami shirt in black/pink. Summer-themed graphic.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwrarz/Pink',
     listed: true,
@@ -717,7 +717,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE Shirt in Blau/Rot. Farbenfrohes Camo-Design mit markentypischem Ape-Print – ein echter Eyecatcher aus dem BAPE-Universum.',
+      'BAPE shirt in blue/red camo with the brand\'s ape print.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -731,7 +731,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE T-Shirt mit Japan-Grafik. Kulturelles Design trifft auf den ikonischen BAPE-Stil – ein besonderes Piece für Fans der japanischen Streetwear.',
+      'BAPE tee with a Japan graphic.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -745,7 +745,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'BAPE T-Shirt in Schwarz/Rot. Starker Farbkontrast mit klassischem Ape-Grafik-Print – ein zeitloses Piece für jede Streetwear-Rotation.',
+      'BAPE tee in black/red with the classic ape graphic print.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -759,7 +759,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Casablanca T-Shirt in Weiß. Luxuriöser Seiden-Touch und künstlerisches Print-Design – die französische Marke steht für gehobene Streetwear-Eleganz.',
+      'Casablanca tee in white. Silky touch, printed graphic.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -773,7 +773,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Cuban Link Kette mit 12g Gewicht. Massive Gliederkette im klassischen Cuban-Link-Stil – ein echter Blickfang für jeden Streetwear-Look.',
+      'Cuban link chain, 12g.',
     details: ['Zustand: gut', 'Gewicht: 12g'],
     listed: false,
   },
@@ -786,7 +786,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Cuban Link Kette mit 18g Gewicht. Etwas schwerer und präsenter als die 12g-Variante – massiver Auftritt für jedes Outfit.',
+      'Cuban link chain, 18g.',
     details: ['Zustand: gut', 'Gewicht: 18g'],
     listed: false,
   },
@@ -799,7 +799,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Cuban Link Kette mit 23g Gewicht. Die massivste Variante der Serie – maximale Präsenz und Gewicht für den ultimativen Statement-Look.',
+      'Cuban link chain, 23g.',
     details: ['Zustand: gut', 'Gewicht: 23g'],
     listed: false,
   },
@@ -812,7 +812,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      '925 Sterling Silber Kette mit 14g Gewicht. Hochwertiges Echtsilber mit elegantem Glanz – zeitloser Schmuck für den täglichen Einsatz.',
+      '925 sterling silver chain, 14g.',
     details: ['Material: 925 Sterling Silber', 'Gewicht: 14g', 'Zustand: gut'],
     listed: false,
   },
@@ -825,7 +825,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Königskette mit 35g Gewicht. Klassisches Panzerkettenglied-Design mit solidem Gewicht – ein echter Klassiker unter den Statement-Ketten.',
+      'Figaro chain, 35g.',
     details: ['Zustand: gut', 'Gewicht: 35g'],
     listed: false,
   },
@@ -838,7 +838,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Königskette mit 77g Gewicht. Besonders massive Ausführung mit beeindruckendem Volumen – für alle, die auf maximale Präsenz setzen.',
+      'Figaro chain, 77g.',
     details: ['Zustand: gut', 'Gewicht: 77g'],
     listed: false,
   },
@@ -851,7 +851,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Bape Shark ABC Camo Hoodie in XXXL. Großzügiger Schnitt mit vollflächigem ABC-Camo-Muster und der ikonischen Haifischmaul-Kapuze.',
+      'BAPE Shark hoodie in ABC camo, size XXXL. Full shark-mouth hood.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Zustand: gut', 'Größe: XXXL'],
     color: 'grün',
     listed: true,
@@ -865,7 +865,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Bape Shark ABC Camo Half-Zip. Sportlicher Half-Zip-Schnitt im ABC-Camo-Muster – eine praktische Alternative zum klassischen Full-Zip-Shark-Hoodie.',
+      'BAPE Shark half-zip in ABC camo. Half-zip cut as an alternative to the full-zip Shark hoodie.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Half-Zip', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau/Camo',
     listed: true,
@@ -880,7 +880,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Palace Pullover in Grün. Minimalistisches Design mit dezentem Dreieck-Logo, hochwertige Baumwollqualität – ein Skate-Streetwear-Klassiker aus London.',
+      'Palace pullover in green. Minimal design with a small triangle logo, cotton.',
     details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grün',
     listed: true,
@@ -894,7 +894,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Palace Sweater in Schwarz. Hochwertiger Baumwollpullover mit dezentem Dreieck-Logo – der minimalistische Skate-Style der Londoner Kultmarke.',
+      'Palace sweater in black. Cotton pullover with a small triangle logo.',
     details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -909,7 +909,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Polo mit Reiter-Emblem in Schwarz. Zeitloser Polo-Schnitt mit Knopfleiste und Kragen – ein vielseitiges Basic für einen smarten Casual-Look.',
+      'Polo with a horse-rider emblem in black. Classic polo cut with collar and button placket.',
     details: ['Farbe: Schwarz', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'schwarz',
     listed: true,
@@ -923,7 +923,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Prada Pullover in Grau. Luxuriöse Materialqualität mit dezentem Branding – zeitlose Eleganz trifft auf italienisches Design.',
+      'Prada pullover in grey. Subtle branding, Italian construction.',
     details: ['Marke: Prada', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'grau',
     listed: true,
@@ -937,7 +937,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Supreme Puffer Jacket in Sandfarben. Wärmende Steppjacke mit cleanem Design und dezentem Supreme-Logo – perfekt für die Übergangszeit.',
+      'Supreme puffer jacket in sand. Padded, clean design, small Supreme logo.',
     details: ['Marke: Supreme', 'Zustand: gut', 'Größe: bitte anfragen'],
     color: 'sandfarben',
     listed: true,
@@ -951,7 +951,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 20,
     description:
-      '10 € pro verkauftem Armband gehen als Spende an die Brustkrebsforschung. Zeig deine Unterstützung und trag etwas Gutes.',
+      '€10 of every bracelet sold goes to breast cancer research.',
     details: ['10 € Spende an Brustkrebsforschung pro Stück', 'Einheitsgröße', 'Zustand: neu'],
     listed: false,
   },
@@ -964,7 +964,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 10,
     description:
-      'Kompletter Ertrag dieser Tasche wird wohltätig gespendet. Support the Movement – mit jedem Kauf unterstützt du direkt den guten Zweck.',
+      'All proceeds from this bag are donated to charity.',
     details: ['Kompletter Ertrag wird gespendet', 'Zustand: neu'],
     listed: false,
   },
@@ -977,7 +977,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Bape Shark Hoodie im Dyed Color Wash. Individueller Waschungs-Effekt sorgt für ein einzigartiges Farbverlaufs-Muster auf jedem Shark-Hoodie.',
+      'BAPE Shark hoodie with a dyed colour-wash effect. Each piece has its own gradient.',
     details: ['Marke: A Bathing Ape (BAPE)', 'Dyed Color Wash', 'Zustand: gut', 'Größe: bitte anfragen'],
     listed: true,
   },
@@ -990,7 +990,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Weißes Ash Tee mit subtilem Vintage-Finish. Schlichtes Design in heller Asch-Optik – ein unkompliziertes Basic für jeden Kleiderschrank.',
+      'White ash tee with a subtle vintage finish. Plain design.',
     details: ['Zustand: gut', 'Größe: bitte anfragen'],
     color: 'weiß',
     listed: true,
@@ -1004,7 +1004,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Laarve Watch in Gold/Lila. Auffällige Uhr mit ikonischem Design und kontrastreicher Farbkombination – ein echtes Statement-Accessoire.',
+      'Laarve Watch in gold/purple.',
     details: ['Zustand: gut'],
     color: 'gold/lila',
     listed: true,
@@ -1018,7 +1018,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description:
-      'Laarve Watch in Schwarz. Clean gehaltenes Zifferblatt-Design im markentypischen Stil – zeitlos und vielseitig kombinierbar.',
+      'Laarve Watch in black. Clean dial design.',
     details: ['Zustand: gut'],
     color: 'schwarz',
     listed: true,
