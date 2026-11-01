@@ -13,8 +13,6 @@ import { FEATURED_ORDER } from '../data/featuredOrder'
 
 const SHOP_HEROES = [
   { file: 'hero 1.png' },
-  { file: 'brasilienjacketmoodpic 1.png', y: 90 },
-  { file: 'IMG_5667 1.png', y: 83 },
   { file: 'IMG_6918 1.png' },
   { file: 'IMG_7336 1.png', y: 11 },
 ].map(({ file, ...position }) => ({ src: `/hero/${encodeURIComponent(file)}`, alt: 'OD COMPLAINTS Shop', ...position }))
@@ -170,7 +168,7 @@ export function ShopPage() {
 
   return (
     <Layout title="Shop | OD COMPLAINTS" description="Limited prints and objects by OD COMPLAINTS, GD.">
-      <ShopHeroBanner slides={SHOP_HEROES} />
+      {currentPage === 1 && <ShopHeroBanner slides={SHOP_HEROES} />}
 
       <section className="border-b border-neutral-800 pb-6 text-left sm:pb-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
