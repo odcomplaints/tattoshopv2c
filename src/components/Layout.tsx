@@ -38,6 +38,10 @@ export function Layout({
 }: LayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuRevealStep, setMenuRevealStep] = useState(0)
+  const [headerHidden, setHeaderHidden] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [logoMini, setLogoMini] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
   const location = useLocation()
   const { cartCount, favoritesCount } = useShop()
   const { t } = useLanguage()
@@ -45,6 +49,25 @@ export function Layout({
   const canonicalUrl = `${SITE_URL}${location.pathname}`
   const ogImage = `${SITE_URL}${logo}`
   const mobileMenuItemCount = navigation.length + (isShopSection ? 2 : 0)
+
+  useEffect(() => {
+    let lastY = window.scrollY
+    function handleScroll() {
+      const y = window.scrollY
+      setScrollY(y)
+      setScrolled(y > 0)
+      if (y <= 0) {
+        setLogoMini(false)
+      } else if (lastY - y > 6) {
+        setLogoMini(true)
+      }
+      if (y < 80) setHeaderHidden(false)
+      else if (Math.abs(y - lastY) > 6) setHeaderHidden(y > lastY)
+      lastY = y
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     if (!menuOpen) {
@@ -87,11 +110,15 @@ export function Layout({
         <meta name="twitter:image" content={ogImage} />
       </Helmet>
       {!hideChrome && (
-      <header>
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 pb-4 pt-10 lg:px-8 lg:pb-6 lg:pt-16">
+      <>
+      <div aria-hidden="true" className="h-[120px] sm:h-[136px] lg:hidden" />
+      <header
+        className={`fixed inset-x-0 top-0 z-30 transition-[transform,background-color,box-shadow] duration-500 ease-in-out lg:static ${headerHidden && !menuOpen ? '-translate-y-full lg:translate-y-0' : 'translate-y-0'} ${scrolled ? 'bg-neutral-950/90 shadow-[0_1px_0_0_rgb(38_38_38)] backdrop-blur-sm lg:bg-transparent lg:shadow-none lg:backdrop-blur-none' : 'bg-neutral-950/0'}`}
+      >
+        <div className={`mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 transition-[padding] duration-500 ease-in-out lg:px-8 ${scrolled ? 'py-2 lg:pb-6 lg:pt-16' : 'pb-4 pt-10 lg:pb-6 lg:pt-16'}`}>
           <div className="relative flex w-full items-center justify-between gap-6">
-            <Link to="/" aria-label="OD COMPLAINTS — home" className="group relative inline-block">
-              <img src={logo} alt="OD COMPLAINTS" className="h-16 w-auto sm:h-20 lg:h-24" />
+            <Link to="/" aria-label="OD COMPLAINTS — home" className="group relative inline-block lg:invisible">
+              <img src={logo} alt="OD COMPLAINTS" className={`block w-auto transition-[height] duration-500 ease-in-out ${scrolled ? 'h-9 sm:h-10 lg:h-24' : 'h-16 sm:h-20 lg:h-24'}`} />
               <img
                 src={logoRedEyes}
                 alt=""
@@ -155,6 +182,24 @@ export function Layout({
           </div>
         </div>
       </header>
+      <Link
+        to="/"
+        aria-label="OD COMPLAINTS — home"
+        style={{
+          left: logoMini ? '1rem' : 'max(2rem, calc((100% - 72rem) / 2 + 2rem))',
+          top: logoMini ? '0.5rem' : `${64 - scrollY}px`,
+        }}
+        className={`group fixed z-30 hidden duration-500 ease-in-out lg:block ${logoMini || scrollY <= 0 ? 'transition-[top,left]' : 'transition-[left]'}`}
+      >
+        <img src={logo} alt="OD COMPLAINTS" className={`block w-auto transition-[height] duration-500 ease-in-out ${logoMini ? 'h-16' : 'h-24'}`} />
+        <img
+          src={logoRedEyes}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-focus-visible:opacity-100"
+        />
+      </Link>
+      </>
       )}
       {hideChrome && (
         <button
