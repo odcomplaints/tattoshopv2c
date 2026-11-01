@@ -113,7 +113,7 @@ export function Layout({
       <>
       <div aria-hidden="true" className="h-[120px] sm:h-[136px] lg:hidden" />
       <header
-        className={`fixed inset-x-0 top-0 z-30 transition-[transform,background-color,box-shadow] duration-500 ease-in-out lg:static ${headerHidden && !menuOpen ? '-translate-y-full lg:translate-y-0' : 'translate-y-0'} ${scrolled ? 'bg-neutral-950/90 shadow-[0_1px_0_0_rgb(38_38_38)] backdrop-blur-sm lg:bg-transparent lg:shadow-none lg:backdrop-blur-none' : 'bg-neutral-950/0'}`}
+        className={`fixed inset-x-0 top-0 z-30 transition-[transform,background-color,box-shadow] duration-500 ease-in-out lg:static ${headerHidden && !menuOpen && !isShopSection ? '-translate-y-full lg:translate-y-0' : 'translate-y-0'} ${scrolled ? 'bg-neutral-950/90 shadow-[0_1px_0_0_rgb(38_38_38)] backdrop-blur-sm lg:bg-transparent lg:shadow-none lg:backdrop-blur-none' : 'bg-neutral-950/0'}`}
       >
         <div className={`mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 transition-[padding] duration-500 ease-in-out lg:px-8 ${scrolled ? 'py-2 lg:pb-6 lg:pt-16' : 'pb-4 pt-10 lg:pb-6 lg:pt-16'}`}>
           <div className="relative flex w-full items-center justify-between gap-6">
