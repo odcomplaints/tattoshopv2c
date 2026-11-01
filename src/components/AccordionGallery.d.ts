@@ -5,6 +5,9 @@ export type AccordionGalleryItem = {
   label?: string
   alt?: string
   link?: string
+  zoom?: number
+  offsetY?: number
+  mono?: boolean
 }
 
 export type AccordionGalleryProps = {

@@ -8,6 +8,9 @@ import { sliderImages } from '../data/slider'
 
 const accordionItems = sliderImages.map((item) => ({
   image: item.image,
+  zoom: item.zoom,
+  offsetY: item.offsetY,
+  mono: item.mono,
   label: item.title,
   alt: `${item.title} – ${item.style}`,
 }))

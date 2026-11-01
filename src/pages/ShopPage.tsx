@@ -17,10 +17,10 @@ const SHOP_HEROES = [
   { file: 'IMG_5667 1.png', y: 83 },
   { file: 'IMG_6918 1.png' },
   { file: 'IMG_7336 1.png', y: 11 },
-  { file: 'IMG_9536 1.png', y: 15 },
 ].map(({ file, ...position }) => ({ src: `/hero/${encodeURIComponent(file)}`, alt: 'OD COMPLAINTS Shop', ...position }))
 
-const HIGH_FASHION = /luxury|dior|prada|balenciaga|casablanca/i
+const HIGH_FASHION = /luxury|dior|prada|balenciaga|casablanca|burberry|billionaire|cp company|stüssy|lamborghini|palace|sergio tacchini/i
+const JERSEYS = /jersey|trikot|trainingsjacke|tracksuit|fc bayern|lakers/i
 
 const CATEGORIES: { id: string; label: string; match: (item: ShopItem) => boolean }[] = [
   { id: 'all', label: 'All items', match: () => true },
@@ -28,11 +28,11 @@ const CATEGORIES: { id: string; label: string; match: (item: ShopItem) => boolea
   { id: 'knit', label: 'Hoodies & knit', match: (i) => /hoodie|pullover|strick/i.test(i.category) },
   { id: 'jackets', label: 'Jackets', match: (i) => /jacke/i.test(i.category) },
   { id: 'bottoms', label: 'All bottoms', match: (i) => /hose/i.test(i.category) },
-  { id: 'jerseys', label: 'Jerseys', match: (i) => /jersey/i.test(i.category) },
+  { id: 'jerseys', label: 'Jerseys', match: (i) => JERSEYS.test(`${i.category} ${i.name}`) },
   { id: 'high-fashion', label: 'High fashion', match: (i) => HIGH_FASHION.test(`${i.category} ${i.name}`) },
   { id: 'vintage', label: 'Vintage', match: (i) => /vintage/i.test(i.category) },
   { id: 'jewelry', label: 'Jewelry', match: (i) => /schmuck/i.test(i.category) },
-  { id: 'accessories', label: 'Accessoires', match: (i) => /accessoire/i.test(i.category) },
+  { id: 'accessories', label: 'Accessoires', match: (i) => /accessoire|uhr/i.test(i.category) },
 ]
 
 // One entry per big hover-menu row; one item represents the category
@@ -136,7 +136,10 @@ export function ShopPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalPages])
 
+  const previousQuery = useRef(query)
   useEffect(() => {
+    if (previousQuery.current === query) return
+    previousQuery.current = query
     goToPage(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
@@ -167,7 +170,7 @@ export function ShopPage() {
 
   return (
     <Layout title="Shop | OD COMPLAINTS" description="Limited prints and objects by OD COMPLAINTS, GD.">
-      <ShopHeroBanner slides={SHOP_HEROES} targetId="products" />
+      <ShopHeroBanner slides={SHOP_HEROES} />
 
       <section className="border-b border-neutral-800 pb-6 text-left sm:pb-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -375,7 +378,7 @@ export function ShopPage() {
         )}
       </section>
 
-      <h2 className="mt-12 hidden text-center text-2xl tracking-widest sm:text-4xl md:block">Shop by category</h2>
+      <h2 className="mt-24 hidden text-center text-2xl tracking-widest sm:text-4xl md:block">Shop by category</h2>
 
       <section className="relative left-1/2 my-8 hidden h-[420px] w-screen -translate-x-1/2 border-y border-white/10 md:block" aria-label="Kategorien">
         <FlowingMenu

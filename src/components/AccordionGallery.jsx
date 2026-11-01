@@ -211,7 +211,17 @@ const AccordionGallery = ({
           >
             <span className="ag-panel__frame">
               <span className="ag-panel__media" ref={el => (mediaRefs.current[i] = el)}>
-                <img src={item.image} alt={item.alt || item.label || ''} draggable="false" />
+                <img
+                  src={item.image}
+                  alt={item.alt || item.label || ''}
+                  draggable="false"
+                  style={{
+                    ...(item.zoom || item.offsetY
+                      ? { transform: `translateY(${item.offsetY ?? 0}%) scale(${item.zoom ?? 1})` }
+                      : null),
+                    ...(item.mono ? { filter: 'grayscale(1)' } : null),
+                  }}
+                />
               </span>
               <span className="ag-panel__overlay" aria-hidden="true" />
             </span>

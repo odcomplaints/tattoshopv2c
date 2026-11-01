@@ -95,7 +95,30 @@ export const catalog: Record<string, CatalogEntry> = {
   'weisses-ash-tee': { id: 'weisses-ash-tee', name: 'Weißes Ash Tee', priceCents: 7900, currency: 'eur', available: true, stock: 1 },
   'laarve-watch-goldlila': { id: 'laarve-watch-goldlila', name: 'Laarve Watch Gold/Lila', priceCents: 25000, currency: 'eur', available: true, stock: 1 },
   'laarve-watch-schwarz': { id: 'laarve-watch-schwarz', name: 'Laarve Watch Schwarz', priceCents: 25000, currency: 'eur', available: true, stock: 1 },
-}
+    'cp-company-strick-sweater': { id: 'cp-company-strick-sweater', name: 'CP Company Strick Sweater', priceCents: 14000, currency: 'eur', available: true, stock: 1 },
+    'stussy-strick-sweater': { id: 'stussy-strick-sweater', name: 'Stüssy Strick Sweater', priceCents: 18000, currency: 'eur', available: true, stock: 1 },
+    'supreme-strickjacke': { id: 'supreme-strickjacke', name: 'Supreme Strickjacke',     priceCents: 24000, currency: 'eur', available: false, stock: 0 },
+    'the-north-face-fleece-weiss': { id: 'the-north-face-fleece-weiss', name: 'The North Face Fleece Weiß', priceCents: 4000, currency: 'eur', available: true, stock: 1 },
+    'the-north-face-fleece-jacke-grau': { id: 'the-north-face-fleece-jacke-grau', name: 'The North Face Fleece Jacke Grau', priceCents: 6500, currency: 'eur', available: true, stock: 1 },
+    'the-north-face-fleece-rot': { id: 'the-north-face-fleece-rot', name: 'The North Face Fleece Rot', priceCents: 4000, currency: 'eur', available: true, stock: 1 },
+    'the-north-face-fleece-grau': { id: 'the-north-face-fleece-grau', name: 'The North Face Fleece Grau',     priceCents: 3000, currency: 'eur', available: true, stock: 1 },
+      'tearing-heart-tee': { id: 'tearing-heart-tee', name: 'Tearing Heart Tee', priceCents: 5000, currency: 'eur', available: true, stock: 1 },
+      'ac-milan-trainingsjacke': { id: 'ac-milan-trainingsjacke', name: 'AC Milan Trainingsjacke', priceCents: 8500, currency: 'eur', available: true, stock: 1 },
+      'fc-bayern-polo': { id: 'fc-bayern-polo', name: 'FC Bayern Polo', priceCents: 4500, currency: 'eur', available: true, stock: 1 },
+      'manchester-united-trainingsjacke': { id: 'manchester-united-trainingsjacke', name: 'Manchester United Trainingsjacke', priceCents: 6500, currency: 'eur', available: true, stock: 1 },
+      'olympique-marseille-trainingsjacke': { id: 'olympique-marseille-trainingsjacke', name: 'Olympique Marseille Trainingsjacke', priceCents: 8500, currency: 'eur', available: true, stock: 1 },
+      'portugal-trainingsjacke': { id: 'portugal-trainingsjacke', name: 'Portugal Trainingsjacke', priceCents: 8500, currency: 'eur', available: true, stock: 1 },
+      'polo-mit-reiter-weiss-blau': { id: 'polo-mit-reiter-weiss-blau', name: 'Polo mit Reiter Weiß/Blau', priceCents: 3500, currency: 'eur', available: true, stock: 1 },
+      'billionaire-boys-club-jeansjacke': { id: 'billionaire-boys-club-jeansjacke', name: 'Billionaire Boys Club Jeansjacke', priceCents: 38000, currency: 'eur', available: true, stock: 1 },
+      'la-martina-vintage-polo': { id: 'la-martina-vintage-polo', name: 'La Martina Vintage Polo', priceCents: 6500, currency: 'eur', available: true, stock: 1 },
+      'sergio-tacchini-winterjacke': { id: 'sergio-tacchini-winterjacke', name: 'Sergio Tacchini Winterjacke', priceCents: 16500, currency: 'eur', available: true, stock: 1 },
+      'vintage-taz-pullover': { id: 'vintage-taz-pullover', name: 'Vintage Taz Pullover', priceCents: 3500, currency: 'eur', available: true, stock: 1 },
+      'avirex-lederjacke': { id: 'avirex-lederjacke', name: 'Avirex Lederjacke', priceCents: 80000, currency: 'eur', available: true, stock: 1 },
+      'cropped-camo-sweatjacke': { id: 'cropped-camo-sweatjacke', name: 'Cropped Camo Sweatjacke', priceCents: 8500, currency: 'eur', available: true, stock: 1 },
+      'spider-jacke': { id: 'spider-jacke', name: 'Spider Jacke', priceCents: 13000, currency: 'eur', available: true, stock: 1 },
+      'nike-sportjacke': { id: 'nike-sportjacke', name: 'Nike Sportjacke', priceCents: 9000, currency: 'eur', available: false, stock: 0 },
+      'real-madrid-tracksuit': { id: 'real-madrid-tracksuit', name: 'Real Madrid Tracksuit', priceCents: 12000, currency: 'eur', available: false, stock: 0 },
+  }
 
 export function getCatalogEntry(id: string): CatalogEntry | undefined {
   return catalog[id]

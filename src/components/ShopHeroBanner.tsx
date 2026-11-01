@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import SpecularButton from './SpecularButton'
 
 type Slide = { src: string; alt: string; x?: number; y?: number; zoom?: number }
 type Pos = { x: number; y: number; zoom: number }
@@ -9,7 +8,7 @@ const STORAGE_KEY = 'heroDebugPositions-v2'
 const INTERVAL_MS = 5000
 const SWIPE_THRESHOLD = 50
 
-export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId: string }) {
+export function ShopHeroBanner({ slides }: { slides: Slide[] }) {
   const [active, setActive] = useState(0)
   const [debug, setDebug] = useState(false)
   const [positions, setPositions] = useState<Record<string, Pos>>(() => {
@@ -22,10 +21,11 @@ export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId
   const [copied, setCopied] = useState(false)
   const drag = useRef<{ x: number; y: number } | null>(null)
   const touchStart = useRef(0)
+  const mouseStart = useRef<number | null>(null)
   const touchEnd = useRef(0)
 
   useEffect(() => {
-    if (slides.length < 2) return
+    if (slides.length < 2 || debug) return
     const timer = window.setInterval(() => setActive((index) => (index + 1) % slides.length), INTERVAL_MS)
     return () => window.clearInterval(timer)
   }, [slides.length, active, debug])
@@ -56,19 +56,21 @@ export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId
     return Math.min(100, Math.max(0, Math.round(value * 10) / 10))
   }
 
+  function goBy(direction: 1 | -1) {
+    setActive((index) => (index + direction + slides.length) % slides.length)
+  }
+
   function handleTouchEnd() {
     if (debug) return
     const diff = touchStart.current - touchEnd.current
-    if (Math.abs(diff) > SWIPE_THRESHOLD && slides.length > 1) {
-      setActive((index) => (diff > 0 ? (index + 1) % slides.length : (index - 1 + slides.length) % slides.length))
-    }
+    if (Math.abs(diff) > SWIPE_THRESHOLD && slides.length > 1) goBy(diff > 0 ? 1 : -1)
     touchStart.current = 0
     touchEnd.current = 0
   }
 
   return (
     <section
-      className="relative left-1/2 mb-8 h-[42.5vh] min-h-[500px] w-screen -translate-x-1/2 touch-pan-y overflow-hidden bg-black max-[968px]:h-[40vh] max-[968px]:min-h-[320px] max-[640px]:h-[28vh] max-[640px]:min-h-[200px] sm:mb-12"
+      className="relative left-1/2 mb-8 h-[42.5vh] min-h-[500px] w-screen -translate-x-1/2 touch-pan-y select-none overflow-hidden bg-black max-[968px]:h-[40vh] max-[968px]:min-h-[320px] max-[640px]:h-[28vh] max-[640px]:min-h-[200px] sm:mb-12"
       aria-roledescription="carousel"
       aria-label="Hero"
       onTouchStart={(event) => {
@@ -80,7 +82,11 @@ export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId
       }}
       onTouchEnd={handleTouchEnd}
       onPointerDown={(event) => {
-        if (!debug || (event.target as HTMLElement).closest('[data-hero-debug]')) return
+        if ((event.target as HTMLElement).closest('[data-hero-debug]')) return
+        if (!debug) {
+          if (event.pointerType === 'mouse') mouseStart.current = event.clientX
+          return
+        }
         drag.current = { x: event.clientX, y: event.clientY }
         event.currentTarget.setPointerCapture(event.pointerId)
       }}
@@ -94,9 +100,17 @@ export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId
         })
         drag.current = { x: event.clientX, y: event.clientY }
       }}
-      onPointerUp={() => {
+      onPointerUp={(event) => {
         drag.current = null
+        if (mouseStart.current === null) return
+        const diff = mouseStart.current - event.clientX
+        mouseStart.current = null
+        if (Math.abs(diff) > SWIPE_THRESHOLD && slides.length > 1) goBy(diff > 0 ? 1 : -1)
       }}
+      onPointerLeave={() => {
+        mouseStart.current = null
+      }}
+      onDragStart={(event) => event.preventDefault()}
     >
       <div className="absolute inset-0">
         {slides.map((slide, index) => (
@@ -115,46 +129,6 @@ export function ShopHeroBanner({ slides, targetId }: { slides: Slide[]; targetId
         ))}
       </div>
       <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-b from-black/20 to-black/50" />
-
-      <div className="absolute left-1/2 top-1/2 z-[15] -translate-x-1/2 -translate-y-1/2">
-        <SpecularButton
-          size="lg"
-          radius={0}
-          tint="#ffffff"
-          tintOpacity={0}
-          blur={0}
-          textColor="#f5f5f5"
-          lineColor="#ffffff"
-          baseColor="#525252"
-          intensity={1}
-          shineSize={10}
-          shineFade={40}
-          thickness={1}
-          speed={0.35}
-          followMouse
-          proximity={250}
-          autoAnimate={false}
-          scramble
-          onClick={() => document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' })}
-        >
-          SHOP NOW
-        </SpecularButton>
-      </div>
-
-      {slides.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2 min-[641px]:bottom-8 min-[641px]:gap-3">
-          {slides.map((slide, index) => (
-            <button
-              key={slide.src}
-              type="button"
-              onClick={() => setActive(index)}
-              aria-label={`Slide ${index + 1}`}
-              aria-current={index === active}
-              className={`hero-dot h-2 w-2 rounded-full transition-all duration-300 min-[641px]:h-2.5 min-[641px]:w-2.5 ${index === active ? 'scale-[1.2] bg-white' : 'bg-white/40 hover:bg-white/70'}`}
-            />
-          ))}
-        </div>
-      )}
 
       {debug && (
         <div
