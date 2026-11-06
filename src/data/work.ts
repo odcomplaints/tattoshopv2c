@@ -16,11 +16,8 @@ export const work: Work[] = [
   { title: 'Low Tide', date: new Date('2026-05-30'), style: 'Fineline', bodyPart: 'Upper arm', image: '/assets/work/2.png' },
   { title: 'Still Life', date: new Date('2026-03-07'), style: 'Blackwork', bodyPart: 'Thigh', image: '/assets/work/4.png' },
   { title: 'Relic', date: new Date('2026-09-07'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-7984.png', zoom: 1.5 },
-  { title: 'Silhouette', date: new Date('2026-09-30'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-8369.png', zoom: 1.5 },
-  { title: 'Nocturne', date: new Date('2026-09-30'), style: 'Abstract', bodyPart: 'Ribs', image: '/assets/work/img-8370.png', zoom: 1.5 },
   { title: 'Briar', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8542%201.png' },
   { title: 'Watchful', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8590%201.png' },
-  { title: 'Coil', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8722%201.png' },
   { title: 'Thorn', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8767%201.png' },
   // Hidden: Aftermath, Ashes, Reverie, Fracture
   // { title: 'Aftermath', date: new Date('2026-09-22'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-8229.png', zoom: 1.5 },
