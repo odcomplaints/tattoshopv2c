@@ -69,6 +69,23 @@ body::before {
 }
 
 @layer components {
+  #root .private-info {
+    filter: blur(0.35em);
+    cursor: pointer;
+    transition: filter 150ms ease;
+  }
+
+  #root .private-info.is-revealed,
+  #root .private-info:focus-visible {
+    filter: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    #root .private-info:hover {
+      filter: none;
+    }
+  }
+
   /* Keep the uppercase treatment across the UI, but only headlines carry the
      brand red. Body copy, links and form fields keep their per-element neutral
      (grey/white) colours for better contrast and readability. */

@@ -1,4 +1,5 @@
 import { Layout } from '../components/Layout'
+import { PrivateInfoText } from '../components/PrivateInfoText'
 import { GlobeIcon } from '../components/icons'
 import { useLanguage } from '../context/LanguageContext'
 
@@ -27,7 +28,7 @@ export function PrivacyPage() {
           {t.privacy.sections.map((section) => (
             <section key={section.heading}>
               <h2 className="text-xs uppercase tracking-widest text-neutral-200">{section.heading}</h2>
-              <p className="mt-2">{section.body}</p>
+              <PrivateInfoText html={section.body} />
             </section>
           ))}
           <p>{t.privacy.closing}</p>
