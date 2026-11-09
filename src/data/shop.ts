@@ -56,7 +56,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'BAPE × Disney collaboration. Shark hoodie with a Mickey Mouse graphic on the hood.',
-    details: ['Marke: BAPE × Disney', 'Material: 100 % Baumwolle', 'Limitierte Kollab-Edition', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+    details: ['Marke: BAPE × Disney', 'Material: 100 % Baumwolle', 'Limitierte Kollab-Edition', 'Zustand: sehr gut', 'Größe: M'],
     color: 'grün',
     listed: true,
     moodImages: ['/assets/shop/moodpics/mickeymousebapesharkmoodpic.png'],
@@ -71,7 +71,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'BAPE Shark hoodie in the classic multi-camo pattern. Full ABC camo, shark-mouth hood.',
-    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'ABC Camo Allover', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'ABC Camo Allover', 'Zustand: sehr gut', 'Größe: L'],
     color: 'pink/blau/schwarz',
     listed: true,
     moodImages: ['/assets/shop/moodpics/bapesharkmulticolormoodpic.png'],
@@ -86,7 +86,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'BAPE Shark hoodie in pink. Full-zip, shark-mouth hood.',
-    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Pink', 'Zustand: gut', 'Größe: bitte M'],
+    details: ['Marke: A Bathing Ape (BAPE)', 'Material: 100 % Baumwolle', 'Farbe: Pink', 'Zustand: gut', 'Größe: M'],
     color: 'pink',
     listed: true,
   },
@@ -115,7 +115,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Supreme zip-up from the regular line. Embroidered box logo on the chest, heavyweight fleece lining.',
-    details: ['Marke: Supreme', 'Material: Baumwoll-Fleece', 'Gesticktes Box Logo', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+    details: ['Marke: Supreme', 'Material: Baumwoll-Fleece', 'Gesticktes Box Logo', 'Zustand: sehr gut', 'Größe: M'],
     color: 'weiß',
     listed: true,
   },
@@ -129,7 +129,7 @@ export const shopItems: ShopItem[] = [
     stock: 2,
     description:
       'Supreme tee from a past season. Graphic print, 100% cotton, regular Supreme fit.',
-    details: ['Marke: Supreme', 'Material: 100 % Baumwolle', 'Grafik-Print', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+    details: ['Marke: Supreme', 'Material: 100 % Baumwolle', 'Grafik-Print', 'Zustand: sehr gut', 'Größe: M'],
     color: 'schwarz',
     listed: true,
   },
@@ -143,7 +143,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Balenciaga zip-up with the brand\'s oversized fit. Printed logo, cotton fleece.',
-    details: ['Marke: Balenciaga', 'Material: Baumwoll-Fleece', 'Oversized Fit', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+    details: ['Marke: Balenciaga', 'Material: Baumwoll-Fleece', 'Oversized Fit', 'Zustand: sehr gut', 'Größe: M'],
     color: 'schwarz',
     listed: true,
   },
@@ -157,7 +157,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Corteiz (CRTZ) hoodie. Heavyweight fleece with an embroidered Alcatraz graphic.',
-    details: ['Marke: Corteiz (CRTZ)', 'Material: Schweres Baumwoll-Fleece', 'Alcatraz-Grafik', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+    details: ['Marke: Corteiz (CRTZ)', 'Material: Schweres Baumwoll-Fleece', 'Alcatraz-Grafik', 'Zustand: sehr gut', 'Größe: L'],
     color: 'schwarz',
     listed: true,
   },
@@ -171,7 +171,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'C.P. Company jacket with the signature goggle hood. Technical nylon, solid construction.',
-    details: ['Marke: C.P. Company', 'Material: Technisches Nylon', 'Linsen-Goggle-Kapuze', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+    details: ['Marke: C.P. Company', 'Material: Technisches Nylon', 'Linsen-Goggle-Kapuze', 'Zustand: sehr gut', 'Größe: M'],
     color: 'schwarz',
     listed: true,
   },
@@ -185,7 +185,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Dior Men × Hajime Sorayama hoodie. Robot graphic on heavyweight Dior cotton.',
-    details: ['Marke: Dior Men × Hajime Sorayama', 'Material: 100 % Baumwolle', 'Limitierte Kollaboration', 'Zustand: sehr gut', 'Größe: bitte anfragen'],
+    details: ['Marke: Dior Men × Hajime Sorayama', 'Material: 100 % Baumwolle', 'Limitierte Kollaboration', 'Zustand: sehr gut', 'Größe: L'],
     color: 'schwarz',
     listed: true,
   },
@@ -199,7 +199,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Carlo Colucci vintage knit sweater, 90s pattern. Wool/acrylic blend.',
-    details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: L'],
     color: 'bunt',
     listed: true,
   },
@@ -213,7 +213,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Second Carlo Colucci vintage piece, mixed pattern. Thick knit, wool/acrylic blend.',
-    details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Marke: Carlo Colucci', 'Material: Wolle / Acryl', 'Vintage 90s', 'Zustand: gut', 'Größe: M'],
     color: 'bunt',
     listed: true,
   },
@@ -241,7 +241,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Vintage AC Milan away kit. Red and black design, original embroidery.',
-    details: ['Verein: AC Milan', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Verein: AC Milan', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: M'],
     color: 'rot/Schwarz',
     listed: true,
   },
@@ -255,7 +255,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Vintage Real Madrid home kit in white. Crest embroidery, original sponsor layout.',
-    details: ['Verein: Real Madrid C.F.', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Verein: Real Madrid C.F.', 'Typ: Vintage-Trikot', 'Original-Stickerei', 'Zustand: gut', 'Größe: M'],
     color: 'schwarz/gold',
     listed: true,
   },
@@ -325,7 +325,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'GOAT tee in a skate box-tee cut. Loose fit, cotton, graphic print.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: M'],
     color: 'schwarz/orange',
     listed: true,
   },
@@ -339,7 +339,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Ferrari polo in red. Classic polo cut with collar and button placket, embroidered logo.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: M'],
     color: 'rot',
     listed: true,
   },
@@ -353,7 +353,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Supreme hoodie with an orange logo print on the chest. Heavyweight fleece, kangaroo pocket.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: M'],
     color: 'schwarz/orange',
     listed: true,
   },
@@ -367,7 +367,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'BAPE tee in an oversized cut. 100% cotton with the brand\'s ape print.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: L'],
     color: 'schwarz',
     listed: true,
   },
@@ -381,7 +381,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Chief Keef polo with a New York graphic. Cotton.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: M'],
     color: 'schwarz',
     listed: true,
   },
@@ -395,7 +395,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Supreme box logo hoodie in white. Heavyweight fleece, embroidered box logo on the chest.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: M'],
     color: 'weiß',
     listed: true,
   },
@@ -437,7 +437,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Bleached oversize tee. Individual bleach-wash effect, each piece unique. Loose cut.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: M'],
     color: 'schwarz',
     listed: true,
   },
@@ -451,7 +451,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Supreme box logo hoodie in black. Heavyweight fleece, embroidered box logo.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: L'],
     color: 'schwarz',
     listed: true,
   },
@@ -648,7 +648,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Box tee in black. Plain cut with a clean box logo print, 100% cotton.',
-    details: ['Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Zustand: gut', 'Größe: M'],
     color: 'schwarz',
     listed: true,
   },
@@ -895,7 +895,7 @@ export const shopItems: ShopItem[] = [
     stock: 1,
     description:
       'Palace sweater in black. Cotton pullover with a small triangle logo.',
-    details: ['Marke: Palace', 'Zustand: gut', 'Größe: bitte anfragen'],
+    details: ['Marke: Palace', 'Zustand: gut', 'Größe: M'],
     color: 'schwarz',
     listed: true,
     moodImages: ['/assets/shop/moodpics/palacesweatermoodpic.png'],
@@ -1235,7 +1235,7 @@ export const shopItems: ShopItem[] = [
     availability: 'available',
     stock: 1,
     description: 'Schwarzes Oversize T-Shirt mit handgebleichtem, tropfendem Herz.',
-    details: ['Handgebleichtes Unikat', 'Oversize Fit', 'Größe: bitte anfragen', 'Zustand: sehr gut'],
+    details: ['Handgebleichtes Unikat', 'Oversize Fit', 'Größe: M', 'Zustand: sehr gut'],
     color: 'schwarz',
     listed: true,
   },
