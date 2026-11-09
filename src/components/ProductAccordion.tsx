@@ -24,6 +24,12 @@ export function ProductAccordion() {
     [],
   )
 
+  // First click expands a panel, second click on the expanded panel navigates.
+  const open = (id: string) => {
+    if (activeId === id) navigate(`/shop/${id}`)
+    else setActiveId(id)
+  }
+
   if (products.length === 0) return null
 
   return (
@@ -32,7 +38,7 @@ export function ProductAccordion() {
         <h2 className="text-2xl tracking-widest sm:text-4xl">Dont miss out</h2>
         <p className="mt-3 text-sm tracking-widest text-neutral-400 sm:text-base">Entdecke unsere handverlesene Kollektion</p>
       </div>
-      <div className="product-accordion" onMouseLeave={() => setActiveId(null)}>
+      <div className="product-accordion">
         {products.map((product) => (
           <div
             key={product.id}
@@ -40,13 +46,8 @@ export function ProductAccordion() {
             role="link"
             tabIndex={0}
             aria-label={`Zu ${product.name} navigieren`}
-            onMouseEnter={() => setActiveId(product.id)}
-            onFocus={() => setActiveId(product.id)}
-            onClick={() => {
-              if (activeId === product.id || window.matchMedia('(hover: hover)').matches) navigate(`/shop/${product.id}`)
-              else setActiveId(product.id)
-            }}
-            onKeyDown={(event) => event.key === 'Enter' && navigate(`/shop/${product.id}`)}
+            onClick={() => open(product.id)}
+            onKeyDown={(event) => event.key === 'Enter' && open(product.id)}
           >
             <img src={product.image} alt={product.name} loading="lazy" decoding="async" width="200" height="600" />
           </div>
