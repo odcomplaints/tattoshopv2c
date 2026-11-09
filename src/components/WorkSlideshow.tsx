@@ -71,7 +71,7 @@ export function WorkSlideshow({ items, intervalMs = 4500 }: WorkSlideshowProps) 
             height="1000"
             loading={index === 0 ? 'eager' : 'lazy'}
             decoding="async"
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${index === activeIndex ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute inset-0 h-full w-full object-cover grayscale transition-opacity duration-700 ${index === activeIndex ? 'opacity-100' : 'opacity-0'}`}
           />
         ))}
       </div>
