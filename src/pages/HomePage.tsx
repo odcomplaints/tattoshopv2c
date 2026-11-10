@@ -84,7 +84,7 @@ export function HomePage() {
             autoAnimate={false}
             onClick={() => navigate('/styles')}
           >
-            BROWSE FLASHES
+            {t.home.browseFlashes}
           </SpecularButton>
         </div>
       </section>
@@ -112,66 +112,56 @@ export function HomePage() {
       </section>
       <section className="mt-5 py-5 text-center sm:mt-8 sm:py-8">
         <div className="mx-auto grid max-w-2xl gap-6">
-          <div><p className="text-xs uppercase tracking-widest text-accent">Studio</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">The body comes first</h2></div>
+          <div><p className="text-xs uppercase tracking-widest text-accent">{t.home.studio.eyebrow}</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.studio.title}</h2></div>
           <div className="space-y-5 text-sm leading-7 text-neutral-400">
-            <p>I work with the body, never against it. Lines follow tension, forms respond to movement and every motif is made for its placement.</p>
-            <p>Each session is a shared process: we establish direction and atmosphere before the final drawing is developed with precision for you.</p>
-            <Link className="inline-block text-xs uppercase tracking-widest text-neutral-300 underline underline-offset-4 transition-colors hover:text-accent" to="/about">About the studio</Link>
+            {t.home.studio.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            <Link className="inline-block text-xs uppercase tracking-widest text-neutral-300 underline underline-offset-4 transition-colors hover:text-accent" to="/about">{t.home.studio.aboutLink}</Link>
           </div>
         </div>
       </section>
       <section className="py-5 text-center sm:py-8">
-        <p className="text-xs uppercase tracking-widest text-accent">Process</p>
-        <h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">From idea to session</h2>
+        <p className="text-xs uppercase tracking-widest text-accent">{t.home.process.eyebrow}</p>
+        <h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.process.title}</h2>
         <ol className="mt-10 grid gap-8 text-center sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ['01', 'Inquiry', 'Send your idea, placement, size and references.'],
-            ['02', 'Alignment', 'I reply with an assessment and possible dates.'],
-            ['03', 'Design', 'Your design is developed and refined for its placement.'],
-            ['04', 'Session', 'At the studio, we apply the motif with focus and precision.'],
-          ].map(([number, title, text]) => <li key={number} className="p-5 sm:p-6"><span className="text-xs text-accent">{number}</span><h3 className="mt-8 text-xs font-medium uppercase tracking-widest text-neutral-100">{title}</h3><p className="mt-3 text-sm leading-6 text-neutral-300">{text}</p></li>)}
+          {t.home.process.steps.map(({ title, description }, index) => {
+            const number = String(index + 1).padStart(2, '0')
+            return <li key={number} className="p-5 sm:p-6"><span className="text-xs text-accent">{number}</span><h3 className="mt-8 text-xs font-medium uppercase tracking-widest text-neutral-100">{title}</h3><p className="mt-3 text-sm leading-6 text-neutral-300">{description}</p></li>
+          })}
         </ol>
       </section>
       <section className="py-5 text-center sm:py-8">
         <div className="mx-auto grid max-w-2xl gap-8">
-          <div><p className="text-xs uppercase tracking-widest text-accent">Guide</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">Time &amp; budget</h2><p className="mx-auto mt-5 max-w-md text-sm leading-7 text-neutral-400">Every project is quoted individually. These ranges offer a first orientation and do not replace a personal quote.</p></div>
+          <div><p className="text-xs uppercase tracking-widest text-accent">{t.home.guide.eyebrow}</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.guide.title}</h2><p className="mx-auto mt-5 max-w-md text-sm leading-7 text-neutral-400">{t.home.guide.description}</p></div>
           <dl className="text-sm">
-            <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Small motifs</dt><dd className="text-neutral-300">from 180 EUR</dd></div>
-            <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Medium projects</dt><dd className="text-neutral-300">400-600 EUR</dd></div>
-            <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Large work</dt><dd className="text-neutral-300">on request</dd></div>
-            <div className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">Day session</dt><dd className="text-neutral-300">by arrangement</dd></div>
+            {t.home.guide.prices.map(({ label, price }) => <div key={label} className="flex items-baseline justify-center gap-4 py-4"><dt className="text-neutral-200">{label}</dt><dd className="text-neutral-300">{price}</dd></div>)}
           </dl>
         </div>
       </section>
       <section className="py-5 text-center sm:py-8">
         <div className="mx-auto grid max-w-2xl gap-8">
-          <div><p className="text-xs uppercase tracking-widest text-accent">Before your session</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">Come prepared</h2></div>
+          <div><p className="text-xs uppercase tracking-widest text-accent">{t.home.preparation.eyebrow}</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.preparation.title}</h2></div>
           <ul className="grid gap-4 text-sm leading-7 text-neutral-400 sm:grid-cols-2">
-            {['Arrive rested, hydrated and with clean skin.', 'Eat well beforehand and allow enough time.', 'Avoid alcohol and other blood-thinning substances the day before.', 'Bring a small selection of references when useful.'].map((item) => <li key={item} className="flex items-start justify-center gap-2 px-4 py-3"><span className="text-accent">+</span><span>{item}</span></li>)}
+            {t.home.preparation.tips.map((item) => <li key={item} className="flex items-start justify-center gap-2 px-4 py-3"><span className="text-accent">+</span><span>{item}</span></li>)}
           </ul>
         </div>
       </section>
       <section className="py-5 text-center sm:py-8">
-        <p className="text-xs uppercase tracking-widest text-accent">Questions</p>
-        <h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">FAQ</h2>
+        <p className="text-xs uppercase tracking-widest text-accent">{t.home.faq.eyebrow}</p>
+        <h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.faq.title}</h2>
         <div className="mx-auto mt-8 max-w-2xl">
-          {[
-            ['Do you work with flash?', 'Occasional flash designs are available. The focus is on individual projects.'],
-            ['Can I bring references?', 'Yes. They help establish direction, visual language and atmosphere.'],
-            ['When will I see the design?', 'For custom work we align on the direction before your appointment; the final drawing is shaped for the placement.'],
-          ].map(([question, answer]) => (
+          {t.home.faq.items.map(({ question, answer, answerBeforeLink, linkText, answerAfterLink }) => (
             <details key={question} className="py-4">
               <summary className="cursor-pointer text-xs uppercase tracking-widest text-neutral-200 transition-all duration-200 hover:scale-110 hover:text-accent">
                 {question}
               </summary>
               <p className="mt-3 text-sm leading-7 text-neutral-300">
-                {question === 'Do you work with flash?' ? (
+                {linkText ? (
                   <>
-                    Occasional flash designs are{' '}
+                    {answerBeforeLink}
                     <Link to="/styles" className="text-accent underline underline-offset-4 transition-colors hover:text-neutral-100">
-                      available
+                      {linkText}
                     </Link>
-                    . The focus is on individual projects.
+                    {answerAfterLink}
                   </>
                 ) : (
                   answer
@@ -205,7 +195,7 @@ export function HomePage() {
               autoAnimate={false}
               onClick={() => navigate('/booking')}
             >
-              Start an inquiry
+              {t.home.startInquiry}
             </SpecularButton>
           </div>
         </div>

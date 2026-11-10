@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
@@ -22,30 +22,6 @@ export function BookingPage() {
   const [submitting, setSubmitting] = useState(false)
   const [missingFields, setMissingFields] = useState<Set<string>>(new Set())
   const [searchParams] = useSearchParams()
-  const [busyDates, setBusyDates] = useState<Set<string>>(new Set())
-  const [busyDatesLoading, setBusyDatesLoading] = useState(true)
-
-  // Load days already blocked in the studio's university/lecture calendar
-  // (see api/uni-calendar-busy.ts) so the date picker can grey them out —
-  // fails open (no blocked days) if the feed isn't configured or errors out.
-  useEffect(() => {
-    let cancelled = false
-    fetch('/api/uni-calendar-busy')
-      .then((res) => res.json())
-      .then((data: { busyDates?: string[] }) => {
-        if (cancelled) return
-        setBusyDates(new Set(data.busyDates ?? []))
-      })
-      .catch(() => {
-        if (!cancelled) setBusyDates(new Set())
-      })
-      .finally(() => {
-        if (!cancelled) setBusyDatesLoading(false)
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
 
   // Pre-fill the motif field when arriving with a flash-design reference,
   // e.g. from the /styles moodboard's "HMU!" button.
@@ -176,18 +152,6 @@ export function BookingPage() {
         <div className="grid gap-14 pt-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.6fr)] lg:gap-20">
           {/* Left: checkout form */}
           <div className="grid gap-10">
-            {/* Express checkout */}
-            <section>
-              <h2 className={sectionTitle}>{b.expressCheckout}</h2>
-              <p className="mt-2 max-w-sm text-xs leading-5 text-neutral-500">{b.expressCheckoutHint}</p>
-              <div className="mt-4 max-w-sm">
-                <ExpressPay onPay={handleExpressPay} disabled={submitting} loading={submitting} />
-              </div>
-              <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-widest text-neutral-600">
-                <span className="h-px flex-1 bg-neutral-800" />
-              </div>
-            </section>
-
             <form ref={formRef} className="grid gap-10" onSubmit={handleSubmit}>
               {/* Contact */}
               <section className="grid gap-6">
@@ -280,16 +244,12 @@ export function BookingPage() {
                 </label>
                 <DateAvailabilityPicker
                   name="date"
-                  busyDates={busyDates}
-                  loading={busyDatesLoading}
                   invalid={missingFields.has('date')}
                   monthNames={b.calendar.monthNames}
                   weekdayNames={b.calendar.weekdayNames}
                   labels={{
                     prevMonth: b.calendar.prevMonth,
                     nextMonth: b.calendar.nextMonth,
-                    unavailable: b.calendar.unavailable,
-                    loading: b.calendar.loading,
                     placeholder: b.calendar.placeholder,
                     selectDate: b.calendar.selectDate,
                     done: b.calendar.done,
@@ -308,6 +268,18 @@ export function BookingPage() {
                 {submitting ? '…' : `${b.payDeposit} · ${DEPOSIT}`}
               </button>
             </form>
+
+            {/* Express checkout */}
+            <section>
+              <h2 className={sectionTitle}>{b.expressCheckout}</h2>
+              <p className="mt-2 max-w-sm text-xs leading-5 text-neutral-500">{b.expressCheckoutHint}</p>
+              <div className="mt-4 max-w-sm">
+                <ExpressPay onPay={handleExpressPay} disabled={submitting} loading={submitting} />
+              </div>
+              <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-widest text-neutral-600">
+                <span className="h-px flex-1 bg-neutral-800" />
+              </div>
+            </section>
           </div>
           {/* Right: order summary */}
           <aside className="lg:sticky lg:top-8 lg:self-start">

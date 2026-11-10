@@ -19,7 +19,42 @@ type TranslationShape = {
     tagline: string
     description: string
     bookSession: string
+    startInquiry: string
     portfolio: string
+    browseFlashes: string
+    studio: {
+      eyebrow: string
+      title: string
+      paragraphs: [string, string]
+      aboutLink: string
+    }
+    process: {
+      eyebrow: string
+      title: string
+      steps: { title: string; description: string }[]
+    }
+    guide: {
+      eyebrow: string
+      title: string
+      description: string
+      prices: { label: string; price: string }[]
+    }
+    preparation: {
+      eyebrow: string
+      title: string
+      tips: string[]
+    }
+    faq: {
+      eyebrow: string
+      title: string
+      items: {
+        question: string
+        answer?: string
+        answerBeforeLink?: string
+        linkText?: string
+        answerAfterLink?: string
+      }[]
+    }
   }
   about: {
     eyebrow: string
@@ -46,8 +81,6 @@ type TranslationShape = {
     calendar: {
       prevMonth: string
       nextMonth: string
-      unavailable: string
-      loading: string
       monthNames: string[]
       weekdayNames: string[]
       placeholder: string
@@ -115,7 +148,69 @@ export const translations: Record<Language, TranslationShape> = {
       description:
         'Blackwork, fineline and botanical motifs. Individual tattoos, considered carefully and executed with precision.',
       bookSession: 'Book a Session',
+      startInquiry: 'Start an inquiry',
       portfolio: 'Portfolio',
+      browseFlashes: 'BROWSE FLASHES',
+      studio: {
+        eyebrow: 'Studio',
+        title: 'Der Körper steht an erster Stelle',
+        paragraphs: [
+          'I work with the body, never against it. Lines follow tension, forms respond to movement and every motif is made for its placement.',
+          'Each session is a shared process: we establish direction and atmosphere before the final drawing is developed with precision for you.',
+        ],
+        aboutLink: 'About the studio',
+      },
+      process: {
+        eyebrow: 'Process',
+        title: 'From idea to session',
+        steps: [
+          { title: 'Inquiry', description: 'Send your idea, placement, size and references.' },
+          { title: 'Alignment', description: 'I reply with an assessment and possible dates.' },
+          { title: 'Design', description: 'Your design is developed and refined for its placement.' },
+          { title: 'Session', description: 'At the studio, we apply the motif with focus and precision.' },
+        ],
+      },
+      guide: {
+        eyebrow: 'Guide',
+        title: 'Time & budget',
+        description: 'Every project is quoted individually. These ranges offer a first orientation and do not replace a personal quote.',
+        prices: [
+          { label: 'Small motifs', price: 'from 180 EUR' },
+          { label: 'Medium projects', price: '400-600 EUR' },
+          { label: 'Large work', price: 'on request' },
+          { label: 'Day session', price: 'by arrangement' },
+        ],
+      },
+      preparation: {
+        eyebrow: 'Before your session',
+        title: 'Come prepared',
+        tips: [
+          'Arrive rested, hydrated and with clean skin.',
+          'Eat well beforehand and allow enough time.',
+          'Avoid alcohol and other blood-thinning substances the day before.',
+          'Bring a small selection of references when useful.',
+        ],
+      },
+      faq: {
+        eyebrow: 'Questions',
+        title: 'FAQ',
+        items: [
+          {
+            question: 'Do you work with flash?',
+            answerBeforeLink: 'Occasional flash designs are ',
+            linkText: 'available',
+            answerAfterLink: '. The focus is on individual projects.',
+          },
+          {
+            question: 'Can I bring references?',
+            answer: 'Yes. They help establish direction, visual language and atmosphere.',
+          },
+          {
+            question: 'When will I see the design?',
+            answer: 'For custom work we align on the direction before your appointment; the final drawing is shaped for the placement.',
+          },
+        ],
+      },
     },
     about: {
       eyebrow: 'About',
@@ -131,7 +226,7 @@ export const translations: Record<Language, TranslationShape> = {
       title: 'Booking',
       intro: 'Secure your appointment with a deposit of {deposit}. The amount is credited towards the final price of your tattoo.',
       expressCheckout: 'Express Checkout',
-      expressCheckoutHint: 'Fill in the form below first — Apple Pay / Google Pay start once your details are complete.',
+      expressCheckoutHint: 'Fill in your email, phone number and preferred date above first.',
       orPayByCard: 'or pay by card',
       contact: 'Contact',
       email: 'Email',
@@ -146,8 +241,6 @@ export const translations: Record<Language, TranslationShape> = {
       calendar: {
         prevMonth: 'Previous month',
         nextMonth: 'Next month',
-        unavailable: 'Unavailable — already blocked in the studio calendar',
-        loading: 'Checking availability…',
         monthNames: [
           'January', 'February', 'March', 'April', 'May', 'June',
           'July', 'August', 'September', 'October', 'November', 'December',
@@ -233,7 +326,7 @@ export const translations: Record<Language, TranslationShape> = {
       work: 'Arbeiten',
       shop: 'Shop',
       booking: 'Termin',
-      about: 'Über uns',
+      about: 'About',
       favorites: 'Favoriten',
       cart: 'Warenkorb',
     },
@@ -248,7 +341,69 @@ export const translations: Record<Language, TranslationShape> = {
       description:
         'Blackwork, Fineline und botanische Motive. Individuelle Tattoos, sorgf\u00e4ltig durchdacht und pr\u00e4zise umgesetzt.',
       bookSession: 'Termin buchen',
+      startInquiry: 'Anfrage starten',
       portfolio: 'Portfolio',
+      browseFlashes: 'FLASH-MOTIVE ANSEHEN',
+      studio: {
+        eyebrow: 'Studio',
+        title: 'Der Körper steht an erster Stelle',
+        paragraphs: [
+          'Ich arbeite mit dem Körper, niemals gegen ihn. Linien folgen der Spannung, Formen reagieren auf Bewegung und jedes Motiv ist auf seine Platzierung abgestimmt.',
+          'Jede Sitzung ist ein gemeinsamer Prozess: Wir stimmen Richtung und Atmosphäre ab, bevor die finale Zeichnung präzise für dich ausgearbeitet wird.',
+        ],
+        aboutLink: 'Über das Studio',
+      },
+      process: {
+        eyebrow: 'Ablauf',
+        title: 'Von der Idee bis zum Termin',
+        steps: [
+          { title: 'Anfrage', description: 'Schick mir deine Idee, die Platzierung, die Größe und Referenzen.' },
+          { title: 'Abstimmung', description: 'Ich melde mich mit einer Einschätzung und möglichen Terminen.' },
+          { title: 'Entwurf', description: 'Dein Design wird entwickelt und passend zur Platzierung ausgearbeitet.' },
+          { title: 'Sitzung', description: 'Im Studio setzen wir das Motiv konzentriert und präzise um.' },
+        ],
+      },
+      guide: {
+        eyebrow: 'Orientierung',
+        title: 'Zeit & Budget',
+        description: 'Jedes Projekt erhält ein individuelles Angebot. Diese Richtwerte dienen zur ersten Orientierung und ersetzen kein persönliches Angebot.',
+        prices: [
+          { label: 'Kleine Motive', price: 'ab 180 EUR' },
+          { label: 'Mittlere Projekte', price: '400–600 EUR' },
+          { label: 'Größere Arbeiten', price: 'auf Anfrage' },
+          { label: 'Tagessitzung', price: 'nach Vereinbarung' },
+        ],
+      },
+      preparation: {
+        eyebrow: 'Vor deinem Termin',
+        title: 'Gut vorbereitet',
+        tips: [
+          'Komm ausgeruht, gut hydriert und mit sauberer Haut.',
+          'Iss vorher ausreichend und plane genug Zeit ein.',
+          'Verzichte am Vortag auf Alkohol und andere blutverdünnende Mittel.',
+          'Bring bei Bedarf eine kleine Auswahl an Referenzen mit.',
+        ],
+      },
+      faq: {
+        eyebrow: 'Fragen',
+        title: 'Häufige Fragen',
+        items: [
+          {
+            question: 'Arbeitest du mit Flash-Motiven?',
+            answerBeforeLink: 'Gelegentlich sind ',
+            linkText: 'Flash-Motive verfügbar',
+            answerAfterLink: '. Der Schwerpunkt liegt auf individuellen Projekten.',
+          },
+          {
+            question: 'Kann ich Referenzen mitbringen?',
+            answer: 'Ja. Sie helfen dabei, Richtung, Bildsprache und Atmosphäre festzulegen.',
+          },
+          {
+            question: 'Wann sehe ich den Entwurf?',
+            answer: 'Bei individuellen Motiven stimmen wir die Richtung vor deinem Termin ab. Der finale Entwurf wird passend zur Platzierung ausgearbeitet.',
+          },
+        ],
+      },
     },
     about: {
       eyebrow: 'Über uns',
@@ -264,7 +419,7 @@ export const translations: Record<Language, TranslationShape> = {
       title: 'Termin',
       intro: 'Sichere dir deinen Termin mit einer Anzahlung von {deposit}. Der Betrag wird auf den Endpreis deines Tattoos angerechnet.',
       expressCheckout: 'Express-Kasse',
-      expressCheckoutHint: 'Fülle zuerst das Formular unten aus — Apple Pay / Google Pay starten erst, wenn deine Angaben vollständig sind.',
+      expressCheckoutHint: 'Fülle zuerst oben deine E-Mail-Adresse, Telefonnummer und deinen Wunschtermin aus.',
       orPayByCard: 'oder mit Karte bezahlen',
       contact: 'Kontakt',
       email: 'E-Mail',
@@ -279,8 +434,6 @@ export const translations: Record<Language, TranslationShape> = {
       calendar: {
         prevMonth: 'Vorheriger Monat',
         nextMonth: 'Nächster Monat',
-        unavailable: 'Nicht verfügbar — im Studio-Kalender bereits belegt',
-        loading: 'Verfügbarkeit wird geprüft…',
         monthNames: [
           'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
           'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember',

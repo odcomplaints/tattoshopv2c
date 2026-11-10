@@ -1,13 +1,8 @@
-// A lightweight dropdown date picker used on the booking page so we can
-// visually grey out / disable specific calendar days — something a native
-// <input type="date"> can't do. Used together with /api/uni-calendar-busy to
-// block days that already have a university lecture/exam on them.
+// A lightweight dropdown date picker used on the booking page so customers
+// can choose a future date — something a native <input type="date"> can't do.
 //
-// The customer sees a compact trigger field ("Select a date"). Clicking it
-// expands a small month-plan calendar with blocked days struck through; the
-// remaining days can be clicked to select. Choosing a day closes the
-// dropdown automatically and shows the chosen date in the trigger, so the
-// customer can then continue down to the deposit button.
+// Choosing a day closes the dropdown and shows the chosen date in the trigger,
+// so the customer can then continue down to the deposit button.
 //
 // Renders its own hidden <input type="date"> with the given `name` so it
 // keeps working with the existing FormData-based submit logic in
@@ -17,16 +12,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 type DateAvailabilityPickerProps = {
   name: string
-  busyDates: Set<string>
-  loading: boolean
   invalid?: boolean
   monthNames: string[]
   weekdayNames: string[]
   labels: {
     prevMonth: string
     nextMonth: string
-    unavailable: string
-    loading: string
     placeholder: string
     selectDate: string
     done: string
@@ -52,8 +43,6 @@ function formatDisplay(key: string, monthNames: string[]): string {
 
 export function DateAvailabilityPicker({
   name,
-  busyDates,
-  loading,
   invalid,
   monthNames,
   weekdayNames,
@@ -61,8 +50,7 @@ export function DateAvailabilityPicker({
   onChange,
 }: DateAvailabilityPickerProps) {
   const today = useMemo(() => startOfToday(), [])
-  const [viewYear, setViewYear] = useState(today.getFullYear())
-  const [viewMonth, setViewMonth] = useState(today.getMonth())
+  const [viewMonth, setViewMonth] = useState({ year: today.getFullYear(), month: today.getMonth() })
   const [selected, setSelected] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -82,39 +70,34 @@ export function DateAvailabilityPicker({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [open])
 
-  const firstOfMonth = new Date(viewYear, viewMonth, 1)
-  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
+  const firstOfMonth = new Date(viewMonth.year, viewMonth.month, 1)
+  const daysInMonth = new Date(viewMonth.year, viewMonth.month + 1, 0).getDate()
   // Convert JS Sunday=0 weekday into a Monday-first column index.
   const leadingBlanks = (firstOfMonth.getDay() + 6) % 7
 
   const cells: Array<{ key: string; day: number } | null> = []
   for (let i = 0; i < leadingBlanks; i += 1) cells.push(null)
   for (let day = 1; day <= daysInMonth; day += 1) {
-    cells.push({ key: toKey(viewYear, viewMonth, day), day })
+    cells.push({ key: toKey(viewMonth.year, viewMonth.month, day), day })
   }
 
   function goToPrevMonth() {
-    setViewMonth((month) => {
-      if (month === 0) {
-        setViewYear((year) => year - 1)
-        return 11
-      }
-      return month - 1
+    setViewMonth(({ year, month }) => {
+      if (month === 0) return { year: year - 1, month: 11 }
+      return { year, month: month - 1 }
     })
   }
 
   function goToNextMonth() {
-    setViewMonth((month) => {
-      if (month === 11) {
-        setViewYear((year) => year + 1)
-        return 0
-      }
-      return month + 1
+    setViewMonth(({ year, month }) => {
+      if (month === 11) return { year: year + 1, month: 0 }
+      return { year, month: month + 1 }
     })
   }
 
   const canGoPrev =
-    viewYear > today.getFullYear() || (viewYear === today.getFullYear() && viewMonth > today.getMonth())
+    viewMonth.year > today.getFullYear() ||
+    (viewMonth.year === today.getFullYear() && viewMonth.month > today.getMonth())
 
   return (
     <div className="relative mt-2" ref={containerRef}>
@@ -149,7 +132,7 @@ export function DateAvailabilityPicker({
               &larr;
             </button>
             <p className="text-xs uppercase tracking-widest text-neutral-200">
-              {monthNames[viewMonth]} {viewYear}
+              {monthNames[viewMonth.month]} {viewMonth.year}
             </p>
             <button
               type="button"
@@ -170,47 +153,30 @@ export function DateAvailabilityPicker({
           <div className="mt-1 grid grid-cols-7 gap-1">
             {cells.map((cell, index) => {
               if (!cell) return <span key={`blank-${index}`} />
-              const cellDate = new Date(viewYear, viewMonth, cell.day)
+              const cellDate = new Date(viewMonth.year, viewMonth.month, cell.day)
               const isPast = cellDate.getTime() < today.getTime()
-              const isBusy = busyDates.has(cell.key)
               const isSelected = selected === cell.key
-              const disabled = isPast || isBusy
 
               return (
                 <button
                   key={cell.key}
                   type="button"
-                  disabled={disabled}
+                  disabled={isPast}
                   onClick={() => {
                     setSelected(cell.key)
                     setOpen(false)
                   }}
-                  title={isBusy ? labels.unavailable : undefined}
                   className={[
                     'relative flex h-9 w-full items-center justify-center text-xs transition-colors',
-                    isBusy
-                      ? 'cursor-not-allowed text-neutral-600'
-                      : isPast
-                        ? 'cursor-not-allowed text-neutral-700'
-                        : 'text-neutral-300 hover:border hover:border-neutral-600',
+                    isPast ? 'cursor-not-allowed text-neutral-700' : 'text-neutral-300 hover:border hover:border-neutral-600',
                     isSelected ? 'border border-accent text-accent' : '',
                   ].join(' ')}
                 >
                   {cell.day}
-                  {isBusy && (
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 flex items-center justify-center text-2xl font-black text-white"
-                    >
-                      ✕
-                    </span>
-                  )}
                 </button>
               )
             })}
           </div>
-
-          {loading && <p className="mt-3 text-[10px] uppercase tracking-widest text-neutral-600">{labels.loading}</p>}
 
           <div className="mt-3 flex justify-end">
             <button
@@ -222,10 +188,6 @@ export function DateAvailabilityPicker({
             </button>
           </div>
         </div>
-      )}
-
-      {invalid && !loading && !open && (
-        <p className="mt-2 text-[10px] uppercase tracking-widest text-neutral-500">{labels.unavailable}</p>
       )}
     </div>
   )
