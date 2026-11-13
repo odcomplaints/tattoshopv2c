@@ -15,7 +15,7 @@ export function AboutPage() {
           type="button"
           onClick={toggleLanguage}
           aria-label={language === 'en' ? 'Auf Deutsch umschalten' : 'Switch to English'}
-          className="lang-toggle mr-[70px] flex h-9 w-9 items-center justify-center transition-colors sm:mr-[86px] lg:mr-[116px]"
+          className="lang-toggle mr-0 flex h-9 w-9 items-center justify-center transition-colors lg:mr-[116px]"
         >
           <GlobeIcon />
         </button>

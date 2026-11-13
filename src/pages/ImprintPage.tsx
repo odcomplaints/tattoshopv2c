@@ -15,7 +15,7 @@ export function ImprintPage() {
           type="button"
           onClick={toggleLanguage}
           aria-label={language === 'en' ? 'Auf Deutsch umschalten' : 'Switch to English'}
-          className="lang-toggle mr-[70px] flex h-9 w-9 items-center justify-center transition-colors sm:mr-[86px] lg:mr-[116px]"
+          className="lang-toggle mr-0 flex h-9 w-9 items-center justify-center transition-colors lg:mr-[116px]"
         >
           <GlobeIcon />
         </button>
@@ -24,6 +24,7 @@ export function ImprintPage() {
       <article className="max-w-2xl text-left">
         <p className="text-xs uppercase tracking-widest text-neutral-300">{t.legal.eyebrow}</p>
         <h1 className="mt-3 text-3xl font-medium uppercase tracking-widest text-neutral-100">{t.imprint.title}</h1>
+        <p className="mt-4 text-xs leading-6 text-neutral-500">{t.imprint.privateInfoHint}</p>
         <div className="mt-8 space-y-7 text-sm leading-7 text-neutral-400">
           {t.imprint.sections.map((section) => (
             <section key={section.heading}>

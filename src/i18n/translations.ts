@@ -22,6 +22,7 @@ type TranslationShape = {
     startInquiry: string
     portfolio: string
     browseFlashes: string
+    visitShop: string
     studio: {
       eyebrow: string
       title: string
@@ -113,6 +114,7 @@ type TranslationShape = {
   }
   imprint: {
     title: string
+    privateInfoHint: string
     sections: { heading: string; body: string }[]
     closing: string
   }
@@ -151,9 +153,10 @@ export const translations: Record<Language, TranslationShape> = {
       startInquiry: 'Start an inquiry',
       portfolio: 'Portfolio',
       browseFlashes: 'BROWSE FLASHES',
+      visitShop: 'Visit shop',
       studio: {
         eyebrow: 'Studio',
-        title: 'Der Körper steht an erster Stelle',
+        title: 'The body comes first',
         paragraphs: [
           'I work with the body, never against it. Lines follow tension, forms respond to movement and every motif is made for its placement.',
           'Each session is a shared process: we establish direction and atmosphere before the final drawing is developed with precision for you.',
@@ -283,6 +286,7 @@ export const translations: Record<Language, TranslationShape> = {
     },
     imprint: {
       title: 'Legal notice',
+      privateInfoHint: 'Private information is blurred. Hover over it on a computer or tap/click it on a touch device to reveal it.',
       sections: [
         { heading: 'Contact', body: 'Email: od.complaints@gmail.com' },
         { heading: 'VAT identification number', body: 'VAT ID pursuant to Section 27a of the German VAT Act (UStG): DE464396864.' },
@@ -344,9 +348,10 @@ export const translations: Record<Language, TranslationShape> = {
       startInquiry: 'Anfrage starten',
       portfolio: 'Portfolio',
       browseFlashes: 'FLASH-MOTIVE ANSEHEN',
+      visitShop: 'Shop besuchen',
       studio: {
         eyebrow: 'Studio',
-        title: 'Der Körper steht an erster Stelle',
+        title: 'The body comes first',
         paragraphs: [
           'Ich arbeite mit dem Körper, niemals gegen ihn. Linien folgen der Spannung, Formen reagieren auf Bewegung und jedes Motiv ist auf seine Platzierung abgestimmt.',
           'Jede Sitzung ist ein gemeinsamer Prozess: Wir stimmen Richtung und Atmosphäre ab, bevor die finale Zeichnung präzise für dich ausgearbeitet wird.',
@@ -476,6 +481,7 @@ export const translations: Record<Language, TranslationShape> = {
     },
     imprint: {
       title: 'Impressum',
+      privateInfoHint: 'Private Angaben sind verschwommen. Am Computer mit der Maus darüberfahren, auf einem Touchgerät antippen oder anklicken, um sie sichtbar zu machen.',
       sections: [
         { heading: 'Kontakt', body: 'E-Mail: od.complaints@gmail.com' },
         { heading: 'Umsatzsteuer-Identifikationsnummer', body: 'USt-IdNr. gemäß § 27a Umsatzsteuergesetz: DE464396864.' },

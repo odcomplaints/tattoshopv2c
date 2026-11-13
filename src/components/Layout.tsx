@@ -307,6 +307,11 @@ export function Layout({
             </>
           )}
         </ul>
+        {headerExtra && (
+          <div className="mt-auto flex justify-center border-t border-neutral-800 px-5 py-5">
+            {headerExtra}
+          </div>
+        )}
       </nav>
       <main className={hideChrome ? 'flex-1' : 'mx-auto w-full max-w-6xl flex-1 px-5 py-12 text-center sm:px-8 sm:py-20'}>{children}</main>
       {!hideChrome && (

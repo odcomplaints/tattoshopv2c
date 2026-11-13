@@ -5,6 +5,9 @@ import { GlobeIcon } from '../components/icons'
 import SpecularButton from '../components/SpecularButton'
 import { useLanguage } from '../context/LanguageContext'
 import { sliderImages } from '../data/slider'
+import { shopItems } from '../data/shop'
+
+const shopMarqueeItems = shopItems.filter((item) => item.listed !== false)
 
 const accordionItems = sliderImages.map((item) => ({
   image: item.image,
@@ -26,7 +29,7 @@ export function HomePage() {
           type="button"
           onClick={toggleLanguage}
           aria-label={language === 'en' ? 'Auf Deutsch umschalten' : 'Switch to English'}
-          className="lang-toggle mr-[70px] flex h-9 w-9 items-center justify-center transition-colors sm:mr-[86px] lg:mr-[116px]"
+          className="lang-toggle mr-0 flex h-9 w-9 items-center justify-center transition-colors lg:mr-[116px]"
         >
           <GlobeIcon />
         </button>
@@ -64,7 +67,7 @@ export function HomePage() {
             {t.home.bookSession}
           </SpecularButton>
         </div>
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-3 flex w-full justify-center">
           <SpecularButton
             size="sm"
             radius={0}
@@ -85,6 +88,45 @@ export function HomePage() {
             onClick={() => navigate('/styles')}
           >
             {t.home.browseFlashes}
+          </SpecularButton>
+        </div>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+          <SpecularButton
+            size="sm"
+            radius={0}
+            tint="#ffffff"
+            tintOpacity={0}
+            blur={0}
+            textColor="#f5f5f5"
+            lineColor="#ffffff"
+            baseColor="#525252"
+            intensity={1}
+            shineSize={10}
+            shineFade={40}
+            thickness={1}
+            speed={0.35}
+            followMouse
+            proximity={250}
+            autoAnimate={false}
+            className="shop-marquee w-full max-w-[18rem]"
+            onClick={() => navigate('/shop')}
+          >
+            <span className="shop-marquee__items" aria-hidden="true">
+              <span className="shop-marquee__track">
+                {[0, 1].flatMap((copy) =>
+                  shopMarqueeItems.map((item) => (
+                    <img
+                      key={`${copy}-${item.id}`}
+                      src={item.image}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )),
+                )}
+              </span>
+            </span>
+            <span className="shop-marquee__label">{t.home.visitShop}</span>
           </SpecularButton>
         </div>
       </section>
