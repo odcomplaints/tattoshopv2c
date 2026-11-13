@@ -82,7 +82,6 @@ body::before {
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    max-width: 18rem;
   }
 
   #root .shop-marquee .specular-button__label {
@@ -122,6 +121,7 @@ body::before {
     height: 100%;
     aspect-ratio: 1;
     flex: none;
+    margin-inline: 0.75rem;
     object-fit: contain;
     transform: scale(2.1);
   }

@@ -44,7 +44,7 @@ export function HomePage() {
           {t.home.tagline}
         </p>
         <p className="mt-6 max-w-xl text-sm leading-7 text-neutral-400">{t.home.description}</p>
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-9 flex w-fit flex-col items-center">
           <SpecularButton
             size="lg"
             radius={0}
@@ -66,68 +66,69 @@ export function HomePage() {
           >
             {t.home.bookSession}
           </SpecularButton>
-        </div>
-        <div className="mt-3 flex w-full justify-center">
-          <SpecularButton
-            size="sm"
-            radius={0}
-            tint="#ffffff"
-            tintOpacity={0}
-            blur={0}
-            textColor="#f5f5f5"
-            lineColor="#ffffff"
-            baseColor="#525252"
-            intensity={1}
-            shineSize={10}
-            shineFade={40}
-            thickness={1}
-            speed={0.35}
-            followMouse
-            proximity={250}
-            autoAnimate={false}
-            onClick={() => navigate('/styles')}
-          >
-            {t.home.browseFlashes}
-          </SpecularButton>
-        </div>
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
-          <SpecularButton
-            size="sm"
-            radius={0}
-            tint="#ffffff"
-            tintOpacity={0}
-            blur={0}
-            textColor="#f5f5f5"
-            lineColor="#ffffff"
-            baseColor="#525252"
-            intensity={1}
-            shineSize={10}
-            shineFade={40}
-            thickness={1}
-            speed={0.35}
-            followMouse
-            proximity={250}
-            autoAnimate={false}
-            className="shop-marquee w-full max-w-[18rem]"
-            onClick={() => navigate('/shop')}
-          >
-            <span className="shop-marquee__items" aria-hidden="true">
-              <span className="shop-marquee__track">
-                {[0, 1].flatMap((copy) =>
-                  shopMarqueeItems.map((item) => (
-                    <img
-                      key={`${copy}-${item.id}`}
-                      src={item.image}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  )),
-                )}
+          <div className="mt-3 w-[85%]">
+            <SpecularButton
+              size="sm"
+              radius={0}
+              tint="#ffffff"
+              tintOpacity={0}
+              blur={0}
+              textColor="#f5f5f5"
+              lineColor="#ffffff"
+              baseColor="#525252"
+              intensity={1}
+              shineSize={10}
+              shineFade={40}
+              thickness={1}
+              speed={0.35}
+              followMouse
+              proximity={250}
+              autoAnimate={false}
+              className="w-full"
+              onClick={() => navigate('/styles')}
+            >
+              {t.home.browseFlashes}
+            </SpecularButton>
+          </div>
+          <div className="mt-3 w-[70%]">
+            <SpecularButton
+              size="sm"
+              radius={0}
+              tint="#ffffff"
+              tintOpacity={0}
+              blur={0}
+              textColor="#f5f5f5"
+              lineColor="#ffffff"
+              baseColor="#525252"
+              intensity={1}
+              shineSize={10}
+              shineFade={40}
+              thickness={1}
+              speed={0.35}
+              followMouse
+              proximity={250}
+              autoAnimate={false}
+              className="shop-marquee w-full"
+              onClick={() => navigate('/shop')}
+            >
+              <span className="shop-marquee__items" aria-hidden="true">
+                <span className="shop-marquee__track">
+                  {[0, 1].flatMap((copy) =>
+                    shopMarqueeItems.map((item) => (
+                      <img
+                        key={`${copy}-${item.id}`}
+                        src={item.image}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )),
+                  )}
+                </span>
               </span>
-            </span>
-            <span className="shop-marquee__label">{t.home.visitShop}</span>
-          </SpecularButton>
+              <span className="shop-marquee__label">{t.home.visitShop}</span>
+            </SpecularButton>
+          </div>
         </div>
       </section>
       <section className="pt-5 text-center sm:pt-8">
