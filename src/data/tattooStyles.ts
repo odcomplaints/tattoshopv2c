@@ -8,6 +8,7 @@
 export type MoodboardImage = { src: string; alt?: string }
 
 export const moodboardImages: MoodboardImage[] = [
+  { src: '/flashes/flash-29.png', alt: 'Flash 29' },
   { src: '/flashes/tribal__01.png', alt: 'Flash 01' },
   { src: '/flashes/tribal__02.png', alt: 'Flash 02' },
   { src: '/flashes/tribal__03.png', alt: 'Flash 03' },
@@ -26,11 +27,9 @@ export const moodboardImages: MoodboardImage[] = [
   { src: '/flashes/flash-26.png', alt: 'Flash 26' },
   { src: '/flashes/flash-27.png', alt: 'Flash 27' },
   { src: '/flashes/flash-28.png', alt: 'Flash 28' },
-  { src: '/flashes/flash-29.png', alt: 'Flash 29' },
   { src: '/flashes/flash-30.png', alt: 'Flash 30' },
   { src: '/flashes/flash-31.png', alt: 'Flash 31' },
   { src: '/flashes/flash-32.png', alt: 'Flash 32' },
   { src: '/flashes/flash-33.png', alt: 'Flash 33' },
 ]
-
 

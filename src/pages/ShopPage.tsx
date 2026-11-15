@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { HeartIcon } from '../components/icons'
@@ -76,6 +76,8 @@ export function ShopPage() {
   const filterRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const productsRef = useRef<HTMLElement>(null)
+  const scrollToProducts = useRef(false)
   const [searchParams, setSearchParams] = useSearchParams()
   const activeCategory = CATEGORIES.find((c) => c.id === searchParams.get('category')) ?? CATEGORIES[0]
 
@@ -116,16 +118,24 @@ export function ShopPage() {
     return searchedItems.slice(start, start + ITEMS_PER_PAGE)
   }, [searchedItems, currentPage])
 
-  function goToPage(page: number) {
+  function goToPage(page: number, scrollToItems = false) {
     const clamped = Math.min(Math.max(page, 1), totalPages)
+    if (scrollToItems && clamped === currentPage) return
+    scrollToProducts.current = scrollToItems
     setSearchParams((params) => {
       const next = new URLSearchParams(params)
       if (clamped <= 1) next.delete('page')
       else next.set('page', String(clamped))
       return next
     })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (!scrollToItems) window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  useLayoutEffect(() => {
+    if (!scrollToProducts.current) return
+    scrollToProducts.current = false
+    productsRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' })
+  }, [currentPage])
 
   useEffect(() => {
     if (pageParam > totalPages) {
@@ -203,7 +213,7 @@ export function ShopPage() {
         </p>
       </section>
 
-      <section id="products" className="scroll-mt-4 pt-6 text-left sm:pt-8" aria-label="Products">
+      <section ref={productsRef} id="products" className="scroll-mt-4 pt-6 text-left sm:pt-8" aria-label="Products">
         <div className="mb-1.5 flex items-center justify-end gap-2 sm:mb-2">
           <div ref={searchRef} className="relative flex items-center">
             {searchOpen ? (
@@ -341,7 +351,7 @@ export function ShopPage() {
           <nav aria-label="Seitennavigation" className="mt-12 flex items-center justify-center gap-2 sm:mt-16">
             <button
               type="button"
-              onClick={() => goToPage(currentPage - 1)}
+              onClick={() => goToPage(currentPage - 1, true)}
               disabled={currentPage <= 1}
               className="border border-neutral-800 px-3 py-2 text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:border-neutral-600 hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-30"
               aria-label="Vorherige Seite"
@@ -352,7 +362,7 @@ export function ShopPage() {
               <button
                 key={page}
                 type="button"
-                onClick={() => goToPage(page)}
+                onClick={() => goToPage(page, true)}
                 aria-current={page === currentPage ? 'page' : undefined}
                 className={`min-w-[2.5rem] border px-3 py-2 text-xs uppercase tracking-widest transition-colors ${
                   page === currentPage
@@ -365,7 +375,7 @@ export function ShopPage() {
             ))}
             <button
               type="button"
-              onClick={() => goToPage(currentPage + 1)}
+              onClick={() => goToPage(currentPage + 1, true)}
               disabled={currentPage >= totalPages}
               className="border border-neutral-800 px-3 py-2 text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:border-neutral-600 hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-30"
               aria-label="Nächste Seite"

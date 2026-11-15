@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import AccordionGallery from '../components/AccordionGallery'
@@ -8,6 +9,10 @@ import { sliderImages } from '../data/slider'
 import { shopItems } from '../data/shop'
 
 const shopMarqueeItems = shopItems.filter((item) => item.listed !== false)
+const shopMarqueeGroups = Array.from(
+  { length: Math.ceil(shopMarqueeItems.length / 10) },
+  (_, index) => shopMarqueeItems.slice(index * 10, (index + 1) * 10),
+)
 
 const accordionItems = sliderImages.map((item) => ({
   image: item.image,
@@ -21,6 +26,23 @@ const accordionItems = sliderImages.map((item) => ({
 export function HomePage() {
   const { language, toggleLanguage, t } = useLanguage()
   const navigate = useNavigate()
+  const shopMarqueeRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const track = shopMarqueeRef.current
+    if (!track) return
+
+    const updateDistance = () => {
+      const groups = Array.from(track.children).slice(0, shopMarqueeGroups.length)
+      const distance = groups.reduce((width, group) => width + group.getBoundingClientRect().width, 0)
+      track.style.setProperty('--shop-marquee-distance', `${distance}px`)
+    }
+
+    const observer = new ResizeObserver(updateDistance)
+    observer.observe(track)
+    updateDistance()
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <Layout
@@ -112,16 +134,20 @@ export function HomePage() {
               onClick={() => navigate('/shop')}
             >
               <span className="shop-marquee__items" aria-hidden="true">
-                <span className="shop-marquee__track">
+                <span ref={shopMarqueeRef} className="shop-marquee__track">
                   {[0, 1].flatMap((copy) =>
-                    shopMarqueeItems.map((item) => (
-                      <img
-                        key={`${copy}-${item.id}`}
-                        src={item.image}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                      />
+                    shopMarqueeGroups.map((group, index) => (
+                      <span className="shop-marquee__group" key={`${copy}-${index}`}>
+                        {group.map((item) => (
+                          <img
+                            key={item.id}
+                            src={item.image}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        ))}
+                      </span>
                     )),
                   )}
                 </span>
