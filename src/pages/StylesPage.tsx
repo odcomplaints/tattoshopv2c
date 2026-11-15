@@ -4,6 +4,7 @@ import { Layout } from '../components/Layout'
 import InfiniteMenu from '../components/InfiniteMenu'
 import type { InfiniteMenuItem } from '../components/InfiniteMenu'
 import { moodboardImages } from '../data/tattooStyles'
+import { flashSettings } from '../data/flashSettings'
 
 const INTRO_TEXT = 'A growing collection of designs, flashes and references.'
 const TYPE_SPEED_MS = 35
@@ -21,9 +22,12 @@ export function StylesPage() {
   const [selectedItem, setSelectedItem] = useState<InfiniteMenuItem | null>(null)
 
   const menuItems: InfiniteMenuItem[] = useMemo(
-    () => moodboardImages.map((img) => ({ image: img.src, title: img.alt ?? '' })),
+    () => moodboardImages
+      .filter((img) => !flashSettings.hidden.includes(img.src))
+      .map((img) => ({ image: img.src, title: img.alt ?? '' })),
     [],
   )
+  const headIndex = flashSettings.head ? menuItems.findIndex((item) => item.image === flashSettings.head) : -1
 
   useEffect(() => {
     setShowIntro(true)
@@ -72,7 +76,7 @@ export function StylesPage() {
       hideChrome
     >
       <div className="relative h-[100dvh] w-screen overflow-hidden bg-neutral-950">
-        {viewMode === 'spin' && (
+        {viewMode === 'spin' && menuItems.length > 0 && (
           <div
             className={`h-full w-full [filter:invert(1)_brightness(1.1)] transition-opacity duration-[1400ms] ease-out ${menuVisible ? 'opacity-100' : 'opacity-0'}`}
           >
@@ -80,12 +84,19 @@ export function StylesPage() {
               items={menuItems}
               backgroundColor="#ffffff"
               subdivisions={2}
+              initialItemIndex={headIndex >= 0 ? headIndex : undefined}
               scale={1.2}
               showLabels={false}
               actionLabel="HMU!"
               onItemOpen={(item) => setSelectedItem(item)}
             />
           </div>
+        )}
+
+        {menuItems.length === 0 && (
+          <p className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-neutral-300">
+            Zurzeit sind keine Flash-Motive verfügbar.
+          </p>
         )}
 
         {viewMode === 'grid' && (

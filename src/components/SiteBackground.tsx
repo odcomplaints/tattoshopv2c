@@ -69,9 +69,9 @@ export default function SiteBackground() {
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const location = useLocation()
-  // The eye clashes visually with the full-bleed style moodboard galleries —
-  // hide it entirely on those pages.
-  const hidden = location.pathname.startsWith('/styles')
+  // Keep the full-bleed moodboard and admin area free of the WebGL background.
+  const isAdmin = /^\/admin\/?$/i.test(location.pathname)
+  const hidden = location.pathname.startsWith('/styles') || isAdmin
 
   // Persist tuning across reloads.
   useEffect(() => {
@@ -85,6 +85,7 @@ export default function SiteBackground() {
   // Toggle the debug panel with "H" (ignored while typing in a field).
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      if (isAdmin) return
       if (e.key.toLowerCase() !== 'h' || e.metaKey || e.ctrlKey || e.altKey) return
       const t = e.target as HTMLElement | null
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return
@@ -92,7 +93,7 @@ export default function SiteBackground() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [isAdmin])
 
   // Scroll-driven zoom on the eye: grows steadily from top to bottom of the
   // page, reaching a large, clearly visible size near the very bottom. Reads
@@ -189,7 +190,7 @@ export default function SiteBackground() {
       </div>
       )}
 
-      {open &&
+      {open && !isAdmin &&
         createPortal(
           <DebugPanel
             config={config}

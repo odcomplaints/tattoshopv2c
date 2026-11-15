@@ -1,5 +1,15 @@
 # tattoshopv2c
 
+## Flash-Motive verwalten
+
+Im Admin-Panel unter „Browse Flashes verwalten“ lassen sich Motive ein- und ausblenden
+und ein Startmotiv für die Spin-Ansicht auswählen. Der Entwurf wird nur im lokalen
+Browser gespeichert und ist noch nicht öffentlich sichtbar. Zur Veröffentlichung
+„Flash-Konfiguration kopieren“ auswählen, den Inhalt von `src/data/flashSettings.ts`
+vollständig ersetzen und die Änderung committen und deployen. Mindestens ein Motiv
+muss sichtbar bleiben. Mit „Flash-Entwurf zurücksetzen“ wird der Stand des aktuell
+geladenen Deployments wiederhergestellt.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

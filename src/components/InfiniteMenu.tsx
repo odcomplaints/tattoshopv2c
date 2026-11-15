@@ -579,6 +579,7 @@ class InfiniteGridMenu {
     onInit?: ((sk: InfiniteGridMenu) => void) | null,
     scale = 1.0,
     subdivisions = 1,
+    initialItemIndex?: number,
   ) {
     this.canvas = canvas
     this.items = items || []
@@ -589,7 +590,7 @@ class InfiniteGridMenu {
     // More subdivisions => more, smaller discs so they still tile the sphere nicely.
     this.discScale = 0.25 / Math.max(1, subdivisions)
     this.camera.position[2] = 3 * scale
-    this.#init(onInit)
+    this.#init(onInit, initialItemIndex)
   }
 
   resize() {
@@ -615,7 +616,7 @@ class InfiniteGridMenu {
     requestAnimationFrame((t) => this.run(t))
   }
 
-  #init(onInit?: ((sk: InfiniteGridMenu) => void) | null) {
+  #init(onInit?: ((sk: InfiniteGridMenu) => void) | null, initialItemIndex?: number) {
     this.gl = this.canvas.getContext('webgl2', { antialias: true, alpha: true }) as WebGL2RenderingContext
     const gl = this.gl
     if (!gl) {
@@ -674,6 +675,16 @@ class InfiniteGridMenu {
     this.#initTexture()
 
     this.control = new ArcballControl(this.canvas, (deltaTime) => this.#onControlUpdate(deltaTime))
+    if (initialItemIndex !== undefined && initialItemIndex >= 0 && initialItemIndex < this.items.length) {
+      const position = this.instancePositions[initialItemIndex]
+      if (position) {
+        quat.rotationTo(
+          this.control.orientation,
+          vec3.normalize(vec3.create(), position),
+          this.control.snapDirection,
+        )
+      }
+    }
 
     this.#updateCameraMatrix()
     this.#updateProjectionMatrix(gl)
@@ -911,6 +922,8 @@ type InfiniteMenuProps = {
   scale?: number
   /** Icosahedron subdivision level — higher = more, smaller faces (more "globe"-like). */
   subdivisions?: number
+  /** Item to show in the center when the menu first opens. */
+  initialItemIndex?: number
   backgroundColor?: string
   showLabels?: boolean
   /** Text shown inside the action button. Defaults to an arrow icon (↗). */
@@ -926,6 +939,7 @@ export default function InfiniteMenu({
   items = [],
   scale = 1.0,
   subdivisions = 1,
+  initialItemIndex,
   backgroundColor = '#000000',
   showLabels = true,
   actionLabel,
@@ -954,6 +968,7 @@ export default function InfiniteMenu({
         (sk) => sk.run(),
         scale,
         subdivisions,
+        initialItemIndex,
       )
     }
 
@@ -969,7 +984,7 @@ export default function InfiniteMenu({
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [items, scale, subdivisions])
+  }, [items, scale, subdivisions, initialItemIndex])
 
   const handleButtonClick = () => {
     if (!activeItem) return

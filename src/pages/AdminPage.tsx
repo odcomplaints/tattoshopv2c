@@ -4,6 +4,7 @@ import { Layout } from '../components/Layout'
 import { shopItems as initialShopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
 import { FEATURED_ORDER } from '../data/featuredOrder'
+import { FlashAdminSection } from '../components/FlashAdminSection'
 
 // ─────────────────────────────────────────────────────────────────────────
 // Local-only admin tool.
@@ -939,6 +940,7 @@ export function AdminPage() {
           )}
         </div>
 
+        <FlashAdminSection />
         <ShippingConfirmationSection />
         <SortSection items={items} />
       </div>
