@@ -55,15 +55,15 @@ export function AboutPage() {
           Consumed by desire. Unmoved by reality.
         </h2>
         <div className="mt-5 space-y-5 text-sm leading-7 text-neutral-400">
-          <p>OD Complaints is a visual and physical projection of extreme desire — a sanctuary for anyone so consumed by an idea, a goal, a passion or a person that the line between longing and reality begins to blur.</p>
+          <p>OD Complaints is a visual and physical projection of extreme desire.</p>
           <p>We take the raw psychology of obsession and turn it into wearable apparel, visual art and permanent marks.</p>
         </div>
 
         <div className="mt-10 grid gap-8 sm:grid-cols-2">
           <div>
             <span className="text-xs uppercase tracking-widest text-accent">Obsession</span>
-            <h3 className="mt-3 text-sm font-medium uppercase tracking-widest text-neutral-100">The possession. The inward pull.</h3>
-            <p className="mt-4 text-sm leading-7 text-neutral-400">The raw sensation of being completely occupied by a passion, an idea, or a person. It is what stays in your head when the world quietens down, lingering in the dark and refusing to be ignored. You don't just experience a feeling—you live inside it.</p>
+            <h3 className="mt-3 text-sm font-medium uppercase tracking-widest text-neutral-100">The inward pull.</h3>
+            <p className="mt-4 text-sm leading-7 text-neutral-400">The raw sensation of being completely occupied by a person, a passion, or an addiction. It is what stays in your head when the world quietens down, lingering in the dark and refusing to be ignored. You don't just experience a feeling—you live inside it.</p>
           </div>
           <div>
             <span className="text-xs uppercase tracking-widest text-accent">Delusion</span>
@@ -73,8 +73,9 @@ export function AboutPage() {
         </div>
 
         <div className="mt-10">
-          <p className="text-xs uppercase tracking-widest text-accent">Complaints</p>
-          <p className="mt-4 text-sm leading-7 text-neutral-400">When someone is fully consumed by longing and refuses the limits of reality, the world responds with resistance — the side-eyes, the unsolicited advice, the friction of an adjusted, comfortable majority. "You're overthinking this." "It's not realistic." "Let it go."</p>
+          <span className="text-xs uppercase tracking-widest text-accent">Complaints</span>
+          <p className="mt-4 text-sm leading-7 text-neutral-400">When someone is fully consumed by longing and refuses the limits of reality, the world responds with resistance — the side-eyes, the unsolicited advice, the friction of an adjusted, comfortable majority.</p>
+          <p className="mt-4 text-sm leading-7 text-neutral-400">"You're overthinking this."<br />"It's not realistic."<br />"Let it go."</p>
           <p className="mt-4 text-sm leading-7 text-neutral-400">We treat these objections as badges of honor. Every garment, print and custom tattoo is physical evidence — a shield of heavy fabric and sharp ink proving you feel no shame for your intensity.</p>
         </div>
       </section>
