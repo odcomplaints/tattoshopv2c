@@ -28,6 +28,7 @@ const AccordionGallery = ({
   tilt = 8,
   stagger = 0.06,
   trigger = 'hover',
+  expandOnClick = false,
   showLabels = true,
   grayscale = true,
   className = ''
@@ -44,6 +45,8 @@ const AccordionGallery = ({
   const vertical = orientation === 'vertical';
   const count = items.length;
   const [active, setActive] = useState(Math.min(Math.max(defaultIndex, 0), count - 1));
+  const [expanded, setExpanded] = useState(false);
+  const [selectedForExpansion, setSelectedForExpansion] = useState(null);
 
   const prefersReduced =
     typeof window !== 'undefined' && window.matchMedia
@@ -155,10 +158,23 @@ const AccordionGallery = ({
   );
 
   const handleEnter = i => {
-    if (trigger === 'hover') setActive(i);
+    if (trigger === 'hover' && !expanded) setActive(i);
   };
 
   const handleClick = (i, e) => {
+    if (expandOnClick) {
+      e.preventDefault();
+      setActive(i);
+      if (expanded) {
+        setExpanded(false);
+        setSelectedForExpansion(null);
+      } else if (selectedForExpansion === i) {
+        setExpanded(true);
+      } else {
+        setSelectedForExpansion(i);
+      }
+      return;
+    }
     if (i !== active) {
       e.preventDefault();
       setActive(i);
@@ -166,19 +182,37 @@ const AccordionGallery = ({
   };
 
   const handleKeyDown = (i, e) => {
+    if (expanded) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setExpanded(false);
+        setSelectedForExpansion(null);
+      }
+      return;
+    }
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
-      setActive((i + 1) % count);
+      const next = (i + 1) % count;
+      setActive(next);
+      if (expandOnClick) {
+        setSelectedForExpansion(null);
+        panelRefs.current[next]?.focus();
+      }
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault();
-      setActive((i - 1 + count) % count);
+      const next = (i - 1 + count) % count;
+      setActive(next);
+      if (expandOnClick) {
+        setSelectedForExpansion(null);
+        panelRefs.current[next]?.focus();
+      }
     }
   };
 
   return (
     <div
       ref={rootRef}
-      className={`accordion-gallery${vertical ? ' accordion-gallery--vertical' : ''}${className ? ` ${className}` : ''}`}
+      className={`accordion-gallery${vertical ? ' accordion-gallery--vertical' : ''}${expanded ? ' accordion-gallery--expanded' : ''}${className ? ` ${className}` : ''}`}
       style={{
         '--ag-accent': accentColor,
         '--ag-overlay': overlayColor,
@@ -187,26 +221,28 @@ const AccordionGallery = ({
         '--ag-radius': `${radius}px`,
         height: vertical ? `${Math.round(height * 1.6)}px` : `${height}px`
       }}
-      role="list"
+      role={expandOnClick ? 'group' : 'list'}
       aria-label="Image accordion gallery"
     >
       {items.map((item, i) => {
         const isActive = i === active;
-        const Tag = item.link ? 'a' : 'div';
+        const Tag = expandOnClick ? 'button' : item.link ? 'a' : 'div';
         return (
           <Tag
             key={i}
             ref={el => (panelRefs.current[i] = el)}
             className={`ag-panel${isActive ? ' ag-panel--active' : ''}`}
             style={{ borderRadius: `${radius}px` }}
-            href={item.link || undefined}
+            href={!expandOnClick && item.link ? item.link : undefined}
+            type={expandOnClick ? 'button' : undefined}
             onClick={e => handleClick(i, e)}
             onMouseEnter={() => handleEnter(i)}
             onFocus={() => setActive(i)}
             onKeyDown={e => handleKeyDown(i, e)}
-            role="listitem"
+            role={expandOnClick ? undefined : 'listitem'}
             tabIndex={0}
-            aria-current={isActive ? 'true' : undefined}
+            aria-current={!expandOnClick && isActive ? 'true' : undefined}
+            aria-expanded={expandOnClick ? expanded && isActive : undefined}
             aria-label={item.label}
           >
             <span className="ag-panel__frame">

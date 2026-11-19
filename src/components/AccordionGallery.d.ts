@@ -27,6 +27,7 @@ export type AccordionGalleryProps = {
   tilt?: number
   stagger?: number
   trigger?: 'hover' | 'click'
+  expandOnClick?: boolean
   showLabels?: boolean
   grayscale?: boolean
   className?: string

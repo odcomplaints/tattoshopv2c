@@ -157,10 +157,10 @@ export function HomePage() {
           </div>
         </div>
       </section>
-      <section className="pt-5 text-center sm:pt-8">
+      <section className="pt-8 text-center sm:pt-12">
         <div className="mb-8 flex flex-col items-center justify-center gap-3">
           <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-100">Latest work</h2>
-          <Link className="text-xs uppercase tracking-widest text-neutral-300 transition-colors hover:text-accent" to="/work">View all work</Link>
+          <Link className="text-xs uppercase tracking-widest text-neutral-300 underline underline-offset-4 transition-colors hover:text-accent" to="/work">View all work</Link>
         </div>
         <div className="mx-auto max-w-5xl px-4">
           <AccordionGallery
@@ -174,6 +174,7 @@ export function HomePage() {
             radius={28}
             expandRatio={0.75}
             trigger="click"
+            expandOnClick
             showLabels={false}
             grayscale
           />
