@@ -39,6 +39,7 @@ export function Layout({
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuRevealStep, setMenuRevealStep] = useState(0)
   const [headerHidden, setHeaderHidden] = useState(false)
+  const [footerHidden, setFooterHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [logoMini, setLogoMini] = useState(false)
   const [scrollY, setScrollY] = useState(0)
@@ -60,11 +61,18 @@ export function Layout({
       setScrolled(y > 0)
       if (y <= 0) {
         setLogoMini(false)
+        setFooterHidden(false)
       } else if (lastY - y > 6) {
         setLogoMini(true)
+        setFooterHidden(false)
       }
       if (y < 80) setHeaderHidden(false)
       else if (Math.abs(y - lastY) > 6) setHeaderHidden(y > lastY)
+      
+      // Hide footer on scroll down, show on scroll up
+      if (Math.abs(y - lastY) > 6) {
+        setFooterHidden(y > lastY)
+      }
       lastY = y
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -95,7 +103,7 @@ export function Layout({
   }, [menuOpen, mobileMenuItemCount])
 
   return (
-    <div className="relative z-10 flex min-h-screen flex-col text-neutral-200">
+    <div className="relative z-10 flex min-h-screen flex-col overflow-hidden text-neutral-200">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -315,7 +323,7 @@ export function Layout({
       </nav>
       <main className={hideChrome ? 'flex-1' : 'mx-auto w-full max-w-6xl flex-1 px-5 py-12 text-center sm:px-8 sm:py-20'}>{children}</main>
       {!hideChrome && (
-      <footer className="border-t border-neutral-800 text-xs uppercase tracking-widest text-accent">
+      <footer className="border-t border-neutral-800 text-xs uppercase tracking-widest text-accent transition-transform duration-300 ease-out" style={{ transform: footerHidden ? 'translateY(100%)' : 'translateY(0)' }}>
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-4 px-5 py-6 text-center sm:px-8">
           <p>GD</p>
           <div className="flex justify-center gap-5">
