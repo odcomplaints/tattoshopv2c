@@ -112,7 +112,7 @@ export function HomePage() {
               {t.home.browseFlashes}
             </SpecularButton>
           </div>
-          <div className="mt-3 w-[80%]">
+          <div className="mt-3 w-[64%]">
             <SpecularButton
               size="sm"
               radius={0}
