@@ -177,6 +177,25 @@ export function ShopPage() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [searchOpen, query])
 
+  // Setup scroll reveal animation for all data-reveal elements
+  useEffect(() => {
+    const revealElements = document.querySelectorAll('[data-reveal]')
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-active')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    revealElements.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [visibleItems])
+
 
   return (
     <Layout title="Shop | OD COMPLAINTS" description="Limited prints and objects by OD COMPLAINTS, GD.">
@@ -310,7 +329,7 @@ export function ShopPage() {
             const favorite = isFavorite(item.id)
             const soldOut = item.availability === 'sold-out' || isSoldOut(item.id)
             return (
-              <div key={item.id} className="group relative">
+              <div key={item.id} className="group relative" data-reveal>
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img
                     src={item.image}
