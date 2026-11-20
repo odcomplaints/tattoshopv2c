@@ -17,6 +17,9 @@ export const config = { runtime: 'edge' }
 
 import { getCatalogEntry } from '../src/data/catalog.js'
 import { recordPurchases } from './_soldout.js'
+import { getShippingDetails, isPodLineItem, sendPodOrderEmail } from './_podOrder.js'
+import type { PaidLineItem } from './_podOrder.js'
+import { getPodProduct, isPrintOnDemand } from '../src/data/printOnDemand.js'
 
 const STRIPE_API_BASE = 'https://api.stripe.com'
 const STRIPE_API_VERSION = '2026-07-29.dahlia'
@@ -69,13 +72,7 @@ async function verifyStripeSignature(payload: string, header: string, secret: st
   return signatures.some((sig) => timingSafeEqual(sig, expected))
 }
 
-type LineItem = {
-  description?: string
-  quantity?: number
-  amount_total?: number
-  currency?: string
-  price?: { product?: { metadata?: { product_id?: string } } }
-}
+type LineItem = PaidLineItem
 
 async function fetchLineItems(sessionId: string, secretKey: string): Promise<LineItem[]> {
   const response = await fetch(
@@ -187,19 +184,246 @@ async function notifyEmail(apiKey: string, to: string, from: string, subject: st
   }
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+type BookingDetails = {
+  name: string
+  email: string
+  phone: string
+  date: string
+  bodyPart: string
+  size: string
+  motif: string
+  checkoutType: string
+}
+
+function formatDateDe(key: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key)
+  return match ? `${match[3]}.${match[2]}.${match[1]}` : key || '—'
+}
+
+function bookingDetailRows(b: BookingDetails, includeContact: boolean): string {
+  const row = (label: string, value: string) =>
+    `<tr><td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#7a7a7a;font-size:11px;letter-spacing:1px;text-transform:uppercase;">${label}</td><td style="padding:10px 0;border-bottom:1px solid #2a2a2a;color:#e5e5e5;font-size:13px;text-align:right;">${escapeHtml(value || '—')}</td></tr>`
+  return [
+    includeContact ? row('Name', b.name) : '',
+    includeContact ? row('E-Mail', b.email) : '',
+    includeContact ? row('Telefon', b.phone) : '',
+    row('Wunschtermin', formatDateDe(b.date)),
+    row('Körperstelle', b.bodyPart),
+    row('Größe', b.size),
+  ].join('')
+}
+
+// Booking emails (customer confirmation + studio notification) share one
+// branded layout. All customer-provided values are HTML-escaped.
+function renderBookingEmailHtml(options: {
+  eyebrow: string
+  heading: string
+  intro: string
+  booking: BookingDetails
+  includeContact: boolean
+  extraHtml: string
+}): string {
+  const { eyebrow, heading, intro, booking, includeContact, extraHtml } = options
+  const motif = booking.motif
+    ? `<div style="margin:20px 0;padding:16px;background-color:#1a1a1a;border-left:3px solid #FF3939;">
+                  <p style="margin:0 0 6px;color:#7a7a7a;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Motiv</p>
+                  <p style="margin:0;color:#d5d5d5;font-size:13px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(booking.motif)}</p>
+                </div>`
+    : ''
+  return `
+<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#0a0a0a;border-radius:2px;overflow:hidden;">
+            <tr>
+              <td style="padding:28px 32px;background-color:#000000;">
+                <img src="${LOGO_URL}" alt="OD COMPLAINTS" width="140" style="display:block;border:0;outline:none;max-width:140px;height:auto;" />
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:32px;">
+                <p style="margin:0 0 6px;color:#FF3939;font-size:11px;letter-spacing:2px;text-transform:uppercase;">${eyebrow}</p>
+                <h1 style="margin:0 0 16px;color:#f5f5f5;font-size:22px;letter-spacing:1px;text-transform:uppercase;font-weight:500;">${heading}</h1>
+                <p style="margin:0 0 24px;color:#b5b5b5;font-size:13px;line-height:1.6;">${intro}</p>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+                  ${bookingDetailRows(booking, includeContact)}
+                </table>
+
+                ${motif}
+
+                ${extraHtml}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:20px 32px;background-color:#000000;">
+                <p style="margin:0;color:#5a5a5a;font-size:10px;letter-spacing:1px;text-transform:uppercase;">OD COMPLAINTS · odcomplaints.com</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`
+}
+
+const CUSTOMER_NEXT_STEPS_HTML = `
+                <p style="margin:28px 0 12px;color:#f5f5f5;font-size:13px;font-weight:600;">Nächste Schritte</p>
+                <ol style="margin:0;color:#b5b5b5;font-size:13px;line-height:1.8;padding-left:20px;">
+                  <li>Wir melden uns innerhalb von 48h bei dir zur Bestätigung des Termins.</li>
+                  <li>Die Anzahlung wird mit dem Endpreis verrechnet.</li>
+                </ol>
+
+                <p style="margin:28px 0 6px;color:#7a7a7a;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Kontakt &amp; Fragen</p>
+                <p style="margin:0;color:#d5d5d5;font-size:13px;line-height:1.6;">
+                  <strong>E-Mail:</strong> od.complaints@gmail.com<br/>
+                  <strong>Telefon:</strong> +49 176 81072268<br/>
+                  <strong>Instagram:</strong> @od.complaints
+                </p>
+
+                <p style="margin:28px 0 0;color:#7a7a7a;font-size:12px;line-height:1.6;">Falls du Fragen hast oder deinen Termin ändern möchtest, schreib uns gerne eine E-Mail.</p>`
+
+async function handleBookingDepositPaid(session: Record<string, unknown>, resendKey: string | undefined): Promise<void> {
+  const sessionId = String(session.id ?? '')
+  const metadata = (session.metadata ?? {}) as Record<string, string>
+  const customerDetails = session.customer_details as { email?: string; name?: string } | undefined
+
+  const booking: BookingDetails = {
+    name: metadata.name || customerDetails?.name || '',
+    email: customerDetails?.email || metadata.email || '',
+    phone: metadata.phone || '',
+    date: metadata.date || '',
+    bodyPart: metadata.body_part || '',
+    size: metadata.size || '',
+    motif: metadata.motif || '',
+    checkoutType: metadata.checkout_type || 'full',
+  }
+
+  // Delayed payment methods (e.g. SEPA) complete the session before the money
+  // arrives; those are confirmed later via checkout.session.async_payment_succeeded.
+  if (session.payment_status !== 'paid') {
+    console.log(`[stripe] ${sessionId} — booking deposit not paid yet (${String(session.payment_status)}), waiting.`)
+    return
+  }
+
+  if (!resendKey) {
+    console.log(`[stripe] checkout.session.completed ${sessionId} — booking deposit, RESEND_API_KEY not set, skipping emails.`)
+    return
+  }
+
+  const deposit = formatMoney(session.amount_total as number | undefined, session.currency as string | undefined)
+  const from = process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL
+  const adminTo = process.env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
+  const dateDe = formatDateDe(booking.date)
+
+  const detailsText = [
+    `Wunschtermin: ${dateDe}`,
+    `Körperstelle: ${booking.bodyPart || '—'}`,
+    `Größe: ${booking.size || '—'}`,
+    `Motiv: ${booking.motif || '—'}`,
+  ].join('\n')
+
+  const tasks: Array<Promise<unknown>> = []
+
+  // Studio: the deposit for a request actually arrived.
+  tasks.push(
+    notifyEmail(
+      resendKey,
+      adminTo,
+      from,
+      `Anzahlung erhalten (${deposit}) — ${booking.name || booking.email} · ${dateDe}`,
+      [
+        `Anzahlung eingegangen: ${deposit}`,
+        `Session: ${sessionId}`,
+        `Name: ${booking.name || '—'}`,
+        `E-Mail: ${booking.email || '—'}`,
+        `Telefon: ${booking.phone || '—'}`,
+        detailsText,
+      ].join('\n'),
+      renderBookingEmailHtml({
+        eyebrow: 'Anzahlung eingegangen',
+        heading: deposit,
+        intro: `Die Anzahlung für folgende Anfrage wurde bezahlt (${booking.checkoutType === 'express' ? 'Express' : 'Formular'}) · Session ${escapeHtml(sessionId)}`,
+        booking,
+        includeContact: true,
+        extraHtml:
+          '<p style="margin:28px 0 0;color:#7a7a7a;font-size:12px;line-height:1.6;">Bitte melde dich innerhalb von 48h beim Kunden zur Terminbestätigung.</p>',
+      }),
+    ),
+  )
+
+  // Customer: confirmation of the reserved slot.
+  if (booking.email) {
+    tasks.push(
+      notifyEmail(
+        resendKey,
+        booking.email,
+        from,
+        'Dein Tattoo-Termin ist reserviert · OD COMPLAINTS',
+        [
+          `Danke${booking.name ? `, ${booking.name}` : ''}! Wir haben deine Anzahlung von ${deposit} erhalten.`,
+          ``,
+          detailsText,
+          ``,
+          `Wir melden uns innerhalb von 48h bei dir zur Bestätigung des Termins.`,
+          `Die Anzahlung wird mit dem Endpreis verrechnet.`,
+          ``,
+          `— OD COMPLAINTS`,
+        ].join('\n'),
+        renderBookingEmailHtml({
+          eyebrow: 'Buchungsbestätigung',
+          heading: 'Dein Termin ist reserviert',
+          intro: `Danke${booking.name ? `, ${escapeHtml(booking.name)}` : ''}! Wir haben deine Anzahlung von ${deposit} erhalten.`,
+          booking,
+          includeContact: false,
+          extraHtml: CUSTOMER_NEXT_STEPS_HTML,
+        }),
+      ),
+    )
+  }
+
+  const results = await Promise.allSettled(tasks)
+  for (const result of results) {
+    if (result.status === 'rejected') console.error(`[stripe] booking email failed: ${result.reason}`)
+  }
+  const sent = results.filter((r) => r.status === 'fulfilled').length
+  console.log(`[stripe] checkout.session.completed ${sessionId} — booking deposit, ${sent}/${results.length} emails sent.`)
+}
+
 async function handleCheckoutCompleted(session: Record<string, unknown>): Promise<void> {
   const sessionId = String(session.id ?? '')
   const customerDetails = session.customer_details as { email?: string; name?: string } | undefined
   const customerEmail = customerDetails?.email
   const amountTotal = session.amount_total as number | undefined
   const currency = session.currency as string | undefined
-  const shippingDetails = session.shipping_details as Record<string, unknown> | undefined
+  const shippingDetails = getShippingDetails(session) as Record<string, unknown> | undefined
 
   const resendKey = process.env.RESEND_API_KEY
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 
+  // Booking deposits are tagged via session metadata in api/checkout.ts.
+  const metadata = session.metadata as Record<string, string> | undefined
+  if (metadata?.type === 'booking-deposit') {
+    await handleBookingDepositPaid(session, resendKey)
+    return
+  }
+
   const lineItems = stripeSecretKey && sessionId ? await fetchLineItems(sessionId, stripeSecretKey) : []
 
+  // ========== SHOP ORDER CHECKOUT ==========
   // Auto-mark purchased items as sold-out once their stock is exhausted.
   // Runs independently of email delivery so it still happens even if Resend
   // isn't configured.
@@ -208,7 +432,8 @@ async function handleCheckoutCompleted(session: Record<string, unknown>): Promis
       const productId = item.price?.product?.metadata?.product_id
       const quantity = item.quantity ?? 1
       const entry = productId ? getCatalogEntry(productId) : undefined
-      if (!productId || !entry) return null
+      // POD items are printed to order — never count them against stock.
+      if (!productId || !entry || isPrintOnDemand(productId)) return null
       return { id: productId, quantity, initialStock: entry.stock }
     })
     .filter((entry): entry is { id: string; quantity: number; initialStock: number } => entry !== null)
@@ -218,17 +443,23 @@ async function handleCheckoutCompleted(session: Record<string, unknown>): Promis
     })
   }
 
+  const hasPodItems = lineItems.some(isPodLineItem) || metadata?.contains_pod === 'true'
+
   if (!resendKey) {
-    console.log(`[stripe] checkout.session.completed ${sessionId} — RESEND_API_KEY not set, skipping emails.`)
+    const log = hasPodItems ? console.error : console.log
+    log(`[stripe] checkout.session.completed ${sessionId} — RESEND_API_KEY not set, skipping emails${hasPodItems ? ' (incl. POD production order!)' : ''}.`)
     return
   }
 
+  // Line item names come from the server catalog (+ a validated size), not from the customer.
+  const itemLabel = (item: LineItem) =>
+    `${item.quantity ?? 1}× ${item.description ?? 'Artikel'}${isPodLineItem(item) ? ' (Print on Demand)' : ''}`
   const itemLines = lineItems.length
-    ? lineItems.map((item) => `  • ${item.quantity ?? 1}× ${item.description ?? 'Artikel'} — ${formatMoney(item.amount_total, item.currency ?? currency)}`).join('\n')
+    ? lineItems.map((item) => `  • ${itemLabel(item)} — ${formatMoney(item.amount_total, item.currency ?? currency)}`).join('\n')
     : '  (Artikel konnten nicht geladen werden — siehe Stripe Dashboard)'
   const itemRows = lineItems.length
     ? lineItems.map((item) => ({
-        label: `${item.quantity ?? 1}× ${item.description ?? 'Artikel'}`,
+        label: itemLabel(item),
         amount: formatMoney(item.amount_total, item.currency ?? currency),
       }))
     : [{ label: 'Artikel konnten nicht geladen werden', amount: '—' }]
@@ -266,6 +497,29 @@ async function handleCheckoutCompleted(session: Record<string, unknown>): Promis
     notifyEmail(resendKey, adminTo, from, adminSubject, adminText, adminHtml),
   ]
 
+  // Print-on-Demand: separate, detailed production order — only once the
+  // money has actually arrived (delayed methods like SEPA are handled via
+  // checkout.session.async_payment_succeeded).
+  if (hasPodItems) {
+    if (session.payment_status === 'paid') {
+      tasks.push(sendPodOrderEmail({ session, lineItems, resendKey, from, to: podOrderRecipient() }))
+    } else {
+      console.log(`[stripe] ${sessionId} — POD order not paid yet (${String(session.payment_status)}), waiting for async payment.`)
+    }
+  }
+
+  const podTimes = [
+    ...new Set(
+      lineItems
+        .filter(isPodLineItem)
+        .map((item) => getPodProduct(item.price?.product?.metadata?.product_id ?? '')?.productionTime)
+        .filter(Boolean),
+    ),
+  ]
+  const podCustomerNote = hasPodItems
+    ? `Print-on-Demand-Artikel werden erst jetzt für dich gedruckt und anschließend versendet (ca. ${podTimes.join(' / ') || '5–10 Werktage'}). Du bekommst eine Versandbestätigung mit Tracking-Nummer.`
+    : ''
+
   if (customerEmail) {
     const customerSubject = 'Deine Bestellung bei OD COMPLAINTS'
     const customerText = [
@@ -279,7 +533,7 @@ async function handleCheckoutCompleted(session: Record<string, unknown>): Promis
       `Lieferadresse:`,
       shippingAddress,
       ``,
-      `Wir versenden deine Bestellung in Kürze und melden uns bei Fragen.`,
+      podCustomerNote || `Wir versenden deine Bestellung in Kürze und melden uns bei Fragen.`,
       ``,
       `— OD COMPLAINTS`,
     ].join('\n')
@@ -290,12 +544,39 @@ async function handleCheckoutCompleted(session: Record<string, unknown>): Promis
       itemRows,
       total,
       shippingAddress,
-      footerNote: 'Wir versenden deine Bestellung in Kürze und melden uns bei Fragen.',
+      footerNote: podCustomerNote || 'Wir versenden deine Bestellung in Kürze und melden uns bei Fragen.',
     })
     tasks.push(notifyEmail(resendKey, customerEmail, from, customerSubject, customerText, customerHtml))
   }
 
-  await Promise.allSettled(tasks)
+  const results = await Promise.allSettled(tasks)
+  for (const result of results) {
+    if (result.status === 'rejected') console.error(`[stripe] ${sessionId} — order email failed: ${result.reason}`)
+  }
+}
+
+function podOrderRecipient(): string {
+  return process.env.POD_ORDER_EMAIL || process.env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
+}
+
+// Delayed payment (e.g. SEPA) for a shop order succeeded: now send the POD
+// production order that was held back in handleCheckoutCompleted.
+async function handleShopAsyncPaymentSucceeded(session: Record<string, unknown>): Promise<void> {
+  const sessionId = String(session.id ?? '')
+  const metadata = session.metadata as Record<string, string> | undefined
+  if (metadata?.contains_pod !== 'true') return
+
+  const resendKey = process.env.RESEND_API_KEY
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+  if (!resendKey || !stripeSecretKey) {
+    console.error(`[stripe] ${sessionId} — POD order paid but RESEND_API_KEY/STRIPE_SECRET_KEY missing, no production email sent!`)
+    return
+  }
+  const lineItems = await fetchLineItems(sessionId, stripeSecretKey)
+  const from = process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL
+  await sendPodOrderEmail({ session, lineItems, resendKey, from, to: podOrderRecipient() }).catch((error) => {
+    console.error(`[stripe] ${sessionId} — POD order email failed: ${error}`)
+  })
 }
 
 export default async function handler(request: Request): Promise<Response> {
@@ -332,6 +613,16 @@ export default async function handler(request: Request): Promise<Response> {
     case 'checkout.session.completed':
       await handleCheckoutCompleted(event.data?.object ?? {})
       break
+    case 'checkout.session.async_payment_succeeded': {
+      const session = event.data?.object ?? {}
+      const metadata = session.metadata as Record<string, string> | undefined
+      if (metadata?.type === 'booking-deposit') {
+        await handleBookingDepositPaid(session, process.env.RESEND_API_KEY)
+      } else {
+        await handleShopAsyncPaymentSucceeded(session)
+      }
+      break
+    }
     default:
       // Unhandled event types are acknowledged so Stripe stops retrying.
       break

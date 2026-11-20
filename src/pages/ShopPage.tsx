@@ -10,6 +10,7 @@ import { useShop } from '../context/ShopContext'
 import { shopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
 import { FEATURED_ORDER } from '../data/featuredOrder'
+import { isPrintOnDemand } from '../data/printOnDemand'
 
 const SHOP_HEROES = [
   { file: 'hero 1.png' },
@@ -22,6 +23,7 @@ const JERSEYS = /jersey|trikot|trainingsjacke|tracksuit|fc bayern|lakers/i
 
 const CATEGORIES: { id: string; label: string; match: (item: ShopItem) => boolean }[] = [
   { id: 'all', label: 'All items', match: () => true },
+  { id: 'pod', label: 'Print on Demand', match: (i) => isPrintOnDemand(i.id) },
   { id: 'tops', label: 'All tops', match: (i) => /t-shirt|hemd|polo|longsleeve|jersey/i.test(i.category) },
   { id: 'knit', label: 'Hoodies & knit', match: (i) => /hoodie|pullover|strick/i.test(i.category) },
   { id: 'jackets', label: 'Jackets', match: (i) => /jacke/i.test(i.category) },
@@ -322,6 +324,9 @@ export function ShopPage() {
                   />
                   {soldOut && (
                     <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">Sold out</span>
+                  )}
+                  {!soldOut && isPrintOnDemand(item.id) && (
+                    <span className="absolute left-0 top-0 border border-neutral-700 bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest text-neutral-200">Print on Demand</span>
                   )}
                   <button
                     type="button"

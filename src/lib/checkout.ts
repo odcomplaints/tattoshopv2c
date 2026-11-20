@@ -6,7 +6,7 @@ export async function startCheckout(cart: CartItem[]): Promise<void> {
   const response = await fetch('/api/checkout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items: cart.map(({ id, quantity }) => ({ id, quantity })) }),
+    body: JSON.stringify({ items: cart.map(({ id, quantity, size }) => ({ id, quantity, size })) }),
   })
 
   let data: { url?: string; error?: string } = {}

@@ -10,5 +10,5 @@
     "noEmit": true,
     "isolatedModules": true
   },
-  "include": ["./**/*.ts", "../src/data/catalog.ts"]
+  "include": ["./**/*.ts", "../src/data/catalog.ts", "../src/data/bookingConfig.ts", "../src/data/printOnDemand.ts"]
 }

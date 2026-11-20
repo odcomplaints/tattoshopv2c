@@ -3,6 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { ExpressPay } from '../components/ExpressPay'
 import { useShop } from '../context/ShopContext'
+import { cartKey, maxCartQuantity } from '../lib/cart'
+import { isPrintOnDemand } from '../data/printOnDemand'
 import { shopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
 import { startCheckout } from '../lib/checkout'
@@ -22,14 +24,20 @@ export function CartPage() {
   const items = cart
     .map((entry) => {
       const product = shopItems.find((shopItem) => shopItem.id === entry.id)
-      return product ? { id: entry.id, quantity: entry.quantity, product } : null
+      return product ? { key: cartKey(entry), id: entry.id, size: entry.size, quantity: entry.quantity, product } : null
     })
-    .filter((entry): entry is { id: string; quantity: number; product: ShopItem } => entry !== null)
+    .filter(
+      (entry): entry is { key: string; id: string; size: string | undefined; quantity: number; product: ShopItem } =>
+        entry !== null,
+    )
 
   const subtotal = items.reduce((total, entry) => total + parsePrice(entry.product.price) * entry.quantity, 0)
   const hasSoldOutItem = items.some(
     (entry) => entry.product.availability === 'sold-out' || isSoldOut(entry.product.id),
   )
+  // A POD line without a size (e.g. from an old saved cart) can't be printed.
+  const hasPodWithoutSize = items.some((entry) => isPrintOnDemand(entry.id) && !entry.size)
+  const checkoutBlocked = hasSoldOutItem || hasPodWithoutSize
 
   async function handleCheckout() {
     setError(null)
@@ -69,10 +77,11 @@ export function CartPage() {
         ) : (
           <div className="mt-8 grid gap-12 lg:grid-cols-[1.4fr_1fr]">
             <ul className="flex flex-col gap-6">
-              {items.map(({ id, quantity, product }) => {
+              {items.map(({ key, id, size, quantity, product }) => {
                 const soldOut = product.availability === 'sold-out' || isSoldOut(product.id)
+                const pod = isPrintOnDemand(id)
                 return (
-                <li key={id} className="flex gap-4 border-b border-neutral-800 pb-6">
+                <li key={key} className="flex gap-4 border-b border-neutral-800 pb-6">
                   <Link to={`/shop/${id}`} className="h-24 w-20 shrink-0 overflow-hidden">
                     <img src={product.image} alt={product.name} className={`h-full w-full object-contain ${soldOut ? 'blur-[2px]' : ''}`} />
                   </Link>
@@ -84,6 +93,11 @@ export function CartPage() {
                       <p className="shrink-0 text-neutral-400">{product.price}</p>
                     </div>
                     <p className="text-xs text-neutral-300">{product.category}</p>
+                    {pod && (
+                      <p className="text-xs uppercase tracking-widest text-neutral-400">
+                        Print on Demand{size ? ` · Größe ${size}` : ''}
+                      </p>
+                    )}
                     {soldOut && (
                       <p className="text-xs uppercase tracking-widest text-accent">
                         Dieser Artikel ist leider ausverkauft — bitte entferne ihn, um fortzufahren.
@@ -93,7 +107,7 @@ export function CartPage() {
                       <div className="flex items-center border border-neutral-800">
                         <button
                           type="button"
-                          onClick={() => updateQuantity(id, quantity - 1)}
+                          onClick={() => updateQuantity(key, quantity - 1)}
                           className="px-2.5 py-1 text-neutral-300 hover:text-accent"
                           aria-label={`Decrease quantity of ${product.name}`}
                         >
@@ -102,8 +116,8 @@ export function CartPage() {
                         <span className="px-2 text-neutral-100">{quantity}</span>
                         <button
                           type="button"
-                          onClick={() => updateQuantity(id, quantity + 1)}
-                          disabled={soldOut || quantity >= product.stock}
+                          onClick={() => updateQuantity(key, quantity + 1)}
+                          disabled={soldOut || quantity >= maxCartQuantity(id)}
                           className="px-2.5 py-1 text-neutral-300 transition-colors hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-neutral-300"
                           aria-label={`Increase quantity of ${product.name}`}
                         >
@@ -112,7 +126,7 @@ export function CartPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => removeFromCart(id)}
+                        onClick={() => removeFromCart(key)}
                         className="text-neutral-400 transition-colors hover:text-accent"
                       >
                         Remove
@@ -144,11 +158,16 @@ export function CartPage() {
                   Bitte entferne die ausverkauften Artikel aus deinem Warenkorb, um fortzufahren.
                 </p>
               )}
-              <ExpressPay onPay={handleCheckout} loading={loading || hasSoldOutItem} />
+              {hasPodWithoutSize && (
+                <p className="border border-accent bg-neutral-900/40 px-4 py-3 text-xs uppercase tracking-widest text-accent">
+                  Bitte entferne Print-on-Demand-Artikel ohne Größe und lege sie mit Größe neu in den Warenkorb.
+                </p>
+              )}
+              <ExpressPay onPay={handleCheckout} loading={loading || checkoutBlocked} />
               <button
                 type="button"
                 onClick={handleCheckout}
-                disabled={loading || hasSoldOutItem}
+                disabled={loading || checkoutBlocked}
                 className="w-full border border-accent px-5 py-3.5 text-xs uppercase tracking-widest text-neutral-100 transition-colors hover:border-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? 'Redirecting…' : 'Pay by card'}

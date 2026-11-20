@@ -8,7 +8,6 @@ import { DateAvailabilityPicker } from '../components/DateAvailabilityPicker'
 import { useLanguage } from '../context/LanguageContext'
 
 const DEPOSIT = '50,00 EUR'
-const DEPOSIT_PAYMENT_LINK = 'https://buy.stripe.com/6oU6oI5LCadqeOZ0Nz6c000'
 
 const fieldClass = 'mt-2 w-full border border-neutral-700 bg-neutral-900 px-3 py-3 text-sm text-neutral-100 outline-none transition-colors placeholder:text-neutral-600 focus:border-neutral-200'
 const fieldMissingClass = 'border-neutral-400'
@@ -21,7 +20,10 @@ export function BookingPage() {
   const formRef = useRef<HTMLFormElement>(null)
   const [submitting, setSubmitting] = useState(false)
   const [missingFields, setMissingFields] = useState<Set<string>>(new Set())
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [searchParams] = useSearchParams()
+  // Set when the customer returns from Stripe Checkout without paying.
+  const paymentCanceled = searchParams.get('canceled') === '1'
 
   // Pre-fill the motif field when arriving with a flash-design reference,
   // e.g. from the /styles moodboard's "HMU!" button.
@@ -88,6 +90,7 @@ export function BookingPage() {
 
     setSubmitting(true)
     setMissingFields(new Set())
+    setSubmitError(null)
 
     const formData = new FormData(form)
     const data: Record<string, string> = {}
@@ -96,22 +99,39 @@ export function BookingPage() {
     })
 
     try {
-      const response = await fetch('/api/booking', {
+      // 1. Send booking notification to admin
+      const bookingResponse = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, checkoutType: mode }),
       })
-      if (!response.ok) {
-        const body = (await response.json().catch(() => ({}))) as { error?: string }
+      if (!bookingResponse.ok) {
+        const body = (await bookingResponse.json().catch(() => ({}))) as { error?: string }
         throw new Error(body.error || 'Could not submit the form.')
       }
-      // Only continue to the deposit payment once the booking details were
-      // successfully delivered to the studio.
-      window.location.href = DEPOSIT_PAYMENT_LINK
-    } catch {
-      // Network/delivery error — nothing we can highlight on a specific
-      // field, so just stop the spinner and let the customer retry.
-    } finally {
+
+      // 2. Create a Stripe Checkout Session for the €50 deposit
+      // The session is marked with metadata so the webhook can send confirmation email
+      const checkoutResponse = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingData: data, checkoutType: mode }),
+      })
+      if (!checkoutResponse.ok) {
+        const body = (await checkoutResponse.json().catch(() => ({}))) as { error?: string }
+        throw new Error(body.error || 'Could not create payment session.')
+      }
+
+      const { url } = (await checkoutResponse.json()) as { url?: string }
+      if (!url) {
+        throw new Error('No payment URL returned.')
+      }
+
+      // 3. Redirect to Stripe Checkout. Keep the spinner until the page unloads.
+      window.location.href = url
+    } catch (error) {
+      console.error('Booking error:', error)
+      setSubmitError(b.submitError)
       setSubmitting(false)
     }
   }
@@ -148,6 +168,12 @@ export function BookingPage() {
           <h1 className="mt-3 text-3xl font-medium uppercase tracking-widest text-neutral-100">{b.title}</h1>
           <p className="mt-4 max-w-xl text-sm leading-7 text-neutral-400">{b.intro.replace('{deposit}', DEPOSIT)}</p>
         </header>
+
+        {paymentCanceled && (
+          <p role="status" className="mt-8 border border-neutral-700 px-4 py-3 text-xs leading-6 text-neutral-300">
+            {b.canceledNotice}
+          </p>
+        )}
 
         <div className="grid gap-14 pt-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.6fr)] lg:gap-20">
           {/* Left: checkout form */}
@@ -267,6 +293,11 @@ export function BookingPage() {
               >
                 {submitting ? '…' : `${b.payDeposit} · ${DEPOSIT}`}
               </button>
+              {submitError && (
+                <p role="alert" className="-mt-6 text-xs leading-6 text-accent">
+                  {submitError}
+                </p>
+              )}
             </form>
 
             {/* Express checkout */}

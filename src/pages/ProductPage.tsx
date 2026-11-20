@@ -4,16 +4,20 @@ import { Layout } from '../components/Layout'
 import { HeartIcon } from '../components/icons'
 import { ZoomImage } from '../components/ZoomImage'
 import { useShop } from '../context/ShopContext'
+import { cartKey, maxCartQuantity } from '../lib/cart'
 import { shopItems } from '../data/shop'
+import { getPodProduct, isPrintOnDemand } from '../data/printOnDemand'
 
 export function ProductPage() {
   const { id } = useParams()
   const item = shopItems.find((product) => product.id === id && product.listed !== false)
   const { addToCart, isFavorite, toggleFavorite, cart, isSoldOut } = useShop()
   const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const [selectedSize, setSelectedSize] = useState<string | null>(null)
 
   useEffect(() => {
     setActiveImageIndex(0)
+    setSelectedSize(null)
   }, [id])
 
   if (!item) {
@@ -29,9 +33,21 @@ export function ProductPage() {
     )
   }
 
-  const inCartQuantity = cart.find((entry) => entry.id === item.id)?.quantity ?? 0
+  const pod = getPodProduct(item.id)
+  const needsSize = !!pod && !selectedSize
+  const lineKey = cartKey({ id: item.id, size: pod ? (selectedSize ?? undefined) : undefined })
+  const inCartQuantity = cart.find((entry) => cartKey(entry) === lineKey)?.quantity ?? 0
   const available = item.availability === 'available' && !isSoldOut(item.id)
-  const canAddToCart = available && inCartQuantity < item.stock
+  const canAddToCart = available && !needsSize && inCartQuantity < maxCartQuantity(item.id)
+  const addLabel = !available
+    ? 'Unavailable'
+    : needsSize
+      ? 'Größe wählen'
+      : canAddToCart
+        ? 'Add to cart'
+        : pod
+          ? 'Maximale Menge im Warenkorb'
+          : 'Already in cart'
   const favorite = isFavorite(item.id)
   const mailto = `mailto:hello@example.com?subject=${encodeURIComponent(`Shop Inquiry: ${item.name}`)}`
 
@@ -85,6 +101,11 @@ export function ProductPage() {
             {!available && (
               <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">
                 Sold out
+              </span>
+            )}
+            {available && pod && (
+              <span className="absolute left-0 top-0 border border-neutral-700 bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest text-neutral-200">
+                Print on Demand
               </span>
             )}
             <button
@@ -152,7 +173,9 @@ export function ProductPage() {
             <p className="text-xs uppercase tracking-widest text-neutral-300">{item.category}</p>
             <h1 className="mt-2 text-3xl font-medium uppercase tracking-widest text-neutral-100">{item.name}</h1>
             <p className="mt-3 text-lg uppercase tracking-widest text-neutral-300">{item.price}</p>
-          {available ? (
+          {available && pod ? (
+            <p className="text-xs uppercase tracking-widest text-neutral-500">Print on Demand · Wird nach Bestellung gedruckt</p>
+          ) : available ? (
             <p className="text-xs uppercase tracking-widest text-neutral-500">
               {item.stock === 1 ? '1 Stück verfügbar' : `${item.stock} Stück verfügbar`}
             </p>
@@ -167,10 +190,46 @@ export function ProductPage() {
             ))}
           </ul>
 
+          {pod && (
+            <div className="border border-neutral-800 px-4 py-3 text-xs leading-6 text-neutral-400">
+              <p className="uppercase tracking-widest text-neutral-200">Print on Demand</p>
+              <p className="mt-1">
+                Dieses Shirt wird erst nach deiner Bestellung für dich gedruckt — keine Lagerware. Produktion &amp; Versand:{' '}
+                {pod.productionTime}.
+              </p>
+            </div>
+          )}
+
+          {pod && available && (
+            <fieldset>
+              <legend className="text-xs uppercase tracking-widest text-neutral-300">Größe</legend>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {pod.sizes.map((size) => {
+                  const selected = size === selectedSize
+                  return (
+                    <button
+                      key={size}
+                      type="button"
+                      onClick={() => setSelectedSize(size)}
+                      aria-pressed={selected}
+                      className={`min-w-12 border px-3 py-2 text-xs uppercase tracking-widest transition-colors ${
+                        selected
+                          ? 'border-accent text-neutral-100'
+                          : 'border-neutral-800 text-neutral-400 hover:border-neutral-500 hover:text-neutral-200'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  )
+                })}
+              </div>
+            </fieldset>
+          )}
+
           <div className="mt-2 flex flex-wrap gap-3">
             <button
               type="button"
-              onClick={() => addToCart(item.id)}
+              onClick={() => addToCart(item.id, pod ? (selectedSize ?? undefined) : undefined)}
               disabled={!canAddToCart}
               className={`cta-solid inline-block w-fit border px-6 py-3 text-xs uppercase tracking-widest transition-colors ${
                 canAddToCart
@@ -178,7 +237,7 @@ export function ProductPage() {
                   : 'pointer-events-none border-neutral-800 text-neutral-700'
               }`}
             >
-              {available ? (canAddToCart ? 'Add to cart' : 'Already in cart') : 'Unavailable'}
+              {addLabel}
             </button>
             <a
               href={available ? mailto : undefined}
@@ -218,6 +277,11 @@ export function ProductPage() {
                     {relatedSoldOut && (
                       <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">
                         Sold out
+                      </span>
+                    )}
+                    {!relatedSoldOut && isPrintOnDemand(related.id) && (
+                      <span className="absolute left-0 top-0 border border-neutral-700 bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest text-neutral-200">
+                        Print on Demand
                       </span>
                     )}
                     <button

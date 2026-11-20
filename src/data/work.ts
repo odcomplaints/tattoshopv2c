@@ -18,6 +18,8 @@ export const work: Work[] = [
   { title: 'Briar', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8542%201.png' },
   { title: 'Watchful', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8590%201.png' },
   { title: 'Thorn', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8767%201.png' },
+  { title: 'Ethereal', date: new Date('2026-11-20'), style: 'Fineline', bodyPart: 'Full body', image: '/assets/work/IMG_8999%201.png' },
+  { title: 'Mirage', date: new Date('2026-11-20'), style: 'Blackwork', bodyPart: 'Full body', image: '/assets/work/IMG_8999%202.png' },
   // Hidden: Aftermath, Ashes, Reverie, Fracture
   // { title: 'Aftermath', date: new Date('2026-09-22'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-8229.png', zoom: 1.5 },
   // { title: 'Ashes', date: new Date('2026-09-30'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-8367.png', zoom: 1.5 },

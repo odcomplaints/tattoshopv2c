@@ -88,7 +88,7 @@ export function HomePage() {
           >
             {t.home.bookSession}
           </SpecularButton>
-          <div className="mt-3 w-[85%]">
+          <div className="mt-3 w-[80%]">
             <SpecularButton
               size="sm"
               radius={0}
@@ -112,7 +112,7 @@ export function HomePage() {
               {t.home.browseFlashes}
             </SpecularButton>
           </div>
-          <div className="mt-3 w-[70%]">
+          <div className="mt-3 w-[80%]">
             <SpecularButton
               size="sm"
               radius={0}

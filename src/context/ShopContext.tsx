@@ -1,16 +1,20 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import { shopItems } from '../data/shop'
+import { getPodProduct } from '../data/printOnDemand'
+import { cartKey, maxCartQuantity } from '../lib/cart'
 import { fetchSoldOutIds } from '../lib/soldOut'
 
-export type CartItem = { id: string; quantity: number }
+/** `size` is only set for Print-on-Demand items, which are ordered per size. */
+export type CartItem = { id: string; quantity: number; size?: string }
 
 type ShopContextValue = {
   cart: CartItem[]
   cartCount: number
-  addToCart: (id: string) => void
-  removeFromCart: (id: string) => void
-  updateQuantity: (id: string, quantity: number) => void
+  addToCart: (id: string, size?: string) => void
+  /** Takes a line key from `cartKey()`. */
+  removeFromCart: (key: string) => void
+  /** Takes a line key from `cartKey()`. */
+  updateQuantity: (key: string, quantity: number) => void
   clearCart: () => void
   favorites: string[]
   favoritesCount: number
@@ -68,35 +72,41 @@ export function ShopProvider({ children }: { children: ReactNode }) {
 
   const isSoldOut = (id: string) => soldOutIds.includes(id)
 
-  const addToCart = (id: string) => {
+  const addToCart = (id: string, size?: string) => {
     if (isSoldOut(id)) return
-    const maxStock = shopItems.find((item) => item.id === id)?.stock ?? 1
+    // POD items always need a valid size, regular items never carry one.
+    const pod = getPodProduct(id)
+    if (pod ? !size || !pod.sizes.includes(size) : size) return
+    const key = cartKey({ id, size })
+    const maxStock = maxCartQuantity(id)
     setCart((current) => {
-      const existing = current.find((entry) => entry.id === id)
+      const existing = current.find((entry) => cartKey(entry) === key)
       if (existing) {
         if (existing.quantity >= maxStock) return current
-        return current.map((entry) => (entry.id === id ? { ...entry, quantity: entry.quantity + 1 } : entry))
+        return current.map((entry) => (cartKey(entry) === key ? { ...entry, quantity: entry.quantity + 1 } : entry))
       }
-      return [...current, { id, quantity: 1 }]
+      return [...current, size ? { id, quantity: 1, size } : { id, quantity: 1 }]
     })
   }
 
-  const removeFromCart = (id: string) => {
-    setCart((current) => current.filter((entry) => entry.id !== id))
+  const removeFromCart = (key: string) => {
+    setCart((current) => current.filter((entry) => cartKey(entry) !== key))
   }
 
   const clearCart = () => {
     setCart([])
   }
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = (key: string, quantity: number) => {
     if (quantity <= 0) {
-      removeFromCart(id)
+      removeFromCart(key)
       return
     }
-    const maxStock = shopItems.find((item) => item.id === id)?.stock ?? 1
-    const clamped = Math.min(quantity, maxStock)
-    setCart((current) => current.map((entry) => (entry.id === id ? { ...entry, quantity: clamped } : entry)))
+    setCart((current) =>
+      current.map((entry) =>
+        cartKey(entry) === key ? { ...entry, quantity: Math.min(quantity, maxCartQuantity(entry.id)) } : entry,
+      ),
+    )
   }
 
   const toggleFavorite = (id: string) => {

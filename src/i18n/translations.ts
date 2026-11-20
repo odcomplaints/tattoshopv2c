@@ -100,6 +100,8 @@ type TranslationShape = {
     expiry: string
     cvc: string
     payDeposit: string
+    submitError: string
+    canceledNotice: string
     orderSummary: string
     tattooDeposit: string
     creditedNote: string
@@ -265,6 +267,8 @@ export const translations: Record<Language, TranslationShape> = {
       expiry: 'Expiry date',
       cvc: 'CVC',
       payDeposit: 'Pay deposit',
+      submitError: 'Something went wrong. Please try again or contact us via Instagram.',
+      canceledNotice: 'Payment was canceled. Your appointment is not reserved yet — you can pay the deposit again below.',
       orderSummary: 'Order Summary',
       tattooDeposit: 'Tattoo deposit',
       creditedNote: 'Credited towards the final price',
@@ -460,6 +464,8 @@ export const translations: Record<Language, TranslationShape> = {
       expiry: 'Ablaufdatum',
       cvc: 'CVC',
       payDeposit: 'Anzahlung bezahlen',
+      submitError: 'Etwas ist schiefgelaufen. Bitte versuche es erneut oder schreib uns auf Instagram.',
+      canceledNotice: 'Die Zahlung wurde abgebrochen. Dein Termin ist noch nicht reserviert — du kannst die Anzahlung unten erneut bezahlen.',
       orderSummary: 'Bestellübersicht',
       tattooDeposit: 'Tattoo-Anzahlung',
       creditedNote: 'Wird auf den Endpreis angerechnet',

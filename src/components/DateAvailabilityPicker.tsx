@@ -7,8 +7,12 @@
 // Renders its own hidden <input type="date"> with the given `name` so it
 // keeps working with the existing FormData-based submit logic in
 // BookingPage.tsx without any changes there beyond swapping the field in.
+//
+// Only allows selection of dates within the studio's configured availability
+// (weekday schedule + booking lead time).
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { isDateAvailable } from '../data/bookingConfig'
 
 type DateAvailabilityPickerProps = {
   name: string
@@ -154,21 +158,21 @@ export function DateAvailabilityPicker({
             {cells.map((cell, index) => {
               if (!cell) return <span key={`blank-${index}`} />
               const cellDate = new Date(viewMonth.year, viewMonth.month, cell.day)
-              const isPast = cellDate.getTime() < today.getTime()
+              const isAvailable = isDateAvailable(cellDate)
               const isSelected = selected === cell.key
 
               return (
                 <button
                   key={cell.key}
                   type="button"
-                  disabled={isPast}
+                  disabled={!isAvailable}
                   onClick={() => {
                     setSelected(cell.key)
                     setOpen(false)
                   }}
                   className={[
                     'relative flex h-9 w-full items-center justify-center text-xs transition-colors',
-                    isPast ? 'cursor-not-allowed text-neutral-700' : 'text-neutral-300 hover:border hover:border-neutral-600',
+                    !isAvailable ? 'cursor-not-allowed text-neutral-700' : 'text-neutral-300 hover:border hover:border-neutral-600',
                     isSelected ? 'border border-accent text-accent' : '',
                   ].join(' ')}
                 >

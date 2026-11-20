@@ -50,7 +50,7 @@ export const podProducts: Record<string, PodProduct> = {
     id: 'pod-tee-02',
     provider: 'PLATZHALTER – POD-Anbieter eintragen',
     blank: 'PLATZHALTER – z. B. Stanley/Stella Creator 2.0 (STTU169)',
-    color: 'Weiß',
+    color: 'Schwarz',
     placement: 'Front, ca. 30 × 40 cm',
     printFile: 'PLATZHALTER – Link zur Druckdatei (PNG, 300 dpi)',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
