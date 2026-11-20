@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Work } from '../data/work'
 
 type WorkGridProps = {
@@ -10,10 +10,29 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
 export function WorkGrid({ items }: WorkGridProps) {
   const [selected, setSelected] = useState<Work | null>(null)
 
+  // Setup scroll reveal animation for all data-reveal elements
+  useEffect(() => {
+    const revealElements = document.querySelectorAll('[data-reveal]')
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-active')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    revealElements.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [items])
+
   return (
     <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-12">
       {items.map((item, index) => (
-        <article key={`${item.title}-${item.date.toISOString()}`}>
+        <article key={`${item.title}-${item.date.toISOString()}`} data-reveal>
           <button
             type="button"
             onClick={() => setSelected(item)}
