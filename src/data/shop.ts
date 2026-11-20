@@ -18,6 +18,48 @@ export type ShopItem = {
 
 export const shopItems: ShopItem[] = [
   {
+    id: 'pod-tee-01',
+    name: 'OD COMPLAINTS Blackwork Tee',
+    price: '39 EUR',
+    category: 'Print on Demand / T-Shirt',
+    image: '/assets/shop/pod/pod-tee-01.svg',
+    availability: 'available',
+    stock: 999,
+    description:
+      'Schwarzes T-Shirt mit einem minimalistischen OD COMPLAINTS Blackwork-Design. Gedruckt nach Bestellung auf hochwertigem Bio-Baumwoll-Jersey.',
+    details: ['Print on Demand', 'Material: 100 % Bio-Baumwolle', 'Druck: Front', 'Farbe: Schwarz', 'Größen: S – XXL', 'Produktion: 5–10 Werktage'],
+    color: 'schwarz',
+    listed: true,
+  },
+  {
+    id: 'pod-tee-02',
+    name: 'OD COMPLAINTS Fineline Tee',
+    price: '39 EUR',
+    category: 'Print on Demand / T-Shirt',
+    image: '/assets/shop/pod/pod-tee-02.svg',
+    availability: 'available',
+    stock: 999,
+    description:
+      'Weißes T-Shirt mit feinen Fineline-Details des OD COMPLAINTS Designs. Klassisch und minimalistisch – gedruckt auf 100 % Bio-Baumwolle.',
+    details: ['Print on Demand', 'Material: 100 % Bio-Baumwolle', 'Druck: Front', 'Farbe: Weiß', 'Größen: S – XXL', 'Produktion: 5–10 Werktage'],
+    color: 'weiß',
+    listed: true,
+  },
+  {
+    id: 'pod-tee-03',
+    name: 'OD COMPLAINTS Limited Edition Tee',
+    price: '39 EUR',
+    category: 'Print on Demand / T-Shirt',
+    image: '/assets/shop/pod/pod-tee-03.svg',
+    availability: 'available',
+    stock: 999,
+    description:
+      'Limited Edition T-Shirt mit exklusivem OD COMPLAINTS Motiv. Schwarz mit hochwertigem Druck – jede Bestellung wird individuell gefertigt.',
+    details: ['Print on Demand', 'Material: 100 % Bio-Baumwolle', 'Druck: Front', 'Farbe: Schwarz', 'Größen: S – XXL', 'Produktion: 5–10 Werktage'],
+    color: 'schwarz',
+    listed: true,
+  },
+  {
     id: 'bape-shark-glow',
     name: 'Bape Shark Glow in the Dark',
     price: '440 EUR',

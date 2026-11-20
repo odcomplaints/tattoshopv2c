@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <!-- Placeholder product shot for the Print-on-Demand tee. Replace with a real mockup. -->
+  <path d="M290 150 L200 180 L80 290 L160 400 L220 350 L220 860 L580 860 L580 350 L640 400 L720 290 L600 180 L510 150 C490 200 450 225 400 225 C350 225 310 200 290 150 Z"
+        fill="#e8e8e8" stroke="#9a9a9a" stroke-width="4" stroke-linejoin="round"/>
+  <rect x="290" y="330" width="220" height="280" fill="none" stroke="#FF3939" stroke-width="3" stroke-dasharray="12 10"/>
+  <g font-family="monospace" text-anchor="middle" letter-spacing="4">
+    <text x="400" y="455" fill="#1a1a1a" font-size="26">DEIN</text>
+    <text x="400" y="495" fill="#1a1a1a" font-size="26">DESIGN 02</text>
+    <text x="400" y="935" fill="#7a7a7a" font-size="20">PRINT ON DEMAND · PLATZHALTER</text>
+  </g>
+</svg>

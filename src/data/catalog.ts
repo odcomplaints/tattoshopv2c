@@ -23,6 +23,10 @@ export type CatalogEntry = {
 }
 
 export const catalog: Record<string, CatalogEntry> = {
+  // Print on Demand — no real stock; see src/data/printOnDemand.ts
+  'pod-tee-01': { id: 'pod-tee-01', name: 'OD COMPLAINTS Blackwork Tee', priceCents: 3900, currency: 'eur', available: true, stock: 999 },
+  'pod-tee-02': { id: 'pod-tee-02', name: 'OD COMPLAINTS Fineline Tee', priceCents: 3900, currency: 'eur', available: true, stock: 999 },
+  'pod-tee-03': { id: 'pod-tee-03', name: 'OD COMPLAINTS Limited Edition Tee', priceCents: 3900, currency: 'eur', available: true, stock: 999 },
   'bape-shark-glow': { id: 'bape-shark-glow', name: 'Bape Shark Glow in the Dark', priceCents: 44000, currency: 'eur', available: true, stock: 1 },
   'bape-shark-lila': { id: 'bape-shark-lila', name: 'Bape Shark Hoodie Lila', priceCents: 45000, currency: 'eur', available: true, stock: 1 },
   'bape-shark-mickey': { id: 'bape-shark-mickey', name: 'Bape Shark × Mickey Mouse', priceCents: 62000, currency: 'eur', available: true, stock: 1 },
