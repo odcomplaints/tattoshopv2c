@@ -61,18 +61,15 @@ export function Layout({
       setScrolled(y > 0)
       if (y <= 0) {
         setLogoMini(false)
-        setFooterHidden(false)
       } else if (lastY - y > 6) {
         setLogoMini(true)
-        setFooterHidden(false)
       }
       if (y < 80) setHeaderHidden(false)
       else if (Math.abs(y - lastY) > 6) setHeaderHidden(y > lastY)
       
-      // Hide footer on scroll down, show on scroll up
-      if (Math.abs(y - lastY) > 6) {
-        setFooterHidden(y > lastY)
-      }
+      // Footer only visible when near bottom of page (within last 300px)
+      const nearBottom = window.innerHeight + y >= document.documentElement.scrollHeight - 300
+      setFooterHidden(!nearBottom)
       lastY = y
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
