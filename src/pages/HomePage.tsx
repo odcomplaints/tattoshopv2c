@@ -44,6 +44,25 @@ export function HomePage() {
     return () => observer.disconnect()
   }, [])
 
+  // Setup scroll reveal animation for all data-reveal elements
+  useEffect(() => {
+    const revealElements = document.querySelectorAll('[data-reveal]')
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-active')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    revealElements.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <Layout
       headerExtra={
@@ -180,7 +199,7 @@ export function HomePage() {
           />
         </div>
       </section>
-      <section className="mt-5 py-5 text-center sm:mt-8 sm:py-8">
+      <section className="mt-5 py-5 text-center sm:mt-8 sm:py-8" data-reveal>
         <div className="mx-auto grid max-w-2xl gap-6">
           <div><p className="text-xs uppercase tracking-widest text-accent">{t.home.studio.eyebrow}</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.studio.title}</h2></div>
           <div className="space-y-5 text-sm leading-7 text-neutral-400">
@@ -189,7 +208,7 @@ export function HomePage() {
           </div>
         </div>
       </section>
-      <section className="py-5 text-center sm:py-8">
+      <section className="py-5 text-center sm:py-8" data-reveal>
         <p className="text-xs uppercase tracking-widest text-accent">{t.home.process.eyebrow}</p>
         <h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.process.title}</h2>
         <ol className="mt-10 grid gap-8 text-center sm:grid-cols-2 lg:grid-cols-4">
@@ -199,7 +218,7 @@ export function HomePage() {
           })}
         </ol>
       </section>
-      <section className="py-5 text-center sm:py-8">
+      <section className="py-5 text-center sm:py-8" data-reveal>
         <div className="mx-auto grid max-w-2xl gap-8">
           <div><p className="text-xs uppercase tracking-widest text-accent">{t.home.guide.eyebrow}</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.guide.title}</h2><p className="mx-auto mt-5 max-w-md text-sm leading-7 text-neutral-400">{t.home.guide.description}</p></div>
           <dl className="text-sm">
@@ -207,7 +226,7 @@ export function HomePage() {
           </dl>
         </div>
       </section>
-      <section className="py-5 text-center sm:py-8">
+      <section className="py-5 text-center sm:py-8" data-reveal>
         <div className="mx-auto grid max-w-2xl gap-8">
           <div><p className="text-xs uppercase tracking-widest text-accent">{t.home.preparation.eyebrow}</p><h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.preparation.title}</h2></div>
           <ul className="grid gap-4 text-sm leading-7 text-neutral-400 sm:grid-cols-2">
@@ -215,7 +234,7 @@ export function HomePage() {
           </ul>
         </div>
       </section>
-      <section className="py-5 text-center sm:py-8">
+      <section className="py-5 text-center sm:py-8" data-reveal>
         <p className="text-xs uppercase tracking-widest text-accent">{t.home.faq.eyebrow}</p>
         <h2 className="mt-3 text-2xl font-medium uppercase tracking-widest text-neutral-100">{t.home.faq.title}</h2>
         <div className="mx-auto mt-8 max-w-2xl">
@@ -241,7 +260,7 @@ export function HomePage() {
           ))}
         </div>
       </section>
-      <section className="pt-5 text-center sm:pt-8">
+      <section className="pt-5 text-center sm:pt-8" data-reveal>
         <div className="mx-auto max-w-3xl px-6 py-10 sm:px-10 sm:py-14">
           <p className="text-xs uppercase tracking-widest text-neutral-200">GD / Private Studio</p>
           <h2 className="mt-4 text-3xl font-medium uppercase leading-tight tracking-widest sm:text-4xl">Ready to start a project together?</h2>
