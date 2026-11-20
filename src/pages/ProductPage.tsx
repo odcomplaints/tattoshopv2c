@@ -6,7 +6,7 @@ import { ZoomImage } from '../components/ZoomImage'
 import { useShop } from '../context/ShopContext'
 import { cartKey, maxCartQuantity } from '../lib/cart'
 import { shopItems } from '../data/shop'
-import { getPodProduct, isPrintOnDemand } from '../data/printOnDemand'
+import { getPodProduct } from '../data/printOnDemand'
 
 export function ProductPage() {
   const { id } = useParams()
@@ -103,11 +103,6 @@ export function ProductPage() {
                 Sold out
               </span>
             )}
-            {available && pod && (
-              <span className="absolute left-0 top-0 border border-neutral-700 bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest text-neutral-200">
-                Print on Demand
-              </span>
-            )}
             <button
               type="button"
               onClick={() => toggleFavorite(item.id)}
@@ -174,7 +169,7 @@ export function ProductPage() {
             <h1 className="mt-2 text-3xl font-medium uppercase tracking-widest text-neutral-100">{item.name}</h1>
             <p className="mt-3 text-lg uppercase tracking-widest text-neutral-300">{item.price}</p>
           {available && pod ? (
-            <p className="text-xs uppercase tracking-widest text-neutral-500">Print on Demand · Wird nach Bestellung gedruckt</p>
+            <p className="text-xs uppercase tracking-widest text-neutral-500">Wird nach Bestellung gedruckt</p>
           ) : available ? (
             <p className="text-xs uppercase tracking-widest text-neutral-500">
               {item.stock === 1 ? '1 Stück verfügbar' : `${item.stock} Stück verfügbar`}
@@ -192,7 +187,6 @@ export function ProductPage() {
 
           {pod && (
             <div className="border border-neutral-800 px-4 py-3 text-xs leading-6 text-neutral-400">
-              <p className="uppercase tracking-widest text-neutral-200">Print on Demand</p>
               <p className="mt-1">
                 Dieses Shirt wird erst nach deiner Bestellung für dich gedruckt — keine Lagerware. Produktion &amp; Versand:{' '}
                 {pod.productionTime}.
@@ -277,11 +271,6 @@ export function ProductPage() {
                     {relatedSoldOut && (
                       <span className="absolute left-0 top-0 border border-accent bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest">
                         Sold out
-                      </span>
-                    )}
-                    {!relatedSoldOut && isPrintOnDemand(related.id) && (
-                      <span className="absolute left-0 top-0 border border-neutral-700 bg-neutral-950 px-2 py-1 text-[10px] uppercase tracking-widest text-neutral-200">
-                        Print on Demand
                       </span>
                     )}
                     <button
