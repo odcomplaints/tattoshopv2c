@@ -36,7 +36,22 @@ type BookingPayload = {
   size?: unknown
   date?: unknown
   checkoutType?: unknown
+  language?: unknown
 }
+
+type EmailAttachment = { filename: string; content: string }
+
+const MAX_REFERENCE_FILES = 5
+const MAX_REFERENCE_BYTES = 4 * 1024 * 1024
+const MAX_REQUEST_BYTES = MAX_REFERENCE_BYTES + 64 * 1024
+const ALLOWED_REFERENCE_TYPES = new Set([
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+])
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -47,6 +62,52 @@ function json(data: unknown, status = 200): Response {
 
 function str(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
+}
+
+function encodeBase64(bytes: Uint8Array): string {
+  let binary = ''
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000))
+  }
+  return btoa(binary)
+}
+
+async function parseRequest(request: Request): Promise<{ payload: BookingPayload; attachments: EmailAttachment[] }> {
+  const contentLength = Number(request.headers.get('content-length') ?? 0)
+  if (contentLength > MAX_REQUEST_BYTES) throw new Error('Booking files exceed the 4 MB total limit.')
+
+  if (!request.headers.get('content-type')?.includes('multipart/form-data')) {
+    return { payload: (await request.json()) as BookingPayload, attachments: [] }
+  }
+
+  const form = await request.formData()
+  const payload: BookingPayload = {}
+  for (const key of ['name', 'email', 'phone', 'motif', 'bodyPart', 'size', 'date', 'checkoutType', 'language'] as const) {
+    if (key === 'name') payload.name = form.get(key)
+    else if (key === 'email') payload.email = form.get(key)
+    else if (key === 'phone') payload.phone = form.get(key)
+    else if (key === 'motif') payload.motif = form.get(key)
+    else if (key === 'bodyPart') payload.bodyPart = form.get(key)
+    else if (key === 'size') payload.size = form.get(key)
+    else if (key === 'date') payload.date = form.get(key)
+    else if (key === 'checkoutType') payload.checkoutType = form.get(key)
+    else payload.language = form.get(key)
+  }
+
+  const files = form.getAll('references').filter((value): value is File => value instanceof File && value.size > 0)
+  if (files.length > MAX_REFERENCE_FILES) throw new Error(`Please upload no more than ${MAX_REFERENCE_FILES} files.`)
+
+  let totalBytes = 0
+  const attachments: EmailAttachment[] = []
+  for (const file of files) {
+    totalBytes += file.size
+    if (totalBytes > MAX_REFERENCE_BYTES) throw new Error('Booking files exceed the 4 MB total limit.')
+    if (!ALLOWED_REFERENCE_TYPES.has(file.type)) throw new Error('Only image files and PDFs can be uploaded.')
+    const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').replace(/^\.+/, '').slice(0, 100) || 'reference'
+    attachments.push({ filename, content: encodeBase64(new Uint8Array(await file.arrayBuffer())) })
+  }
+
+  return { payload, attachments }
 }
 
 function buildMessage(b: Record<string, string>, checkoutType: string): string {
@@ -96,14 +157,22 @@ async function notifyTelegram(botToken: string, chatId: string, message: string)
   })
 }
 
-async function notifyEmail(apiKey: string, to: string, from: string, subject: string, text: string, html: string): Promise<void> {
+async function notifyEmail(
+  apiKey: string,
+  to: string,
+  from: string,
+  subject: string,
+  text: string,
+  html: string,
+  attachments: EmailAttachment[] = [],
+): Promise<void> {
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ from, to: [to], subject, text, html }),
+    body: JSON.stringify({ from, to: [to], subject, text, html, ...(attachments.length ? { attachments } : {}) }),
   })
   if (!response.ok) {
     const body = await response.text().catch(() => '')
@@ -115,10 +184,13 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
   const { request, env } = context
 
   let payload: BookingPayload
+  let attachments: EmailAttachment[]
   try {
-    payload = (await request.json()) as BookingPayload
-  } catch {
-    return json({ error: 'Invalid JSON body.' }, 400)
+    const parsedRequest = await parseRequest(request)
+    payload = parsedRequest.payload
+    attachments = parsedRequest.attachments
+  } catch (error) {
+    return json({ error: error instanceof Error ? error.message : 'Invalid booking form data.' }, 400)
   }
 
   const b = {
@@ -144,11 +216,17 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
   const message = buildMessage(b, checkoutType)
   const tasks: Promise<unknown>[] = []
 
+  if (attachments.length > 0 && !env.RESEND_API_KEY) {
+    return json({ error: 'File uploads require email delivery to be configured.' }, 500)
+  }
+
+  let emailTask: Promise<unknown> | undefined
   if (env.RESEND_API_KEY) {
     const to = env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
     const from = env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL
     const subject = b.name ? `Neue Tattoo-Anfrage von ${b.name}` : `Neue Tattoo-Anfrage (Express) — ${b.email}`
-    tasks.push(notifyEmail(env.RESEND_API_KEY, to, from, subject, message, buildHtmlMessage(b)))
+    emailTask = notifyEmail(env.RESEND_API_KEY, to, from, subject, message, buildHtmlMessage(b), attachments)
+    tasks.push(emailTask)
   }
 
   if (env.DISCORD_WEBHOOK_URL) tasks.push(notifyDiscord(env.DISCORD_WEBHOOK_URL, message))
@@ -161,6 +239,11 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
   }
 
   const results = await Promise.allSettled(tasks)
+  const emailResult = emailTask ? results[0] : undefined
+  if (attachments.length > 0 && emailResult?.status !== 'fulfilled') {
+    const reason = emailResult?.status === 'rejected' ? String(emailResult.reason) : 'Could not deliver the booking attachments.'
+    return json({ error: reason }, 502)
+  }
   const anySucceeded = results.some((r) => r.status === 'fulfilled')
 
   if (!anySucceeded) {

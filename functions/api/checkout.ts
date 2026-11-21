@@ -7,6 +7,7 @@
 import { getCatalogEntry } from '../../src/data/catalog'
 import { stripeRequest, StripeError, randomSuffix } from '../_stripe'
 import { getSoldOutIds } from '../_soldout'
+import { bookingConfig, isDateKeyAvailable } from '../../src/data/bookingConfig'
 
 interface Env {
   STRIPE_SECRET_KEY: string
@@ -20,9 +21,62 @@ interface Env {
 }
 
 type CartLine = { id: unknown; quantity: unknown }
+type StripeFormValue = string | number | boolean | StripeFormObject | StripeFormValue[]
+type StripeFormObject = { [key: string]: StripeFormValue | null | undefined }
+type CheckoutPayload = {
+  items?: CartLine[]
+  bookingData?: Record<string, unknown>
+  checkoutType?: unknown
+}
+type Booking = {
+  checkoutType: 'full' | 'express'
+  language: 'de' | 'en'
+  name: string
+  email: string
+  phone: string
+  date: string
+  bodyPart: string
+  size: string
+  motif: string
+}
 
 // Countries we are willing to ship physical prints to.
 const SHIPPING_COUNTRIES = ['DE', 'AT', 'CH', 'NL', 'BE', 'LU', 'FR', 'DK', 'PL', 'CZ']
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+function str(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : ''
+}
+
+function clip(value: string, max: number): string {
+  return value.length > max ? `${value.slice(0, max - 1)}…` : value
+}
+
+function formatDateDe(key: string): string {
+  const [year, month, day] = key.split('-')
+  return `${day}.${month}.${year}`
+}
+
+function parseBooking(raw: Record<string, unknown>, rawType: unknown): Booking | { error: string } {
+  const booking: Booking = {
+    checkoutType: rawType === 'express' ? 'express' : 'full',
+    language: raw.language === 'de' ? 'de' : 'en',
+    name: str(raw.name),
+    email: str(raw.email),
+    phone: str(raw.phone),
+    date: str(raw.date),
+    bodyPart: str(raw.bodyPart),
+    size: str(raw.size),
+    motif: str(raw.motif),
+  }
+  if (!booking.email || !booking.phone || !booking.date) return { error: 'Missing required fields.' }
+  if (booking.checkoutType === 'full' && (!booking.name || !booking.motif || !booking.bodyPart || !booking.size)) {
+    return { error: 'Missing required fields.' }
+  }
+  if (!EMAIL_RE.test(booking.email)) return { error: 'Invalid email address.' }
+  if (!isDateKeyAvailable(booking.date, new Date(), 1)) return { error: 'The selected date is not available.' }
+  return booking
+}
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -38,11 +92,63 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
     return json({ error: 'Payment is not configured. Missing STRIPE_SECRET_KEY.' }, 500)
   }
 
-  let payload: { items?: CartLine[] }
+  let payload: CheckoutPayload
   try {
-    payload = (await request.json()) as { items?: CartLine[] }
+    payload = (await request.json()) as CheckoutPayload
   } catch {
     return json({ error: 'Invalid JSON body.' }, 400)
+  }
+
+  const origin = env.SITE_URL?.replace(/\/$/, '') || new URL(request.url).origin
+
+  if (payload.bookingData) {
+    const booking = parseBooking(payload.bookingData, payload.checkoutType)
+    if ('error' in booking) return json({ error: booking.error }, 400)
+
+    const metadata = {
+      type: 'booking-deposit',
+      checkout_type: booking.checkoutType,
+      language: booking.language,
+      name: clip(booking.name, 200),
+      email: clip(booking.email, 200),
+      phone: clip(booking.phone, 100),
+      date: booking.date,
+      body_part: clip(booking.bodyPart, 200),
+      size: clip(booking.size, 100),
+      motif: clip(booking.motif, 500),
+    }
+
+    try {
+      const session = await stripeRequest<{ id: string; url: string }>(env.STRIPE_SECRET_KEY, '/v1/checkout/sessions', {
+        mode: 'payment',
+        line_items: [
+          {
+            quantity: 1,
+            price_data: {
+              currency: 'eur',
+              unit_amount: bookingConfig.depositCents,
+              product_data: {
+                name: 'Tattoo-Anzahlung',
+                description: `Wunschtermin ${formatDateDe(booking.date)} · wird mit dem Endpreis verrechnet`,
+              },
+            },
+          },
+        ],
+        customer_email: booking.email,
+        metadata,
+        payment_intent_data: {
+          description: `Tattoo-Anzahlung ${booking.name || booking.email} (${booking.date})`,
+          metadata,
+        },
+        success_url: `${origin}/shop/success?session_id={CHECKOUT_SESSION_ID}&type=booking`,
+        cancel_url: `${origin}/booking?canceled=1`,
+        integration_identifier: `booking_${randomSuffix()}`,
+      })
+      return json({ id: session.id, url: session.url })
+    } catch (error) {
+      if (error instanceof StripeError) return json({ error: error.message }, 400)
+      return json({ error: 'Could not start checkout. Please try again.' }, 502)
+    }
   }
 
   const rawItems = Array.isArray(payload.items) ? payload.items : []
@@ -52,7 +158,7 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
 
   // Validate every line against the server catalog and build trusted line items.
   const soldOutIds = await getSoldOutIds(env)
-  const lineItems: Array<Record<string, unknown>> = []
+  const lineItems: StripeFormObject[] = []
   for (const raw of rawItems) {
     const id = typeof raw.id === 'string' ? raw.id : ''
     const quantity = Math.floor(Number(raw.quantity))
@@ -77,9 +183,6 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
       },
     })
   }
-
-  // Resolve the public origin for success/cancel redirects.
-  const origin = env.SITE_URL?.replace(/\/$/, '') || new URL(request.url).origin
 
   try {
     const session = await stripeRequest<{ id: string; url: string }>(

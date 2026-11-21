@@ -26,6 +26,7 @@ interface Env {
 }
 
 import { getCatalogEntry } from '../../src/data/catalog'
+import { bookingDocumentFilenames } from '../../src/data/bookingDocuments'
 import { recordPurchases } from '../_soldout'
 
 const STRIPE_API_BASE = 'https://api.stripe.com'
@@ -185,11 +186,21 @@ function renderOrderEmailHtml(options: {
 </html>`
 }
 
-async function notifyEmail(apiKey: string, to: string, from: string, subject: string, text: string, html: string): Promise<void> {
+type EmailAttachment = { filename: string; content: string }
+
+async function notifyEmail(
+  apiKey: string,
+  to: string,
+  from: string,
+  subject: string,
+  text: string,
+  html: string,
+  attachments: EmailAttachment[] = [],
+): Promise<void> {
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from, to: [to], subject, text, html }),
+    body: JSON.stringify({ from, to: [to], subject, text, html, ...(attachments.length ? { attachments } : {}) }),
   })
   if (!response.ok) {
     const body = await response.text().catch(() => '')
@@ -197,13 +208,119 @@ async function notifyEmail(apiKey: string, to: string, from: string, subject: st
   }
 }
 
-async function handleCheckoutCompleted(session: Record<string, unknown>, env: Env): Promise<void> {
+function encodeBase64(bytes: Uint8Array): string {
+  let binary = ''
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000))
+  }
+  return btoa(binary)
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+async function loadBookingDocuments(siteOrigin: string): Promise<EmailAttachment[]> {
+  const attachments: EmailAttachment[] = []
+  for (const filename of bookingDocumentFilenames) {
+    const response = await fetch(new URL(`/PDFs/${filename}`, siteOrigin))
+    if (!response.ok) throw new Error(`Could not load booking document ${filename} (${response.status}).`)
+    const bytes = new Uint8Array(await response.arrayBuffer())
+    if (bytes.length === 0 || bytes[0] !== 0x25 || bytes[1] !== 0x50 || bytes[2] !== 0x44 || bytes[3] !== 0x46) {
+      throw new Error(`Booking document ${filename} is not a valid PDF.`)
+    }
+    attachments.push({ filename, content: encodeBase64(bytes) })
+  }
+  return attachments
+}
+
+async function handleBookingDepositPaid(session: Record<string, unknown>, env: Env, siteOrigin: string): Promise<void> {
+  const sessionId = String(session.id ?? '')
+  const metadata = (session.metadata ?? {}) as Record<string, string>
+  if (session.payment_status !== 'paid') return
+  if (!env.RESEND_API_KEY) {
+    console.log(`[stripe] booking deposit ${sessionId} — RESEND_API_KEY not set, skipping emails.`)
+    return
+  }
+
+  const customerDetails = session.customer_details as { email?: string; name?: string } | undefined
+  const booking = {
+    name: metadata.name || customerDetails?.name || '',
+    email: customerDetails?.email || metadata.email || '',
+    phone: metadata.phone || '',
+    date: metadata.date || '',
+    bodyPart: metadata.body_part || '',
+    size: metadata.size || '',
+    motif: metadata.motif || '',
+    language: metadata.language === 'de' ? 'de' as const : 'en' as const,
+  }
+  const deposit = formatMoney(session.amount_total as number | undefined, session.currency as string | undefined)
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(booking.date)
+    ? `${booking.date.slice(8, 10)}.${booking.date.slice(5, 7)}.${booking.date.slice(0, 4)}`
+    : booking.date || '—'
+  const from = env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL
+  const adminTo = env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
+  const customerAttachments = booking.email ? await loadBookingDocuments(siteOrigin) : []
+  const details = [
+    `Wunschtermin: ${date}`,
+    `Körperstelle: ${booking.bodyPart || '—'}`,
+    `Größe: ${booking.size || '—'}`,
+    `Motiv: ${booking.motif || '—'}`,
+  ].join('\n')
+  const tasks: Promise<unknown>[] = [
+    notifyEmail(
+      env.RESEND_API_KEY,
+      adminTo,
+      from,
+      `Anzahlung erhalten (${deposit}) — ${booking.name || booking.email}`,
+      `Anzahlung eingegangen: ${deposit}\nSession: ${sessionId}\nName: ${booking.name || '—'}\nE-Mail: ${booking.email || '—'}\nTelefon: ${booking.phone || '—'}\n${details}`,
+      `<p>Anzahlung eingegangen: ${deposit}</p><pre>${escapeHtml(details)}</pre>`,
+    ),
+  ]
+
+  if (booking.email) {
+    const german = booking.language === 'de'
+    tasks.push(
+      notifyEmail(
+        env.RESEND_API_KEY,
+        booking.email,
+        from,
+        german ? 'Dein Tattoo-Termin ist reserviert · OD COMPLAINTS' : 'Your tattoo appointment is reserved · OD COMPLAINTS',
+        german
+          ? `Danke${booking.name ? `, ${booking.name}` : ''}! Deine Anzahlung von ${deposit} ist eingegangen.\n\n${details}\n\nWir melden uns innerhalb von 48 Stunden zur Bestätigung deines Termins.\n\n— OD COMPLAINTS`
+          : `Thank you${booking.name ? `, ${booking.name}` : ''}! Your deposit of ${deposit} has been received.\n\n${details}\n\nWe will contact you within 48 hours to confirm your appointment.\n\n— OD COMPLAINTS`,
+        german
+          ? '<p>Vielen Dank! Deine Anzahlung ist eingegangen. Wir melden uns innerhalb von 48 Stunden zur Bestätigung deines Termins. Die Anzahlung wird mit dem Endpreis verrechnet.</p>'
+          : '<p>Thank you! Your deposit has been received. We will contact you within 48 hours to confirm your appointment. The deposit will be credited towards the final price.</p>',
+        customerAttachments,
+      ),
+    )
+  }
+
+  const results = await Promise.allSettled(tasks)
+  for (const result of results) {
+    if (result.status === 'rejected') console.error(`[stripe] booking email failed: ${result.reason}`)
+  }
+}
+
+async function handleCheckoutCompleted(session: Record<string, unknown>, env: Env, siteOrigin: string): Promise<void> {
   const sessionId = String(session.id ?? '')
   const customerDetails = session.customer_details as { email?: string; name?: string } | undefined
   const customerEmail = customerDetails?.email
   const amountTotal = session.amount_total as number | undefined
   const currency = session.currency as string | undefined
   const shippingDetails = session.shipping_details as Record<string, unknown> | undefined
+  const metadata = session.metadata as Record<string, string> | undefined
+
+  if (metadata?.type === 'booking-deposit') {
+    await handleBookingDepositPaid(session, env, siteOrigin)
+    return
+  }
 
   if (!env.RESEND_API_KEY) {
     console.log(`[stripe] checkout.session.completed ${sessionId} — RESEND_API_KEY not set, skipping emails.`)
@@ -335,8 +452,16 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
 
   switch (event.type) {
     case 'checkout.session.completed':
-      await handleCheckoutCompleted(event.data?.object ?? {}, env)
+      await handleCheckoutCompleted(event.data?.object ?? {}, env, new URL(request.url).origin)
       break
+    case 'checkout.session.async_payment_succeeded': {
+      const session = event.data?.object ?? {}
+      const metadata = session.metadata as Record<string, string> | undefined
+      if (metadata?.type === 'booking-deposit') {
+        await handleBookingDepositPaid(session, env, new URL(request.url).origin)
+      }
+      break
+    }
     default:
       // Unhandled event types are acknowledged so Stripe stops retrying.
       break

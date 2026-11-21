@@ -42,6 +42,7 @@ function formatDateDe(key: string): string {
 
 type Booking = {
   checkoutType: 'full' | 'express'
+  language: 'de' | 'en'
   name: string
   email: string
   phone: string
@@ -56,6 +57,7 @@ type Booking = {
 function parseBooking(raw: Record<string, unknown>, rawType: unknown): Booking | { error: string } {
   const booking: Booking = {
     checkoutType: rawType === 'express' ? 'express' : 'full',
+    language: raw.language === 'de' ? 'de' : 'en',
     name: str(raw.name),
     email: str(raw.email),
     phone: str(raw.phone),
@@ -122,6 +124,7 @@ export default async function handler(request: Request): Promise<Response> {
     const metadata = {
       type: 'booking-deposit',
       checkout_type: booking.checkoutType,
+      language: booking.language,
       name: clip(booking.name, 200),
       email: clip(booking.email, 200),
       phone: clip(booking.phone, 100),

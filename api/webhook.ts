@@ -20,6 +20,7 @@ import { recordPurchases } from './_soldout.js'
 import { getShippingDetails, isPodLineItem, sendPodOrderEmail } from './_podOrder.js'
 import type { PaidLineItem } from './_podOrder.js'
 import { getPodProduct, isPrintOnDemand } from '../src/data/printOnDemand.js'
+import { bookingDocumentFilenames } from '../src/data/bookingDocuments.js'
 
 const STRIPE_API_BASE = 'https://api.stripe.com'
 const STRIPE_API_VERSION = '2026-07-29.dahlia'
@@ -172,11 +173,21 @@ function renderOrderEmailHtml(options: {
 </html>`
 }
 
-async function notifyEmail(apiKey: string, to: string, from: string, subject: string, text: string, html: string): Promise<void> {
+type EmailAttachment = { filename: string; content: string }
+
+async function notifyEmail(
+  apiKey: string,
+  to: string,
+  from: string,
+  subject: string,
+  text: string,
+  html: string,
+  attachments: EmailAttachment[] = [],
+): Promise<void> {
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from, to: [to], subject, text, html }),
+    body: JSON.stringify({ from, to: [to], subject, text, html, ...(attachments.length ? { attachments } : {}) }),
   })
   if (!response.ok) {
     const body = await response.text().catch(() => '')
@@ -202,6 +213,28 @@ type BookingDetails = {
   size: string
   motif: string
   checkoutType: string
+}
+
+function encodeBase64(bytes: Uint8Array): string {
+  let binary = ''
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000))
+  }
+  return btoa(binary)
+}
+
+async function loadBookingDocuments(siteOrigin: string): Promise<EmailAttachment[]> {
+  const attachments: EmailAttachment[] = []
+  for (const filename of bookingDocumentFilenames) {
+    const response = await fetch(new URL(`/PDFs/${filename}`, siteOrigin))
+    if (!response.ok) throw new Error(`Could not load booking document ${filename} (${response.status}).`)
+    const bytes = new Uint8Array(await response.arrayBuffer())
+    if (bytes.length === 0 || bytes[0] !== 0x25 || bytes[1] !== 0x50 || bytes[2] !== 0x44 || bytes[3] !== 0x46) {
+      throw new Error(`Booking document ${filename} is not a valid PDF.`)
+    }
+    attachments.push({ filename, content: encodeBase64(bytes) })
+  }
+  return attachments
 }
 
 function formatDateDe(key: string): string {
@@ -296,7 +329,11 @@ const CUSTOMER_NEXT_STEPS_HTML = `
 
                 <p style="margin:28px 0 0;color:#7a7a7a;font-size:12px;line-height:1.6;">Falls du Fragen hast oder deinen Termin ändern möchtest, schreib uns gerne eine E-Mail.</p>`
 
-async function handleBookingDepositPaid(session: Record<string, unknown>, resendKey: string | undefined): Promise<void> {
+async function handleBookingDepositPaid(
+  session: Record<string, unknown>,
+  resendKey: string | undefined,
+  siteOrigin: string,
+): Promise<void> {
   const sessionId = String(session.id ?? '')
   const metadata = (session.metadata ?? {}) as Record<string, string>
   const customerDetails = session.customer_details as { email?: string; name?: string } | undefined
@@ -328,6 +365,7 @@ async function handleBookingDepositPaid(session: Record<string, unknown>, resend
   const from = process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL
   const adminTo = process.env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
   const dateDe = formatDateDe(booking.date)
+  const customerAttachments = booking.email ? await loadBookingDocuments(siteOrigin) : []
 
   const detailsText = [
     `Wunschtermin: ${dateDe}`,
@@ -391,6 +429,7 @@ async function handleBookingDepositPaid(session: Record<string, unknown>, resend
           includeContact: false,
           extraHtml: CUSTOMER_NEXT_STEPS_HTML,
         }),
+        customerAttachments,
       ),
     )
   }
@@ -403,7 +442,7 @@ async function handleBookingDepositPaid(session: Record<string, unknown>, resend
   console.log(`[stripe] checkout.session.completed ${sessionId} — booking deposit, ${sent}/${results.length} emails sent.`)
 }
 
-async function handleCheckoutCompleted(session: Record<string, unknown>): Promise<void> {
+async function handleCheckoutCompleted(session: Record<string, unknown>, siteOrigin: string): Promise<void> {
   const sessionId = String(session.id ?? '')
   const customerDetails = session.customer_details as { email?: string; name?: string } | undefined
   const customerEmail = customerDetails?.email
@@ -417,7 +456,7 @@ async function handleCheckoutCompleted(session: Record<string, unknown>): Promis
   // Booking deposits are tagged via session metadata in api/checkout.ts.
   const metadata = session.metadata as Record<string, string> | undefined
   if (metadata?.type === 'booking-deposit') {
-    await handleBookingDepositPaid(session, resendKey)
+    await handleBookingDepositPaid(session, resendKey, siteOrigin)
     return
   }
 
@@ -611,13 +650,13 @@ export default async function handler(request: Request): Promise<Response> {
 
   switch (event.type) {
     case 'checkout.session.completed':
-      await handleCheckoutCompleted(event.data?.object ?? {})
+      await handleCheckoutCompleted(event.data?.object ?? {}, new URL(request.url).origin)
       break
     case 'checkout.session.async_payment_succeeded': {
       const session = event.data?.object ?? {}
       const metadata = session.metadata as Record<string, string> | undefined
       if (metadata?.type === 'booking-deposit') {
-        await handleBookingDepositPaid(session, process.env.RESEND_API_KEY)
+        await handleBookingDepositPaid(session, process.env.RESEND_API_KEY, new URL(request.url).origin)
       } else {
         await handleShopAsyncPaymentSucceeded(session)
       }

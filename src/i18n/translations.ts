@@ -75,6 +75,9 @@ type TranslationShape = {
     appointmentDetailsHint: string
     name: string
     motif: string
+    referenceFiles: string
+    referenceFilesHint: string
+    referenceFilesError: string
     placement: string
     size: string
     sizePlaceholder: string
@@ -239,6 +242,9 @@ export const translations: Record<Language, TranslationShape> = {
       appointmentDetailsHint: 'These details are optional — not required if you pay via Apple Pay / Google Pay above.',
       name: 'Name',
       motif: 'Motif description',
+      referenceFiles: 'Reference files',
+      referenceFilesHint: 'Optional: up to 5 images or PDFs, 4 MB total. They will be sent to the studio with your inquiry.',
+      referenceFilesError: 'Please upload no more than 5 files and keep the total size under 4 MB.',
       placement: 'Placement',
       size: 'Size in cm',
       sizePlaceholder: 'e.g. 12',
@@ -318,7 +324,7 @@ export const translations: Record<Language, TranslationShape> = {
       title: 'Privacy',
       sections: [
         { heading: 'Hosting and server log files', body: 'This website is hosted on Cloudflare Pages. Each time this site is accessed, technical data (such as IP address, browser type, referring page and timestamp) is automatically processed by our hosting provider in server log files to ensure secure and stable delivery of the site, based on our legitimate interest pursuant to Art. 6(1)(f) GDPR. Log data is retained only as long as necessary for this purpose, in line with Cloudflare\u2019s standard retention practices (see cloudflare.com/privacypolicy).' },
-        { heading: 'Booking and contact inquiries', body: 'When you send an inquiry through the booking or contact form, the data you submit (such as name, email address and appointment details) is processed to respond to your request and, where applicable, to initiate or perform a contract, pursuant to Art. 6(1)(b) and (f) GDPR. Form submissions are technically handled by Formspree, Inc. (USA), acting as a processor on our behalf. As Formspree is located outside the EU/EEA, data transfer relies on appropriate safeguards (e.g. EU-U.S. Data Privacy Framework or standard contractual clauses). Inquiry data is deleted once it is no longer required, unless statutory retention obligations apply.' },
+        { heading: 'Booking and contact inquiries', body: 'When you send an inquiry through the booking or contact form, the data you submit (such as name, email address, appointment details and any reference files or photos you choose to attach) is processed to respond to your request and, where applicable, to initiate or perform a contract, pursuant to Art. 6(1)(b) and (f) GDPR. Booking inquiries and their attachments are sent to the studio by email using Resend, Inc. as an email service provider. Inquiry data is deleted once it is no longer required, unless statutory retention obligations apply.' },
         { heading: 'Shop orders and payments', body: "Where items are purchased through the shop, order and payment data (such as name, delivery address and order contents) is processed solely to fulfil the purchase contract pursuant to Art. 6(1)(b) GDPR. Payment processing is carried out by Stripe (Stripe Payments Europe, Ltd., 1 Grand Canal Street Lower, Dublin, Ireland, and its parent company Stripe, Inc., USA), acting as a processor on our behalf. We do not receive or store full payment card details; these are transmitted directly and securely to Stripe. Where data is transferred to Stripe entities outside the EU/EEA, this is based on appropriate safeguards such as the EU-U.S. Data Privacy Framework or standard contractual clauses. For details see Stripe's own privacy policy at stripe.com/privacy." },
         { heading: 'Cookies', body: 'This website does not currently set any cookies or use any tracking or analytics tools. Should this change, this notice will be updated accordingly and, where legally required, your consent will be obtained in advance.' },
         { heading: 'Recipients and storage duration', body: 'Personal data is only shared with the processors named above (hosting, form and payment providers) to the extent necessary and is not sold or passed on to any other third parties. Data is stored only for as long as necessary for the purposes described above or as required by statutory retention periods (e.g. commercial and tax retention periods of up to 10 years for order and invoice data).' },
@@ -436,6 +442,9 @@ export const translations: Record<Language, TranslationShape> = {
       appointmentDetailsHint: 'Diese Angaben sind optional — bei Zahlung per Apple Pay / Google Pay oben nicht erforderlich.',
       name: 'Name',
       motif: 'Motivbeschreibung',
+      referenceFiles: 'Referenzdateien',
+      referenceFilesHint: 'Optional: bis zu 5 Bilder oder PDFs, insgesamt maximal 4 MB. Die Dateien werden mit deiner Anfrage an das Studio gesendet.',
+      referenceFilesError: 'Bitte lade höchstens 5 Dateien mit insgesamt maximal 4 MB hoch.',
       placement: 'Platzierung',
       size: 'Größe in cm',
       sizePlaceholder: 'z. B. 12',
@@ -515,7 +524,7 @@ export const translations: Record<Language, TranslationShape> = {
       title: 'Datenschutz',
       sections: [
         { heading: 'Hosting und Server-Logfiles', body: 'Diese Website wird bei Cloudflare Pages gehostet. Bei jedem Zugriff auf diese Seite werden technische Daten (wie IP-Adresse, Browsertyp, verweisende Seite und Zeitstempel) automatisch von unserem Hosting-Anbieter in Server-Logfiles verarbeitet, um eine sichere und stabile Auslieferung der Seite zu gewährleisten, gestützt auf unser berechtigtes Interesse gemäß Art. 6 Abs. 1 lit. f DSGVO. Die Logdaten werden nur so lange gespeichert, wie es für diesen Zweck erforderlich ist, entsprechend den Standard-Speicherpraktiken von Cloudflare (siehe cloudflare.com/privacypolicy).' },
-        { heading: 'Termin- und Kontaktanfragen', body: 'Wenn du über das Termin- oder Kontaktformular eine Anfrage sendest, werden die von dir übermittelten Daten (wie Name, E-Mail-Adresse und Termindetails) verarbeitet, um deine Anfrage zu beantworten und gegebenenfalls einen Vertrag anzubahnen oder durchzuführen, gemäß Art. 6 Abs. 1 lit. b und f DSGVO. Formularübermittlungen werden technisch von Formspree, Inc. (USA) als Auftragsverarbeiter für uns abgewickelt. Da Formspree außerhalb der EU/des EWR ansässig ist, stützt sich die Datenübermittlung auf geeignete Garantien (z. B. EU-U.S. Data Privacy Framework oder Standardvertragsklauseln). Anfragedaten werden gelöscht, sobald sie nicht mehr benötigt werden, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.' },
+        { heading: 'Termin- und Kontaktanfragen', body: 'Wenn du über das Termin- oder Kontaktformular eine Anfrage sendest, werden die von dir übermittelten Daten (wie Name, E-Mail-Adresse, Termindetails und angehängte Referenzdateien oder Fotos) verarbeitet, um deine Anfrage zu beantworten und gegebenenfalls einen Vertrag anzubahnen oder durchzuführen, gemäß Art. 6 Abs. 1 lit. b und f DSGVO. Terminanfragen und ihre Anhänge werden über Resend, Inc. als E-Mail-Dienstleister per E-Mail an das Studio übermittelt. Anfragedaten werden gelöscht, sobald sie nicht mehr benötigt werden, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.' },
         { heading: 'Shop-Bestellungen und Zahlungen', body: 'Werden Artikel über den Shop erworben, werden Bestell- und Zahlungsdaten (z. B. Name, Lieferadresse und Bestellinhalt) ausschließlich zur Erfüllung des Kaufvertrags gemäß Art. 6 Abs. 1 lit. b DSGVO verarbeitet. Die Zahlungsabwicklung erfolgt über Stripe (Stripe Payments Europe, Ltd., 1 Grand Canal Street Lower, Dublin, Irland, sowie deren Mutterunternehmen Stripe, Inc., USA) als Auftragsverarbeiter für uns. Vollständige Zahlungskartendaten erhalten oder speichern wir nicht selbst; diese werden direkt und verschlüsselt an Stripe übermittelt. Soweit Daten an Stripe-Gesellschaften außerhalb der EU/des EWR übermittelt werden, stützt sich dies auf geeignete Garantien wie das EU-U.S. Data Privacy Framework oder Standardvertragsklauseln. Details findest du in der Datenschutzerklärung von Stripe unter stripe.com/privacy.' },
         { heading: 'Cookies', body: 'Diese Website setzt derzeit keine Cookies und verwendet keine Tracking- oder Analyse-Tools. Sollte sich dies ändern, wird dieser Hinweis entsprechend aktualisiert und, sofern gesetzlich erforderlich, wird deine Einwilligung vorab eingeholt.' },
         { heading: 'Empfänger und Speicherdauer', body: 'Personenbezogene Daten werden nur im erforderlichen Umfang an die oben genannten Auftragsverarbeiter (Hosting-, Formular- und Zahlungsanbieter) weitergegeben und nicht verkauft oder an sonstige Dritte weitergegeben. Daten werden nur so lange gespeichert, wie es für die oben beschriebenen Zwecke erforderlich ist oder gesetzliche Aufbewahrungsfristen dies vorschreiben (z. B. handels- und steuerrechtliche Aufbewahrungsfristen von bis zu 10 Jahren für Bestell- und Rechnungsdaten).' },

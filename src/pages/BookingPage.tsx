@@ -8,6 +8,8 @@ import { DateAvailabilityPicker } from '../components/DateAvailabilityPicker'
 import { useLanguage } from '../context/LanguageContext'
 
 const DEPOSIT = '50,00 EUR'
+const MAX_REFERENCE_FILES = 5
+const MAX_REFERENCE_BYTES = 4 * 1024 * 1024
 
 const fieldClass = 'mt-2 w-full border border-neutral-700 bg-neutral-900 px-3 py-3 text-sm text-neutral-100 outline-none transition-colors placeholder:text-neutral-600 focus:border-neutral-200'
 const fieldMissingClass = 'border-neutral-400'
@@ -88,22 +90,33 @@ export function BookingPage() {
       return
     }
 
+    const formData = new FormData(form)
+    const referenceFiles = formData.getAll('references').filter((value): value is File => value instanceof File && value.size > 0)
+    if (
+      referenceFiles.length > MAX_REFERENCE_FILES ||
+      referenceFiles.reduce((total, file) => total + file.size, 0) > MAX_REFERENCE_BYTES
+    ) {
+      setSubmitError(b.referenceFilesError)
+      return
+    }
+
     setSubmitting(true)
     setMissingFields(new Set())
     setSubmitError(null)
 
-    const formData = new FormData(form)
     const data: Record<string, string> = {}
     formData.forEach((value, key) => {
-      data[key] = typeof value === 'string' ? value : ''
+      if (typeof value === 'string') data[key] = value
     })
+    data.language = language
 
     try {
       // 1. Send booking notification to admin
+      formData.append('checkoutType', mode)
+      formData.append('language', language)
       const bookingResponse = await fetch('/api/booking', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, checkoutType: mode }),
+        body: formData,
       })
       if (!bookingResponse.ok) {
         const body = (await bookingResponse.json().catch(() => ({}))) as { error?: string }
@@ -241,6 +254,19 @@ export function BookingPage() {
                     defaultValue={referenceMotifText}
                     onInput={() => clearFieldHighlight('motif')}
                   />
+                </label>
+                <label className={labelClass}>
+                  {b.referenceFiles}
+                  <input
+                    className={fieldClass}
+                    name="references"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf"
+                    multiple
+                  />
+                  <span className="mt-2 block text-xs normal-case tracking-normal text-neutral-500">
+                    {b.referenceFilesHint}
+                  </span>
                 </label>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <label className={labelClass}>
