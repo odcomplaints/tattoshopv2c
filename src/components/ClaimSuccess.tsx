@@ -90,7 +90,9 @@ export function ClaimSuccess({ sessionId }: { sessionId: string | null }) {
       <h1 className="mt-4 text-3xl font-medium uppercase tracking-widest text-neutral-100">{copy.heading}</h1>
       <p className="mt-4 text-sm leading-7 text-neutral-400" role="status">{message}</p>
       {phase.kind === 'paid' && sessionId && <DownloadList sessionId={sessionId} claims={phase.claims} />}
-      {sessionId && <p className="mt-4 break-all text-[10px] uppercase tracking-widest text-neutral-600">{sessionId}</p>}
+      {sessionId && phase.kind !== 'paid' && phase.kind !== 'loading' && (
+        <p className="mt-4 break-all text-[10px] uppercase tracking-widest text-neutral-600">{sessionId}</p>
+      )}
       <Link
         to="/work"
         className="mt-8 inline-block text-xs uppercase tracking-widest text-neutral-300 underline underline-offset-4 transition-colors hover:text-accent"
