@@ -9,7 +9,8 @@ export type ClaimState = 'none' | 'available' | 'reserved' | 'claimed'
 export function getClaimState(work: Work, status: ClaimStatus): ClaimState {
   if (!isClaimEnabled(work)) return 'none'
   if (work.claim.claimed || status.claimed.includes(work.id)) return 'claimed'
-  if (status.reserved.includes(work.id)) return 'reserved'
+  // Open checkouts ("reserved") are deliberately not shown: a piece stays claimable in the UI,
+  // and the server refuses the checkout if someone else is paying for it right now.
   return 'available'
 }
 
