@@ -11,10 +11,21 @@ import {
 } from './_claims.js'
 import { claimCopy, claimDeliveryFiles, claimFileLabels, formatClaimPrice, getWorkById, parseWorkIds } from '../src/data/claims.js'
 import type { ClaimLanguage, ClaimableWork } from '../src/data/claims.js'
+import { buildInvoicePdf, invoiceFilename, toBase64 } from './_invoice.js'
 
 type Session = Record<string, unknown>
 
-export type SendMail = (apiKey: string, to: string, from: string, subject: string, text: string, html: string) => Promise<void>
+export type MailAttachment = { filename: string; content: string }
+
+export type SendMail = (
+  apiKey: string,
+  to: string,
+  from: string,
+  subject: string,
+  text: string,
+  html: string,
+  attachments?: MailAttachment[],
+) => Promise<void>
 
 export type ClaimContext = {
   resendKey: string | undefined
@@ -156,6 +167,37 @@ export async function handleClaimPaid(session: Session, context: ClaimContext): 
   const hasDuplicate = duplicates.length > 0
   const duplicateWarning = `⚠️ Bereits vergeben: ${duplicates.map((entry) => entry.title).join(', ')} – diese Zahlung (anteilig) bitte zurückerstatten!`
 
+  // Same PDF for buyer and owner. The date comes from the session so webhook and success-page fallback agree on the number.
+  const invoiceDate = typeof session.created === 'number' ? new Date(session.created * 1000) : new Date()
+  const address = (session.customer_details as { address?: Record<string, string | null> } | undefined)?.address
+  const invoice: MailAttachment[] =
+    delivered.length > 0
+      ? [
+          {
+            filename: invoiceFilename(sessionId, invoiceDate),
+            content: toBase64(
+              buildInvoicePdf({
+                sessionId,
+                language,
+                date: invoiceDate,
+                buyerName: customerDetails?.name || '',
+                buyerEmail: customerEmail || '',
+                buyerAddress: [
+                  address?.line1,
+                  address?.line2,
+                  [address?.postal_code, address?.city].filter(Boolean).join(' '),
+                  address?.country,
+                ].filter((line): line is string => !!line),
+                lines: delivered.map((entry) => ({
+                  description: `${copy.cart.label}: ${entry.title}`,
+                  amountCents: entry.claim.priceCents,
+                })),
+              }),
+            ),
+          },
+        ]
+      : []
+
   const tasks: Promise<unknown>[] = [
     context.send(
       context.resendKey,
@@ -170,10 +212,12 @@ export async function handleClaimPaid(session: Session, context: ClaimContext): 
         `Session: ${sessionId}`,
         ...downloads.map((download) => `Download ${download.title}: ${download.url}`),
         ...(hasDuplicate ? ['Für bereits vergebene Motive wurde der Download gesperrt und nicht per Mail verschickt.'] : []),
+        ...(invoice.length > 0 ? ['Rechnung als PDF im Anhang.'] : []),
       ].join('\n'),
       `<p style="font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;">${
         hasDuplicate ? `<strong>${escapeHtml(duplicateWarning)}</strong><br>` : '<strong>🎨 Neuer Claim</strong><br>'
       }Motiv: ${escapeHtml(titles)}<br>Kunde: ${escapeHtml(customerDetails?.name || '—')} &lt;${escapeHtml(customerEmail || 'keine E-Mail')}&gt;<br>Betrag (Vorlagen): ${escapeHtml(amount)}<br>Session: ${escapeHtml(sessionId)}</p>`,
+      invoice,
     ),
   ]
 
@@ -208,6 +252,7 @@ export async function handleClaimPaid(session: Session, context: ClaimContext): 
           license: copy.license,
           footerNote: copy.email.next,
         }),
+        invoice,
       ),
     )
   }

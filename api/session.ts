@@ -14,11 +14,11 @@ export const config = { runtime: 'edge' }
 // Best-effort guard against repeat mails on page reloads when KV is not configured.
 const fulfilledHere = new Set<string>()
 
-const sendMail: SendMail = async (apiKey, to, from, subject, text, html) => {
+const sendMail: SendMail = async (apiKey, to, from, subject, text, html, attachments = []) => {
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from, to: [to], subject, text, html }),
+    body: JSON.stringify({ from, to: [to], subject, text, html, ...(attachments.length ? { attachments } : {}) }),
   })
   if (!response.ok) {
     throw new Error(`Resend request failed (${response.status}): ${await response.text().catch(() => '')}`)
@@ -50,6 +50,7 @@ export default async function handler(request: Request): Promise<Response> {
   try {
     const session = await stripeGet<{
       id?: string
+      created?: number
       status?: string
       payment_status?: string
       amount_total?: number
