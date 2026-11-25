@@ -50,7 +50,7 @@ export function ProductAccordion() {
             onClick={() => open(product.id)}
             onKeyDown={(event) => event.key === 'Enter' && open(product.id)}
           >
-            <img src={optimizedSrc(product.image, 400)} alt={product.name} loading="lazy" decoding="async" width="200" height="600" />
+            <img src={optimizedSrc(product.image, 2000)} alt={product.name} loading="lazy" decoding="async" />
           </div>
         ))}
       </div>

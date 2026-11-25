@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
+import { ClaimDownloads, ClaimSuccess } from '../components/ClaimSuccess'
 import { useShop } from '../context/ShopContext'
 import { useLanguage } from '../context/LanguageContext'
 
@@ -12,6 +13,8 @@ export function SuccessPage() {
   const { language, toggleLanguage } = useLanguage()
 
   const isBooking = type === 'booking'
+  const isClaim = type === 'claim'
+  const hasClaims = searchParams.get('claims') === '1'
 
   // The payment already succeeded on Stripe's side by the time the customer
   // lands here, so the cart can be safely emptied. Booking deposits never
@@ -21,8 +24,10 @@ export function SuccessPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const title = isBooking ? 'Zahlung erfolgreich | OD COMPLAINTS' : 'Payment successful | OD COMPLAINTS'
-  const description = isBooking ? 'Dein Termin ist reserviert.' : 'Thank you for your order.'
+  const title = isClaim
+    ? 'Claim | OD COMPLAINTS'
+    : isBooking ? 'Zahlung erfolgreich | OD COMPLAINTS' : 'Payment successful | OD COMPLAINTS'
+  const description = isClaim ? 'Deine Tattoo-Vorlage.' : isBooking ? 'Dein Termin ist reserviert.' : 'Thank you for your order.'
 
   return (
     <Layout
@@ -39,6 +44,9 @@ export function SuccessPage() {
         </button>
       }
     >
+      {isClaim ? (
+        <ClaimSuccess sessionId={sessionId} />
+      ) : (
       <div className="mx-auto flex min-h-[50svh] max-w-md flex-col items-center justify-center text-center">
         <p className="text-xs uppercase tracking-widest text-accent">
           {isBooking ? (language === 'de' ? 'Buchung bestätigt' : 'Booking confirmed') : language === 'de' ? 'Bestellung bestätigt' : 'Order confirmed'}
@@ -66,7 +74,9 @@ export function SuccessPage() {
         >
           {isBooking ? (language === 'de' ? 'Zurück zur Startseite' : 'Back to home') : language === 'de' ? 'Weiter einkaufen' : 'Continue shopping'}
         </Link>
+        {hasClaims && <ClaimDownloads sessionId={sessionId} />}
       </div>
+      )}
     </Layout>
   )
 }

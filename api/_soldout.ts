@@ -10,6 +10,10 @@
 
 const SOLD_OUT_SET_KEY = 'sold_out_ids'
 
+export function isKvConfigured(): boolean {
+  return getConfig() !== null
+}
+
 function getConfig(): { url: string; token: string } | null {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
   const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
@@ -17,7 +21,7 @@ function getConfig(): { url: string; token: string } | null {
   return { url: url.replace(/\/$/, ''), token }
 }
 
-async function redisCommand<T = unknown>(command: (string | number)[]): Promise<T | null> {
+export async function redisCommand<T = unknown>(command: (string | number)[]): Promise<T | null> {
   const config = getConfig()
   if (!config) return null
   const response = await fetch(config.url, {
@@ -33,7 +37,7 @@ async function redisCommand<T = unknown>(command: (string | number)[]): Promise<
   return body.result
 }
 
-async function redisPipeline(commands: (string | number)[][]): Promise<unknown[] | null> {
+export async function redisPipeline(commands: (string | number)[][]): Promise<unknown[] | null> {
   const config = getConfig()
   if (!config) return null
   const response = await fetch(`${config.url}/pipeline`, {

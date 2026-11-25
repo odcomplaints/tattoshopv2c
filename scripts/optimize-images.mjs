@@ -37,7 +37,7 @@ const MANIFEST = join('src', 'data', 'imageManifest.json')
 const WIDTHS = [400, 800, 1200, 2000]
 const QUALITY = 78
 // Assets that must stay as-is (email clients need PNG; already-small files).
-const SKIP_DIRS = ['opt', join('assets', 'email')]
+const SKIP_DIRS = ['opt', 'claims', join('assets', 'email')]
 const RASTER = new Set(['.png', '.jpg', '.jpeg'])
 
 async function* walk(dir) {

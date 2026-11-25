@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Layout } from '../components/Layout'
 import { ExpressPay } from '../components/ExpressPay'
+import { useLanguage } from '../context/LanguageContext'
 import { useShop } from '../context/ShopContext'
 import { cartKey, maxCartQuantity } from '../lib/cart'
+import { claimCopy, formatClaimPrice, getClaimableWork, workIdFromCartId } from '../data/claims'
 import { isPrintOnDemand } from '../data/printOnDemand'
 import { shopItems } from '../data/shop'
-import type { ShopItem } from '../data/shop'
 import { startCheckout } from '../lib/checkout'
 import { optimizedSrc } from '../lib/image'
 
@@ -15,36 +16,90 @@ function parsePrice(price: string) {
   return match ? parseFloat(match[0].replace(',', '.')) : 0
 }
 
+type CartLineView = {
+  key: string
+  id: string
+  size: string | undefined
+  quantity: number
+  name: string
+  priceLabel: string
+  unitPrice: number
+  image: string
+  category: string
+  href: string
+  soldOut: boolean
+  /** Digital tattoo template (`claim:<workId>`). */
+  claim: boolean
+}
+
 export function CartPage() {
   const { cart, updateQuantity, removeFromCart, cartCount, isSoldOut } = useShop()
+  const { language } = useLanguage()
+  const copy = claimCopy[language]
   const [searchParams] = useSearchParams()
   const canceled = searchParams.get('canceled') === '1'
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [claimConsent, setClaimConsent] = useState(false)
 
   const items = cart
-    .map((entry) => {
+    .map((entry): CartLineView | null => {
+      const workId = workIdFromCartId(entry.id)
+      if (workId !== null) {
+        const piece = getClaimableWork(workId)
+        if (!piece) return null
+        return {
+          key: cartKey(entry),
+          id: entry.id,
+          size: undefined,
+          quantity: 1,
+          name: piece.title,
+          priceLabel: formatClaimPrice(piece.claim.priceCents),
+          unitPrice: piece.claim.priceCents / 100,
+          image: piece.image,
+          category: copy.cart.label,
+          href: `/work/${piece.id}`,
+          soldOut: isSoldOut(entry.id),
+          claim: true,
+        }
+      }
       const product = shopItems.find((shopItem) => shopItem.id === entry.id)
-      return product ? { key: cartKey(entry), id: entry.id, size: entry.size, quantity: entry.quantity, product } : null
+      if (!product) return null
+      return {
+        key: cartKey(entry),
+        id: entry.id,
+        size: entry.size,
+        quantity: entry.quantity,
+        name: product.name,
+        priceLabel: product.price,
+        unitPrice: parsePrice(product.price),
+        image: product.image,
+        category: product.category,
+        href: `/shop/${entry.id}`,
+        soldOut: product.availability === 'sold-out' || isSoldOut(product.id),
+        claim: false,
+      }
     })
-    .filter(
-      (entry): entry is { key: string; id: string; size: string | undefined; quantity: number; product: ShopItem } =>
-        entry !== null,
-    )
+    .filter((entry): entry is CartLineView => entry !== null)
 
-  const subtotal = items.reduce((total, entry) => total + parsePrice(entry.product.price) * entry.quantity, 0)
-  const hasSoldOutItem = items.some(
-    (entry) => entry.product.availability === 'sold-out' || isSoldOut(entry.product.id),
-  )
+  const subtotal = items.reduce((total, entry) => total + entry.unitPrice * entry.quantity, 0)
+  const hasSoldOutItem = items.some((entry) => entry.soldOut)
+  const hasClaim = items.some((entry) => entry.claim)
+  const onlyClaims = hasClaim && items.every((entry) => entry.claim)
   // A POD line without a size (e.g. from an old saved cart) can't be printed.
   const hasPodWithoutSize = items.some((entry) => isPrintOnDemand(entry.id) && !entry.size)
-  const checkoutBlocked = hasSoldOutItem || hasPodWithoutSize
+  const consentMissing = hasClaim && !claimConsent
+  const checkoutBlocked = hasSoldOutItem || hasPodWithoutSize || consentMissing
 
   async function handleCheckout() {
     setError(null)
+    if (consentMissing) {
+      setError(copy.cart.consentRequired)
+      return
+    }
     setLoading(true)
     try {
-      await startCheckout(cart)
+      await startCheckout(cart, { claimConsent, language })
       // On success the browser is redirected to Stripe, so no further state
       // update is needed here.
     } catch (err) {
@@ -78,22 +133,22 @@ export function CartPage() {
         ) : (
           <div className="mt-8 grid gap-12 lg:grid-cols-[1.4fr_1fr]">
             <ul className="flex flex-col gap-6">
-              {items.map(({ key, id, size, quantity, product }) => {
-                const soldOut = product.availability === 'sold-out' || isSoldOut(product.id)
+              {items.map(({ key, id, size, quantity, name, priceLabel, image, category, href, soldOut, claim }) => {
                 const pod = isPrintOnDemand(id)
                 return (
                 <li key={key} className="flex gap-4 border-b border-neutral-800 pb-6">
-                  <Link to={`/shop/${id}`} className="h-24 w-20 shrink-0 overflow-hidden">
-                    <img src={optimizedSrc(product.image, 200)} alt={product.name} loading="lazy" decoding="async" className={`h-full w-full object-contain ${soldOut ? 'blur-[2px]' : ''}`} />
+                  <Link to={href} className="h-24 w-20 shrink-0 overflow-hidden">
+                    <img src={optimizedSrc(image, 200)} alt={name} loading="lazy" decoding="async" className={`h-full w-full object-contain ${soldOut ? 'blur-[2px]' : ''}`} />
                   </Link>
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex items-baseline justify-between gap-3 text-xs uppercase tracking-widest">
-                      <Link to={`/shop/${id}`} className="font-medium text-neutral-100 hover:text-accent">
-                        {product.name}
+                      <Link to={href} className="font-medium text-neutral-100 hover:text-accent">
+                        {name}
                       </Link>
-                      <p className="shrink-0 text-neutral-400">{product.price}</p>
+                      <p className="shrink-0 text-neutral-400">{priceLabel}</p>
                     </div>
-                    <p className="text-xs text-neutral-300">{product.category}</p>
+                    <p className="text-xs text-neutral-300">{category}</p>
+                    {claim && <p className="text-xs uppercase tracking-widest text-neutral-400">{copy.cart.noShipping}</p>}
                     {pod && (
                       <p className="text-xs uppercase tracking-widest text-neutral-400">
                         Print on Demand{size ? ` · Größe ${size}` : ''}
@@ -101,16 +156,19 @@ export function CartPage() {
                     )}
                     {soldOut && (
                       <p className="text-xs uppercase tracking-widest text-accent">
-                        Dieser Artikel ist leider ausverkauft — bitte entferne ihn, um fortzufahren.
+                        {claim
+                          ? copy.cart.unavailable
+                          : 'Dieser Artikel ist leider ausverkauft — bitte entferne ihn, um fortzufahren.'}
                       </p>
                     )}
                     <div className="mt-1 flex items-center gap-3 text-xs uppercase tracking-widest">
+                      {!claim && (
                       <div className="flex items-center border border-neutral-800">
                         <button
                           type="button"
                           onClick={() => updateQuantity(key, quantity - 1)}
                           className="px-2.5 py-1 text-neutral-300 hover:text-accent"
-                          aria-label={`Decrease quantity of ${product.name}`}
+                          aria-label={`Decrease quantity of ${name}`}
                         >
                           &minus;
                         </button>
@@ -120,11 +178,12 @@ export function CartPage() {
                           onClick={() => updateQuantity(key, quantity + 1)}
                           disabled={soldOut || quantity >= maxCartQuantity(id)}
                           className="px-2.5 py-1 text-neutral-300 transition-colors hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-neutral-300"
-                          aria-label={`Increase quantity of ${product.name}`}
+                          aria-label={`Increase quantity of ${name}`}
                         >
                           +
                         </button>
                       </div>
+                      )}
                       <button
                         type="button"
                         onClick={() => removeFromCart(key)}
@@ -147,8 +206,19 @@ export function CartPage() {
                 <p className="text-neutral-100">{subtotal.toFixed(2)} EUR</p>
               </div>
               <p className="text-xs leading-6 text-neutral-400">
-                Shipping and taxes are calculated at checkout.
+                {onlyClaims ? copy.cart.noShipping : 'Shipping and taxes are calculated at checkout.'}
               </p>
+              {hasClaim && (
+                <label className="flex cursor-pointer items-start gap-3 text-xs leading-5 text-neutral-400">
+                  <input
+                    type="checkbox"
+                    checked={claimConsent}
+                    onChange={(event) => setClaimConsent(event.target.checked)}
+                    className="mt-1 h-3.5 w-3.5 shrink-0 accent-accent"
+                  />
+                  <span>{copy.consent}</span>
+                </label>
+              )}
               {error && (
                 <p className="border border-accent bg-neutral-900/40 px-4 py-3 text-xs uppercase tracking-widest text-accent">
                   {error}

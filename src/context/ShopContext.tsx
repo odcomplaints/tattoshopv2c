@@ -1,7 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { getPodProduct } from '../data/printOnDemand'
+import { getClaimableWork, workIdFromCartId } from '../data/claims'
 import { cartKey, maxCartQuantity } from '../lib/cart'
+import { fetchClaimStatus, getClaimState } from '../lib/claims'
+import type { ClaimStatus } from '../lib/claims'
 import { fetchSoldOutIds } from '../lib/soldOut'
 
 /** `size` is only set for Print-on-Demand items, which are ordered per size. */
@@ -20,8 +23,10 @@ type ShopContextValue = {
   favoritesCount: number
   isFavorite: (id: string) => boolean
   toggleFavorite: (id: string) => void
-  /** True if this product was auto-marked sold-out by a real purchase (live, not from shop.ts). */
+  /** True if this product was auto-marked sold-out by a real purchase (live, not from shop.ts). Also covers claimed templates. */
   isSoldOut: (id: string) => boolean
+  /** Live claim state of the tattoo templates (see api/claim-status.ts). */
+  claimStatus: ClaimStatus
 }
 
 const ShopContext = createContext<ShopContextValue | null>(null)
@@ -51,11 +56,15 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>(() => readCart())
   const [favorites, setFavorites] = useState<string[]>(() => readFavorites())
   const [soldOutIds, setSoldOutIds] = useState<string[]>([])
+  const [claimStatus, setClaimStatus] = useState<ClaimStatus>({ claimed: [], reserved: [] })
 
   useEffect(() => {
     let cancelled = false
     fetchSoldOutIds().then((ids) => {
       if (!cancelled) setSoldOutIds(ids)
+    })
+    fetchClaimStatus().then((status) => {
+      if (!cancelled) setClaimStatus(status)
     })
     return () => {
       cancelled = true
@@ -70,7 +79,14 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites))
   }, [favorites])
 
-  const isSoldOut = (id: string) => soldOutIds.includes(id)
+  const isSoldOut = (id: string) => {
+    const workId = workIdFromCartId(id)
+    if (workId !== null) {
+      const piece = getClaimableWork(workId)
+      return !piece || getClaimState(piece, claimStatus) === 'claimed'
+    }
+    return soldOutIds.includes(id)
+  }
 
   const addToCart = (id: string, size?: string) => {
     if (isSoldOut(id)) return
@@ -131,6 +147,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
         isFavorite,
         toggleFavorite,
         isSoldOut,
+        claimStatus,
       }}
     >
       {children}

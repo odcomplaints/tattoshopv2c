@@ -11,6 +11,7 @@ function page<K extends string>(load: () => Promise<Record<K, ComponentType>>, n
 }
 
 const WorkPage = page(() => import('./pages/WorkPage'), 'WorkPage')
+const WorkClaimPage = page(() => import('./pages/WorkClaimPage'), 'WorkClaimPage')
 const ShopPage = page(() => import('./pages/ShopPage'), 'ShopPage')
 const CartPage = page(() => import('./pages/CartPage'), 'CartPage')
 const SuccessPage = page(() => import('./pages/SuccessPage'), 'SuccessPage')
@@ -36,6 +37,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/work" element={<WorkPage />} />
+          <Route path="/work/:id" element={<WorkClaimPage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/shop/cart" element={<CartPage />} />
           <Route path="/shop/success" element={<SuccessPage />} />

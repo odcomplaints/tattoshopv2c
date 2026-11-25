@@ -21,6 +21,8 @@ import { getShippingDetails, isPodLineItem, sendPodOrderEmail } from './_podOrde
 import type { PaidLineItem } from './_podOrder.js'
 import { getPodProduct, isPrintOnDemand } from '../src/data/printOnDemand.js'
 import { bookingDocumentFilenames } from '../src/data/bookingDocuments.js'
+import { CLAIM_METADATA_TYPE } from '../src/data/claims.js'
+import { handleClaimAbandoned, handleClaimPaid } from './_claimFulfillment.js'
 
 const STRIPE_API_BASE = 'https://api.stripe.com'
 const STRIPE_API_VERSION = '2026-07-29.dahlia'
@@ -459,6 +461,12 @@ async function handleCheckoutCompleted(session: Record<string, unknown>, siteOri
     await handleBookingDepositPaid(session, resendKey, siteOrigin)
     return
   }
+  if (metadata?.type === CLAIM_METADATA_TYPE) {
+    await handleClaimPaid(session, claimContext(resendKey, siteOrigin))
+    return
+  }
+  // Mixed cart (physical items + templates): deliver the templates, then process the shop order as usual.
+  if (metadata?.work_ids) await handleClaimPaid(session, claimContext(resendKey, siteOrigin))
 
   const lineItems = stripeSecretKey && sessionId ? await fetchLineItems(sessionId, stripeSecretKey) : []
 
@@ -598,6 +606,16 @@ function podOrderRecipient(): string {
   return process.env.POD_ORDER_EMAIL || process.env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL
 }
 
+function claimContext(resendKey: string | undefined, siteOrigin: string) {
+  return {
+    resendKey,
+    from: process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL,
+    adminTo: process.env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY_EMAIL,
+    siteOrigin,
+    send: notifyEmail,
+  }
+}
+
 // Delayed payment (e.g. SEPA) for a shop order succeeded: now send the POD
 // production order that was held back in handleCheckoutCompleted.
 async function handleShopAsyncPaymentSucceeded(session: Record<string, unknown>): Promise<void> {
@@ -657,9 +675,19 @@ export default async function handler(request: Request): Promise<Response> {
       const metadata = session.metadata as Record<string, string> | undefined
       if (metadata?.type === 'booking-deposit') {
         await handleBookingDepositPaid(session, process.env.RESEND_API_KEY, new URL(request.url).origin)
+      } else if (metadata?.type === CLAIM_METADATA_TYPE) {
+        await handleClaimPaid(session, claimContext(process.env.RESEND_API_KEY, new URL(request.url).origin))
       } else {
+        if (metadata?.work_ids) await handleClaimPaid(session, claimContext(process.env.RESEND_API_KEY, new URL(request.url).origin))
         await handleShopAsyncPaymentSucceeded(session)
       }
+      break
+    }
+    case 'checkout.session.expired':
+    case 'checkout.session.async_payment_failed': {
+      const session = event.data?.object ?? {}
+      const metadata = session.metadata as Record<string, string> | undefined
+      if (metadata?.work_ids) await handleClaimAbandoned(session)
       break
     }
     default:
