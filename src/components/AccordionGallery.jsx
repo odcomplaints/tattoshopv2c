@@ -2,6 +2,13 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 
 import './AccordionGallery.css';
+import { responsiveImage } from '../lib/image';
+
+// Panels are full width on mobile and at most ~60% of the row when expanded.
+const accordionImage = src => {
+  const { src: url, srcSet, sizes } = responsiveImage(src, '(min-width: 768px) 60vw, 100vw');
+  return { src: url, srcSet, sizes };
+};
 
 const DEFAULT_ITEMS = [
   { image: 'https://picsum.photos/id/1015/900/1200', label: 'Canyon', link: '#' },
@@ -248,7 +255,7 @@ const AccordionGallery = ({
             <span className="ag-panel__frame">
               <span className="ag-panel__media" ref={el => (mediaRefs.current[i] = el)}>
                 <img
-                  src={item.image}
+                  {...accordionImage(item.image)}
                   alt={item.alt || item.label || ''}
                   draggable="false"
                   style={{

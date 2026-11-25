@@ -8,6 +8,7 @@ import { isPrintOnDemand } from '../data/printOnDemand'
 import { shopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
 import { startCheckout } from '../lib/checkout'
+import { optimizedSrc } from '../lib/image'
 
 function parsePrice(price: string) {
   const match = price.match(/[\d.,]+/)
@@ -83,7 +84,7 @@ export function CartPage() {
                 return (
                 <li key={key} className="flex gap-4 border-b border-neutral-800 pb-6">
                   <Link to={`/shop/${id}`} className="h-24 w-20 shrink-0 overflow-hidden">
-                    <img src={product.image} alt={product.name} className={`h-full w-full object-contain ${soldOut ? 'blur-[2px]' : ''}`} />
+                    <img src={optimizedSrc(product.image, 200)} alt={product.name} loading="lazy" decoding="async" className={`h-full w-full object-contain ${soldOut ? 'blur-[2px]' : ''}`} />
                   </Link>
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex items-baseline justify-between gap-3 text-xs uppercase tracking-widest">

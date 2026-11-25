@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
+import { optimizedSrc, responsiveImage } from '../lib/image'
 
 type ZoomImageProps = {
   src: string
@@ -7,6 +8,8 @@ type ZoomImageProps = {
   className?: string
   imgClassName?: string
   zoom?: number
+  /** Rendered width for responsive image selection (img `sizes`). */
+  sizes?: string
   lensSize?: number
 }
 
@@ -28,6 +31,7 @@ export function ZoomImage({
   className = '',
   imgClassName = '',
   zoom = 1.6,
+  sizes = '(min-width: 1024px) 50vw, 100vw',
   lensSize = 200,
 }: ZoomImageProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -95,7 +99,13 @@ export function ZoomImage({
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setHovering(false)}
     >
-      <img ref={imgRef} src={src} alt={alt} draggable={false} className={imgClassName} />
+      <img
+        ref={imgRef}
+        {...responsiveImage(src, sizes)}
+        alt={alt}
+        draggable={false}
+        className={imgClassName}
+      />
 
       {hovering && (
         <div
@@ -105,7 +115,8 @@ export function ZoomImage({
             height: lensSize,
             left: lensPos.x - lensSize / 2,
             top: lensPos.y - lensSize / 2,
-            backgroundImage: `url(${src})`,
+            // Zoomed view needs the large variant; only fetched once the lens is shown.
+            backgroundImage: `url(${optimizedSrc(src, 2000)})`,
             backgroundRepeat: 'no-repeat',
             backgroundSize: bgSize,
             backgroundPosition: `${bgPosX}px ${bgPosY}px`,

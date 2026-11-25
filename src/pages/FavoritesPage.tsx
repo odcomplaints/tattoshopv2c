@@ -3,6 +3,7 @@ import { Layout } from '../components/Layout'
 import { HeartIcon } from '../components/icons'
 import { useShop } from '../context/ShopContext'
 import { shopItems } from '../data/shop'
+import { responsiveImage } from '../lib/image'
 
 export function FavoritesPage() {
   const { favorites, toggleFavorite } = useShop()
@@ -31,13 +32,12 @@ export function FavoritesPage() {
                 <div key={item.id} className="group relative">
                   <div className="relative aspect-[4/5] overflow-hidden">
                     <img
-                      src={item.image}
+                      {...responsiveImage(item.image, '(min-width: 768px) 33vw, 50vw')}
                       alt={`${item.name}, ${item.category}`}
                       width="800"
                       height="1000"
                       loading="lazy"
                       decoding="async"
-                      sizes="(min-width: 768px) 33vw, 50vw"
                       className="h-full w-full object-cover"
                     />
                     {item.availability === 'sold-out' && (

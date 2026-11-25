@@ -6,6 +6,7 @@ import { ExpressPay } from '../components/ExpressPay'
 import { GlobeIcon } from '../components/icons'
 import { DateAvailabilityPicker } from '../components/DateAvailabilityPicker'
 import { useLanguage } from '../context/LanguageContext'
+import { optimizedSrc } from '../lib/image'
 
 const DEPOSIT = '50,00 EUR'
 const MAX_REFERENCE_FILES = 5
@@ -225,7 +226,7 @@ export function BookingPage() {
                 {referenceImage && (
                   <div className="flex items-center gap-4 border border-neutral-800 p-3">
                     <img
-                      src={referenceImage}
+                      src={optimizedSrc(referenceImage, 800)}
                       alt={referenceTitle || 'Referenz-Design'}
                       className="h-20 w-20 shrink-0 object-contain [filter:invert(1)_brightness(1.1)]"
                     />

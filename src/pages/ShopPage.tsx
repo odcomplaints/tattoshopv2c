@@ -11,6 +11,7 @@ import { shopItems } from '../data/shop'
 import type { ShopItem } from '../data/shop'
 import { FEATURED_ORDER } from '../data/featuredOrder'
 import { isPrintOnDemand } from '../data/printOnDemand'
+import { optimizedSrc, responsiveImage } from '../lib/image'
 
 const SHOP_HEROES = [
   { file: 'hero 1.png' },
@@ -42,7 +43,8 @@ const MENU_CATEGORIES: FlowingMenuItemData[] = ['knit', 'jackets', 'tops', 'bott
     const images = shopItems
       .filter((item) => item.listed !== false && category.match(item))
       .slice(0, 1)
-      .map((item) => item.image)
+      // Menu tiles are 90×60 px — the smallest variant is plenty.
+      .map((item) => optimizedSrc(item.image, 200))
     return images.length ? { id, text: category.label, images } : null
   })
   .filter((entry): entry is FlowingMenuItemData => entry !== null)
@@ -332,13 +334,12 @@ export function ShopPage() {
               <div key={item.id} className="group relative" data-reveal>
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img
-                    src={item.image}
+                    {...responsiveImage(item.image, '(min-width: 768px) 33vw, 50vw')}
                     alt={`${item.name}, ${item.category}`}
                     width="800"
                     height="1000"
                     loading="lazy"
                     decoding="async"
-                    sizes="(min-width: 768px) 33vw, 50vw"
                     className={`h-full w-full object-contain ${soldOut ? 'blur-[2px]' : ''}`}
                   />
                   {soldOut && (

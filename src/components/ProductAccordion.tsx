@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { shopItems } from '../data/shop'
 import './ProductAccordion.css'
+import { optimizedSrc } from '../lib/image'
 
 const PREMIUM = /supreme|bape|dior|balenciaga|prada|palace|xtc|corteiz|casablanca|laarve/i
 const MAX_ITEMS = 18
@@ -49,7 +50,7 @@ export function ProductAccordion() {
             onClick={() => open(product.id)}
             onKeyDown={(event) => event.key === 'Enter' && open(product.id)}
           >
-            <img src={product.image} alt={product.name} loading="lazy" decoding="async" width="200" height="600" />
+            <img src={optimizedSrc(product.image, 400)} alt={product.name} loading="lazy" decoding="async" width="200" height="600" />
           </div>
         ))}
       </div>

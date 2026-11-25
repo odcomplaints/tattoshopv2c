@@ -9,6 +9,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { mat4, quat, vec2, vec3 } from 'gl-matrix'
 import './InfiniteMenu.css'
+import { optimizedSrc } from '../lib/image'
 
 export type InfiniteMenuItem = { image: string; title?: string; description?: string; link?: string }
 
@@ -728,7 +729,7 @@ class InfiniteGridMenu {
               console.error(`[InfiniteMenu] Failed to load image: ${item.image}`)
               finish(null)
             }
-            img.src = item.image
+            img.src = optimizedSrc(item.image, 800)
           }),
       ),
     ).then((images) => {

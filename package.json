@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:full": "wrangler pages dev --port 8788 --compatibility-date=2024-09-01 -- npm run dev",
+    "images": "node scripts/optimize-images.mjs",
+    "prebuild": "node scripts/optimize-images.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -51,6 +53,7 @@
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
     "postcss": "^8.5.21",
+    "sharp": "^0.35.5",
     "stripe": "^22.6.1",
     "tsx": "^4.23.13",
     "typescript": "~6.0.2",

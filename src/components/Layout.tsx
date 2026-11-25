@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import logo from '../assets/logo2.png'
-import logoRedEyes from '../assets/logo2-redeyes.png'
+// Full-size PNG only for social previews (og:image); the page shows the small WebP.
+import ogLogo from '../assets/logo2.png'
+import logo from '../assets/logo2.webp'
+import logoRedEyes from '../assets/logo2-redeyes.webp'
 import { useShop } from '../context/ShopContext'
 import { useLanguage } from '../context/LanguageContext'
 import { CartIcon, HeartIcon } from './icons'
@@ -50,7 +52,7 @@ export function Layout({
   const isHome = location.pathname === '/'
   const compact = scrolled && !isHome
   const canonicalUrl = `${SITE_URL}${location.pathname}`
-  const ogImage = `${SITE_URL}${logo}`
+  const ogImage = `${SITE_URL}${ogLogo}`
   const mobileMenuItemCount = navigation.length + (isShopSection ? 2 : 0)
 
   useEffect(() => {

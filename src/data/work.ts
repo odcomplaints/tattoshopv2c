@@ -1,15 +1,14 @@
-import { z } from 'zod'
-
-export const workSchema = z.object({
-  title: z.string(),
-  date: z.date(),
-  style: z.string(),
-  bodyPart: z.string(),
-  image: z.union([z.string().url(), z.string().startsWith('/')]),
-  zoom: z.number().optional(),
-})
-
-export type Work = z.infer<typeof workSchema>
+// Static data, checked by TypeScript at build time (no runtime validation
+// library needed in the browser bundle).
+export type Work = {
+  title: string
+  date: Date
+  style: string
+  bodyPart: string
+  /** Absolute URL or a path under public/, e.g. '/assets/work/1.png' */
+  image: string
+  zoom?: number
+}
 
 export const work: Work[] = [
   { title: 'Night Bloom', date: new Date('2026-06-18'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/1.png' },
@@ -33,6 +32,6 @@ export const work: Work[] = [
   // { title: 'Undercurrent', date: new Date('2026-09-08'), style: 'Botanical', bodyPart: 'Upper arm', image: '/assets/work/img-7983.png', zoom: 1.5 },
   // { title: 'Wanderer', date: new Date('2026-09-21'), style: 'Fineline', bodyPart: 'Upper arm', image: '/assets/work/img-8230.png', zoom: 1.5 },
   // { title: 'Threshold', date: new Date('2026-09-20'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-8231.png', zoom: 1.5 },
-].map((entry) => workSchema.parse(entry))
+]
 
 export const newestWork = [...work].sort((first, second) => second.date.getTime() - first.date.getTime())

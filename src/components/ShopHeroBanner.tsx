@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
+import { optimizedSrc } from '../lib/image'
+
+// Background images can't use srcset: pick one variant for this screen once.
+const heroWidth = typeof window === 'undefined' ? 2000 : Math.round(window.innerWidth * Math.min(window.devicePixelRatio || 1, 2))
 
 type Slide = { src: string; alt: string; x?: number; y?: number; zoom?: number }
 type Pos = { x: number; y: number; zoom: number }
@@ -121,7 +125,7 @@ export function ShopHeroBanner({ slides }: { slides: Slide[] }) {
             aria-hidden={index !== active}
             className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out ${index === active ? 'z-[1] opacity-100' : 'opacity-0'}`}
             style={{
-              backgroundImage: `url('${slide.src}')`,
+              backgroundImage: `url('${optimizedSrc(slide.src, heroWidth)}')`,
               backgroundPosition: `${posOf(slide).x}% ${posOf(slide).y}%`,
               transform: posOf(slide).zoom !== 100 ? `scale(${posOf(slide).zoom / 100})` : undefined,
             }}

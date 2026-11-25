@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { Work } from '../data/work'
+import { responsiveImage } from '../lib/image'
 
 type WorkGridProps = {
   items: Work[]
@@ -41,13 +42,12 @@ export function WorkGrid({ items }: WorkGridProps) {
           >
             <div className="aspect-[4/5] overflow-hidden bg-neutral-900">
               <img
-                src={item.image}
+                {...responsiveImage(item.image, '(min-width: 768px) 33vw, 50vw')}
                 alt={`${item.title}, ${item.style} tattoo`}
                 width="800"
                 height="1000"
                 loading={index > 1 ? 'lazy' : 'eager'}
                 decoding="async"
-                sizes="(min-width: 768px) 33vw, 50vw"
                 className="h-full w-full object-cover grayscale transition-opacity duration-200 hover:opacity-80"
                 style={item.zoom ? { transform: `scale(${item.zoom})` } : undefined}
               />
@@ -71,7 +71,7 @@ export function WorkGrid({ items }: WorkGridProps) {
             onClick={(event) => event.stopPropagation()}
           >
             <img
-              src={selected.image}
+              {...responsiveImage(selected.image, '(min-width: 768px) 768px, 100vw')}
               alt={`${selected.title}, ${selected.style} tattoo`}
               className="max-h-[75vh] w-auto max-w-full object-contain grayscale"
             />

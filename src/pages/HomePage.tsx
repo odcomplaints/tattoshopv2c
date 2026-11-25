@@ -7,8 +7,17 @@ import SpecularButton from '../components/SpecularButton'
 import { useLanguage } from '../context/LanguageContext'
 import { sliderImages } from '../data/slider'
 import { shopItems } from '../data/shop'
+import { FEATURED_ORDER } from '../data/featuredOrder'
+import { optimizedSrc } from '../lib/image'
 
-const shopMarqueeItems = shopItems.filter((item) => item.listed !== false)
+// Limited to 20 products (featured order first): every item is rendered twice
+// for the seamless loop, so the full catalog meant ~200 image downloads.
+const MARQUEE_LIMIT = 20
+const listedItems = shopItems.filter((item) => item.listed !== false)
+const shopMarqueeItems = [
+  ...FEATURED_ORDER.map((id) => listedItems.find((item) => item.id === id)).filter((item) => item !== undefined),
+  ...listedItems.filter((item) => !FEATURED_ORDER.includes(item.id)),
+].slice(0, MARQUEE_LIMIT)
 const shopMarqueeGroups = Array.from(
   { length: Math.ceil(shopMarqueeItems.length / 10) },
   (_, index) => shopMarqueeItems.slice(index * 10, (index + 1) * 10),
@@ -160,7 +169,7 @@ export function HomePage() {
                         {group.map((item) => (
                           <img
                             key={item.id}
-                            src={item.image}
+                            src={optimizedSrc(item.image, 200)}
                             alt=""
                             loading="lazy"
                             decoding="async"

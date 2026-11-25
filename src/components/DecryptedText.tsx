@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import type { CSSProperties } from 'react'
-import { motion } from 'motion/react'
 
 const styles: Record<string, CSSProperties> = {
   wrapper: {
@@ -377,7 +376,7 @@ export default function DecryptedText({
         : {}
 
   return (
-    <motion.span className={parentClassName} ref={containerRef} style={styles.wrapper} {...animateProps}>
+    <span className={parentClassName} ref={containerRef} style={styles.wrapper} {...animateProps}>
       <span style={styles.srOnly}>{displayText}</span>
 
       <span aria-hidden="true">
@@ -391,7 +390,7 @@ export default function DecryptedText({
           )
         })}
       </span>
-    </motion.span>
+    </span>
   )
 }
 

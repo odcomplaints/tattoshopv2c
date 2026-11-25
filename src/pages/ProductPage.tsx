@@ -7,6 +7,7 @@ import { useShop } from '../context/ShopContext'
 import { cartKey, maxCartQuantity } from '../lib/cart'
 import { shopItems } from '../data/shop'
 import { getPodProduct } from '../data/printOnDemand'
+import { optimizedSrc, responsiveImage } from '../lib/image'
 
 export function ProductPage() {
   const { id } = useParams()
@@ -149,7 +150,7 @@ export function ProductPage() {
                   }`}
                 >
                   <img
-                    src={src}
+                    src={optimizedSrc(src, 200)}
                     alt=""
                     width="160"
                     height="160"
@@ -259,13 +260,12 @@ export function ProductPage() {
                 <div key={related.id} className="group relative">
                   <div className="relative aspect-[4/5] overflow-hidden">
                     <img
-                      src={related.image}
+                      {...responsiveImage(related.image, '(min-width: 768px) 33vw, 50vw')}
                       alt={`${related.name}, ${related.category}`}
                       width="800"
                       height="1000"
                       loading="lazy"
                       decoding="async"
-                      sizes="(min-width: 768px) 33vw, 50vw"
                       className={`h-full w-full object-contain ${relatedSoldOut ? 'blur-[2px]' : ''}`}
                     />
                     {relatedSoldOut && (

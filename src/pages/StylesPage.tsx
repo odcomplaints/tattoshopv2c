@@ -5,6 +5,7 @@ import InfiniteMenu from '../components/InfiniteMenu'
 import type { InfiniteMenuItem } from '../components/InfiniteMenu'
 import { moodboardImages } from '../data/tattooStyles'
 import { flashSettings } from '../data/flashSettings'
+import { optimizedSrc } from '../lib/image'
 
 const INTRO_TEXT = 'A growing collection of designs, flashes and references.'
 const TYPE_SPEED_MS = 35
@@ -110,7 +111,7 @@ export function StylesPage() {
                   className="group relative aspect-square overflow-hidden bg-neutral-950"
                 >
                   <img
-                    src={menuItem.image}
+                    src={optimizedSrc(menuItem.image, 400)}
                     alt={menuItem.title ?? ''}
                     loading="lazy"
                     decoding="async"
@@ -168,7 +169,7 @@ export function StylesPage() {
               onClick={(event) => event.stopPropagation()}
             >
               <img
-                src={selectedItem.image}
+                src={optimizedSrc(selectedItem.image, 800)}
                 alt=""
                 className="max-h-[40vh] w-full object-contain [filter:invert(1)_brightness(1.1)]"
               />
