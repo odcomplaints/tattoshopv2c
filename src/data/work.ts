@@ -43,7 +43,8 @@ const FLASH_CLAIM: WorkClaim = { priceCents: 5000, singleClaimOnly: true }
 // Delivery files live under an unguessable folder name; they are only linked after payment.
 const BRIAR_CLAIM: WorkClaim = {
   ...FLASH_CLAIM,
-  files: ['png', 'pdf'].flatMap((ext) => [1, 2].map((n) => `/claims/briar-niaqu5kfopr73zvl/briar-${n}.${ext}`)),
+  // One ZIP with 2 PNG + 2 PDF.
+  file: '/claims/briar-niaqu5kfopr73zvl/briar-tattoo-flash.zip',
 }
 
 export const work: Work[] = [

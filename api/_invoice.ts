@@ -25,6 +25,7 @@ const labels = {
     description: 'Leistung',
     amount: 'Betrag',
     total: 'Gesamt',
+    vatIncluded: 'Enthaltene Umsatzsteuer',
     paid: 'Bezahlt über Stripe. Zahlungsreferenz',
     delivery: 'Lieferung: digitale Dateien per Download-Link / E-Mail.',
     taxId: 'Steuer-Nr./USt-IdNr.',
@@ -38,6 +39,7 @@ const labels = {
     description: 'Description',
     amount: 'Amount',
     total: 'Total',
+    vatIncluded: 'Included VAT',
     paid: 'Paid via Stripe. Payment reference',
     delivery: 'Delivery: digital files via download link / email.',
     taxId: 'Tax ID / VAT ID',
@@ -75,9 +77,14 @@ const approxWidth = (text: string, size: number) => text.length * size * 0.54
 
 export function buildInvoicePdf(input: InvoiceInput): Uint8Array {
   const text = labels[input.language]
-  const sellerName = process.env.INVOICE_SELLER_NAME || 'OD COMPLAINTS'
-  const sellerAddress = (process.env.INVOICE_SELLER_ADDRESS ?? '').split('|').map((line) => line.trim()).filter(Boolean)
-  const taxId = process.env.INVOICE_TAX_ID
+  const sellerName = process.env.INVOICE_SELLER_NAME || 'Jonas Geiger (OD COMPLAINTS)'
+  const sellerAddress = (process.env.INVOICE_SELLER_ADDRESS || 'Unterer Weiler 5|73527 Schwäbisch Gmünd|Deutschland|od.complaints@gmail.com')
+    .split('|')
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const taxId = process.env.INVOICE_TAX_ID || 'DE464396864'
+  // Prices are gross. Set INVOICE_VAT_RATE=0 to omit the VAT breakdown (e.g. Kleinunternehmer).
+  const vatRate = Number(process.env.INVOICE_VAT_RATE ?? '19')
   const taxNote = process.env.INVOICE_TAX_NOTE
   const total = input.lines.reduce((sum, line) => sum + line.amountCents, 0)
 
@@ -125,6 +132,11 @@ export function buildInvoicePdf(input: InvoiceInput): Uint8Array {
   putRight(545, rowY - 10, 11, formatMoney(total, input.language), true)
 
   let noteY = rowY - 46
+  if (vatRate > 0) {
+    const vat = Math.round(total - total / (1 + vatRate / 100))
+    put(50, rowY - 28, 9, `${text.vatIncluded} ${vatRate} %: ${formatMoney(vat, input.language)}`)
+    noteY -= 4
+  }
   if (taxNote) {
     put(50, noteY, 9, taxNote)
     noteY -= 14
