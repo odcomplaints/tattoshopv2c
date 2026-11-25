@@ -40,22 +40,28 @@ export type Work = {
 }
 
 const FLASH_CLAIM: WorkClaim = { priceCents: 5000, singleClaimOnly: true }
-// Delivery files live under an unguessable folder name; they are only linked after payment.
-const BRIAR_CLAIM: WorkClaim = {
+
+// Each piece ships as one ZIP (2 PNG + 2 PDF) in public/claims/<id>-<token>/<id>-tattoo-flash.zip.
+// The folder token is unguessable; the link is only handed out after payment. Checkout refuses a
+// piece whose ZIP is missing, so a piece without its file can never be sold by accident.
+const claimWithZip = (folder: string): WorkClaim => ({
   ...FLASH_CLAIM,
-  // One ZIP with 2 PNG + 2 PDF.
-  file: '/claims/briar-niaqu5kfopr73zvl/briar-tattoo-flash.zip',
-}
+  file: `/claims/${folder}/${folder.replace(/-[a-z0-9]{16}$/, '')}-tattoo-flash.zip`,
+})
+const BRIAR_CLAIM = claimWithZip('briar-niaqu5kfopr73zvl')
+const THORN_CLAIM = claimWithZip('thorn-vpyuibt4s3509lkc')
+const MIRAGE_CLAIM = claimWithZip('mirage-xhobt4rdi80y2wcu')
+const RELIC_CLAIM = claimWithZip('relic-pn8e4racyx26d19i')
 
 export const work: Work[] = [
   { id: 'night-bloom', title: 'Night Bloom', date: new Date('2026-06-18'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/1.png' },
   { id: 'low-tide', title: 'Low Tide', date: new Date('2026-05-30'), style: 'Fineline', bodyPart: 'Upper arm', image: '/assets/work/2.png' },
-  { id: 'relic', title: 'Relic', date: new Date('2026-09-07'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-7984.png', zoom: 1.5 },
+  { id: 'relic', title: 'Relic', date: new Date('2026-09-07'), style: 'Blackwork', bodyPart: 'Calf', image: '/assets/work/img-7984.png', zoom: 1.5, claim: RELIC_CLAIM },
   { id: 'briar', title: 'Briar', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8542%201.png', claim: BRIAR_CLAIM },
-  { id: 'watchful', title: 'Watchful', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8590%201.png', claim: FLASH_CLAIM },
-  { id: 'thorn', title: 'Thorn', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8767%201.png', claim: FLASH_CLAIM },
+  { id: 'watchful', title: 'Watchful', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8590%201.png' },
+  { id: 'thorn', title: 'Thorn', date: new Date('2026-11-04'), style: 'Tribal', bodyPart: 'Flash design', image: '/assets/work/IMG_8767%201.png', claim: THORN_CLAIM },
   { id: 'ethereal', title: 'Ethereal', date: new Date('2026-11-20'), style: 'Fineline', bodyPart: 'Full body', image: '/assets/work/IMG_8999%201.png' },
-  { id: 'mirage', title: 'Mirage', date: new Date('2026-11-20'), style: 'Blackwork', bodyPart: 'Full body', image: '/assets/work/IMG_8999%202.png' },
+  { id: 'mirage', title: 'Mirage', date: new Date('2026-11-20'), style: 'Blackwork', bodyPart: 'Full body', image: '/assets/work/IMG_8999%202.png', claim: MIRAGE_CLAIM },
   // Hidden: Aftermath, Ashes, Reverie, Fracture
   // { title: 'Aftermath', date: new Date('2026-09-22'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-8229.png', zoom: 1.5 },
   // { title: 'Ashes', date: new Date('2026-09-30'), style: 'Blackwork', bodyPart: 'Forearm', image: '/assets/work/img-8367.png', zoom: 1.5 },
