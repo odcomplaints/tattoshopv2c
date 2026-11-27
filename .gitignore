@@ -27,3 +27,6 @@ dist-ssr
 *.sln
 *.sw?
 claude.md
+
+# Local email preview renders
+.mail-preview-*.html
