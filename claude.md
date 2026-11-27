@@ -12,7 +12,7 @@ Stil-Referenz: velkasvestments.de – dunkel, roh, reduziert, Bilder im Fokus.
   vor `npm run build`) nach public/opt/. Im Code Bilder immer über src/lib/image.ts
   einbinden (`responsiveImage()` für <img>, `optimizedSrc()` für CSS/WebGL), nie den Originalpfad direkt
 - Backend: Vercel Edge Functions in api/ (Stripe Checkout + Webhook, Mails via Resend)
-- Deployment: Vercel (functions/ ist ein veralteter Cloudflare-Stand)
+- Deployment: Vercel
 
 ## Design-Regeln
 - Hintergrund: neutral-950, Text: neutral-200
