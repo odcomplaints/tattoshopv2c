@@ -2,8 +2,7 @@
 //
 // We talk to the Stripe API directly with `fetch` instead of the Node SDK so the
 // code runs on Vercel Edge Functions without any bundling, polyfill, or
-// Node-builtin concerns. (This mirrors functions/_stripe.ts, which is the
-// Cloudflare Pages equivalent kept for reference / future use.)
+// Node-builtin concerns.
 
 const STRIPE_API_BASE = 'https://api.stripe.com'
 

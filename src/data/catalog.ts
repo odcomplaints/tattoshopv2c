@@ -5,7 +5,7 @@
 // what actually gets sent to Stripe. Keep the values in sync with shop.ts.
 //
 // This module is intentionally free of any asset/image imports so it can be
-// bundled by both the Vite app and the Cloudflare Pages Functions (functions/).
+// bundled by both the Vite app and the Vercel Edge Functions (api/).
 
 export type CatalogEntry = {
   /** Product id — matches ShopItem.id in src/data/shop.ts */

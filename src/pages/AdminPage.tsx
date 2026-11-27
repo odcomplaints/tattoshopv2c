@@ -102,7 +102,7 @@ function generateCatalogTs(items: ShopItem[]): string {
   lines.push(`// what actually gets sent to Stripe. Keep the values in sync with shop.ts.`)
   lines.push(`//`)
   lines.push(`// This module is intentionally free of any asset/image imports so it can be`)
-  lines.push(`// bundled by both the Vite app and the Cloudflare Pages Functions (functions/).`)
+  lines.push(`// bundled by both the Vite app and the Vercel Edge Functions (api/).`)
   lines.push(``)
   lines.push(`export type CatalogEntry = {`)
   lines.push(`  /** Product id — matches ShopItem.id in src/data/shop.ts */`)
